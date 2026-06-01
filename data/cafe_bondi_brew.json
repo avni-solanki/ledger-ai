@@ -1,0 +1,495 @@
+{
+  "business": {
+    "name": "Bondi Brew Co.",
+    "abn": "51 824 753 901",
+    "owner": "Sarah Mitchell",
+    "structure": "Sole Trader",
+    "gst_registered": true,
+    "gst_registration_date": "2019-03-01",
+    "location": "Shop 4, 112 Campbell Parade, Bondi Beach NSW 2026",
+    "industry": "Café / Food & Beverage",
+    "financial_year": "2024-25",
+    "bank_bsb": "032-086",
+    "bank_account": "412987653"
+  },
+  "transactions": [
+    { "id": "T001", "date": "2025-01-02", "description": "Coffee & food sales - daily takings", "amount": 1842.50, "gst_amount": 167.50, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T002", "date": "2025-01-03", "description": "Coffee & food sales - daily takings", "amount": 2105.00, "gst_amount": 191.36, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T003", "date": "2025-01-04", "description": "Uber Eats delivery sales", "amount": 634.80, "gst_amount": 57.71, "category": "Sales Revenue - Delivery", "type": "income", "paid_to_from": "Uber Eats" },
+    { "id": "T004", "date": "2025-01-06", "description": "Coffee beans - single origin Ethiopia & house blend", "amount": 1243.00, "gst_amount": 113.00, "category": "Cost of Goods - Coffee Beans", "type": "expense", "paid_to_from": "Single Origin Coffee Roasters" },
+    { "id": "T005", "date": "2025-01-07", "description": "Milk - full cream, skim, oat, almond (weekly)", "amount": 387.45, "gst_amount": 0.00, "category": "Cost of Goods - Milk & Dairy", "type": "expense", "paid_to_from": "Pepe's Milk Pty Ltd" },
+    { "id": "T006", "date": "2025-01-08", "description": "Coffee & food sales - daily takings", "amount": 1978.30, "gst_amount": 179.85, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T007", "date": "2025-01-09", "description": "January rent - Campbell Parade", "amount": 5500.00, "gst_amount": 500.00, "category": "Rent", "type": "expense", "paid_to_from": "Bondi Beach Properties Pty Ltd" },
+    { "id": "T008", "date": "2025-01-10", "description": "Uber Eats commission fee - Dec reconciliation", "amount": 312.40, "gst_amount": 28.40, "category": "Platform Commissions", "type": "expense", "paid_to_from": "Uber Eats Australia" },
+    { "id": "T009", "date": "2025-01-13", "description": "Coffee & food sales - weekly summary", "amount": 8934.00, "gst_amount": 812.18, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T010", "date": "2025-01-14", "description": "Baked goods & pastry supplies", "amount": 654.20, "gst_amount": 0.00, "category": "Cost of Goods - Food Supplies", "type": "expense", "paid_to_from": "Brumby's Wholesale Bakery" },
+    { "id": "T011", "date": "2025-01-15", "description": "Square POS terminal fees - January", "amount": 187.60, "gst_amount": 17.05, "category": "POS & Payment Fees", "type": "expense", "paid_to_from": "Square Australia" },
+    { "id": "T012", "date": "2025-01-17", "description": "Electricity bill - quarterly Dec-Jan", "amount": 1123.45, "gst_amount": 102.13, "category": "Utilities - Electricity", "type": "expense", "paid_to_from": "AGL Energy" },
+    { "id": "T013", "date": "2025-01-20", "description": "Coffee & food sales - weekly summary", "amount": 9210.50, "gst_amount": 837.32, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T014", "date": "2025-01-21", "description": "Milk & dairy - weekly restock", "amount": 412.30, "gst_amount": 0.00, "category": "Cost of Goods - Milk & Dairy", "type": "expense", "paid_to_from": "Pepe's Milk Pty Ltd" },
+    { "id": "T015", "date": "2025-01-22", "description": "Casual wages - fortnight ending 22 Jan (Jordan & Priya)", "amount": 2847.60, "gst_amount": 0.00, "category": "Wages - Casual Staff", "type": "expense", "paid_to_from": "Jordan Tran & Priya Sharma" },
+    { "id": "T016", "date": "2025-01-24", "description": "Coffee beans reorder", "amount": 987.00, "gst_amount": 89.73, "category": "Cost of Goods - Coffee Beans", "type": "expense", "paid_to_from": "Single Origin Coffee Roasters" },
+    { "id": "T017", "date": "2025-01-27", "description": "Coffee & food sales - weekly summary", "amount": 8756.20, "gst_amount": 795.84, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T018", "date": "2025-01-28", "description": "Public liability insurance - monthly instalment", "amount": 234.17, "gst_amount": 21.29, "category": "Insurance", "type": "expense", "paid_to_from": "BizCover Insurance" },
+    { "id": "T019", "date": "2025-01-31", "description": "Uber Eats delivery sales - Jan balance", "amount": 1876.40, "gst_amount": 170.58, "category": "Sales Revenue - Delivery", "type": "income", "paid_to_from": "Uber Eats" },
+    { "id": "T020", "date": "2025-02-03", "description": "Coffee & food sales - weekly summary", "amount": 6321.80, "gst_amount": 574.71, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T021", "date": "2025-02-05", "description": "February rent - Campbell Parade", "amount": 5500.00, "gst_amount": 500.00, "category": "Rent", "type": "expense", "paid_to_from": "Bondi Beach Properties Pty Ltd" },
+    { "id": "T022", "date": "2025-02-05", "description": "Casual wages - fortnight ending 5 Feb", "amount": 2614.40, "gst_amount": 0.00, "category": "Wages - Casual Staff", "type": "expense", "paid_to_from": "Jordan Tran & Priya Sharma" },
+    { "id": "T023", "date": "2025-02-06", "description": "Milk & dairy - weekly restock", "amount": 389.60, "gst_amount": 0.00, "category": "Cost of Goods - Milk & Dairy", "type": "expense", "paid_to_from": "Pepe's Milk Pty Ltd" },
+    { "id": "T024", "date": "2025-02-07", "description": "Espresso machine group head service - ANOMALOUS REPAIR", "amount": 2380.00, "gst_amount": 216.36, "category": "Equipment Repairs & Maintenance", "type": "expense", "paid_to_from": "Pro Espresso Service Sydney" },
+    { "id": "T025", "date": "2025-02-10", "description": "Coffee & food sales - weekly summary", "amount": 5987.40, "gst_amount": 544.31, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T026", "date": "2025-02-11", "description": "Coffee beans order", "amount": 1098.00, "gst_amount": 99.82, "category": "Cost of Goods - Coffee Beans", "type": "expense", "paid_to_from": "Single Origin Coffee Roasters" },
+    { "id": "T027", "date": "2025-02-12", "description": "Wastewater & water usage - quarterly", "amount": 342.80, "gst_amount": 31.16, "category": "Utilities - Water", "type": "expense", "paid_to_from": "Sydney Water" },
+    { "id": "T028", "date": "2025-02-14", "description": "Valentine's Day - coffee & food takings (bumper)", "amount": 2341.60, "gst_amount": 212.87, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T029", "date": "2025-02-17", "description": "Coffee & food sales - weekly summary", "amount": 5643.20, "gst_amount": 512.93, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T030", "date": "2025-02-19", "description": "Casual wages - fortnight ending 19 Feb", "amount": 2614.40, "gst_amount": 0.00, "category": "Wages - Casual Staff", "type": "expense", "paid_to_from": "Jordan Tran & Priya Sharma" },
+    { "id": "T031", "date": "2025-02-20", "description": "Packaging - cups, lids, bags, napkins", "amount": 478.90, "gst_amount": 43.54, "category": "Packaging & Consumables", "type": "expense", "paid_to_from": "BioPak Australia" },
+    { "id": "T032", "date": "2025-02-24", "description": "Coffee & food sales - weekly summary", "amount": 5812.70, "gst_amount": 528.43, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T033", "date": "2025-02-26", "description": "Uber Eats commission - February", "amount": 287.30, "gst_amount": 26.12, "category": "Platform Commissions", "type": "expense", "paid_to_from": "Uber Eats Australia" },
+    { "id": "T034", "date": "2025-02-28", "description": "Square POS fees - February", "amount": 162.40, "gst_amount": 14.76, "category": "POS & Payment Fees", "type": "expense", "paid_to_from": "Square Australia" },
+    { "id": "T035", "date": "2025-03-03", "description": "Coffee & food sales - weekly summary", "amount": 6120.30, "gst_amount": 556.39, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T036", "date": "2025-03-05", "description": "Superannuation - Q3 contribution (casual staff)", "amount": 634.20, "gst_amount": 0.00, "category": "Superannuation", "type": "expense", "paid_to_from": "AustralianSuper" },
+    { "id": "T037", "date": "2025-03-07", "description": "March rent - Campbell Parade", "amount": 5500.00, "gst_amount": 500.00, "category": "Rent", "type": "expense", "paid_to_from": "Bondi Beach Properties Pty Ltd" },
+    { "id": "T038", "date": "2025-03-07", "description": "Coffee beans - monthly bulk order", "amount": 1356.00, "gst_amount": 123.27, "category": "Cost of Goods - Coffee Beans", "type": "expense", "paid_to_from": "Single Origin Coffee Roasters" },
+    { "id": "T039", "date": "2025-03-10", "description": "Coffee & food sales - weekly summary", "amount": 6432.10, "gst_amount": 584.74, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T040", "date": "2025-03-12", "description": "Casual wages - fortnight ending 12 Mar", "amount": 2731.20, "gst_amount": 0.00, "category": "Wages - Casual Staff", "type": "expense", "paid_to_from": "Jordan Tran & Priya Sharma" },
+    { "id": "T041", "date": "2025-03-13", "description": "Milk & dairy - weekly restock", "amount": 401.20, "gst_amount": 0.00, "category": "Cost of Goods - Milk & Dairy", "type": "expense", "paid_to_from": "Pepe's Milk Pty Ltd" },
+    { "id": "T042", "date": "2025-03-17", "description": "Coffee & food sales - weekly summary", "amount": 5978.60, "gst_amount": 543.51, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T043", "date": "2025-03-19", "description": "Council rates - Waverley Council Q3", "amount": 892.50, "gst_amount": 0.00, "category": "Council Rates", "type": "expense", "paid_to_from": "Waverley Council" },
+    { "id": "T044", "date": "2025-03-20", "description": "Electricity bill - Jan-Mar quarter", "amount": 1087.30, "gst_amount": 98.85, "category": "Utilities - Electricity", "type": "expense", "paid_to_from": "AGL Energy" },
+    { "id": "T045", "date": "2025-03-24", "description": "Coffee & food sales - weekly summary", "amount": 5543.80, "gst_amount": 504.00, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T046", "date": "2025-03-26", "description": "Casual wages - fortnight ending 26 Mar", "amount": 2731.20, "gst_amount": 0.00, "category": "Wages - Casual Staff", "type": "expense", "paid_to_from": "Jordan Tran & Priya Sharma" },
+    { "id": "T047", "date": "2025-03-27", "description": "BAS payment - Q2 Oct-Dec GST net", "amount": 3214.00, "gst_amount": 0.00, "category": "Tax - GST BAS Payment", "type": "expense", "paid_to_from": "Australian Taxation Office" },
+    { "id": "T048", "date": "2025-03-31", "description": "Uber Eats delivery sales - March", "amount": 1423.60, "gst_amount": 129.42, "category": "Sales Revenue - Delivery", "type": "income", "paid_to_from": "Uber Eats" },
+    { "id": "T049", "date": "2025-04-02", "description": "Coffee & food sales - Easter Wednesday peak", "amount": 2687.40, "gst_amount": 244.31, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T050", "date": "2025-04-04", "description": "Good Friday - reduced hours trading", "amount": 1243.60, "gst_amount": 113.05, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T051", "date": "2025-04-07", "description": "April rent - Campbell Parade", "amount": 5500.00, "gst_amount": 500.00, "category": "Rent", "type": "expense", "paid_to_from": "Bondi Beach Properties Pty Ltd" },
+    { "id": "T052", "date": "2025-04-07", "description": "Coffee & food sales - Easter Monday", "amount": 1876.20, "gst_amount": 170.56, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T053", "date": "2025-04-08", "description": "Coffee beans order - April", "amount": 1198.00, "gst_amount": 108.91, "category": "Cost of Goods - Coffee Beans", "type": "expense", "paid_to_from": "Single Origin Coffee Roasters" },
+    { "id": "T054", "date": "2025-04-09", "description": "Casual wages - fortnight ending 9 Apr", "amount": 2614.40, "gst_amount": 0.00, "category": "Wages - Casual Staff", "type": "expense", "paid_to_from": "Jordan Tran & Priya Sharma" },
+    { "id": "T055", "date": "2025-04-14", "description": "Coffee & food sales - weekly summary", "amount": 5231.70, "gst_amount": 475.61, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T056", "date": "2025-04-15", "description": "Public liability insurance - monthly instalment", "amount": 234.17, "gst_amount": 21.29, "category": "Insurance", "type": "expense", "paid_to_from": "BizCover Insurance" },
+    { "id": "T057", "date": "2025-04-16", "description": "Milk & dairy - weekly restock", "amount": 378.90, "gst_amount": 0.00, "category": "Cost of Goods - Milk & Dairy", "type": "expense", "paid_to_from": "Pepe's Milk Pty Ltd" },
+    { "id": "T058", "date": "2025-04-21", "description": "Coffee & food sales - weekly summary", "amount": 4876.30, "gst_amount": 443.30, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T059", "date": "2025-04-23", "description": "Casual wages - fortnight ending 23 Apr", "amount": 2614.40, "gst_amount": 0.00, "category": "Wages - Casual Staff", "type": "expense", "paid_to_from": "Jordan Tran & Priya Sharma" },
+    { "id": "T060", "date": "2025-04-25", "description": "ANZAC Day - café closed", "amount": 0.00, "gst_amount": 0.00, "category": "Public Holiday", "type": "note", "paid_to_from": "N/A" },
+    { "id": "T061", "date": "2025-04-28", "description": "Coffee & food sales - weekly summary", "amount": 4543.10, "gst_amount": 413.01, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T062", "date": "2025-04-29", "description": "Square POS fees - April", "amount": 154.30, "gst_amount": 14.03, "category": "POS & Payment Fees", "type": "expense", "paid_to_from": "Square Australia" },
+    { "id": "T063", "date": "2025-04-30", "description": "Uber Eats commission - April", "amount": 264.80, "gst_amount": 24.07, "category": "Platform Commissions", "type": "expense", "paid_to_from": "Uber Eats Australia" },
+    { "id": "T064", "date": "2025-05-02", "description": "Coffee & food sales - weekly summary", "amount": 4312.80, "gst_amount": 392.07, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T065", "date": "2025-05-05", "description": "May rent - Campbell Parade", "amount": 5500.00, "gst_amount": 500.00, "category": "Rent", "type": "expense", "paid_to_from": "Bondi Beach Properties Pty Ltd" },
+    { "id": "T066", "date": "2025-05-07", "description": "Casual wages - fortnight ending 7 May", "amount": 2497.60, "gst_amount": 0.00, "category": "Wages - Casual Staff", "type": "expense", "paid_to_from": "Jordan Tran & Priya Sharma" },
+    { "id": "T067", "date": "2025-05-08", "description": "Coffee beans order - May", "amount": 1067.00, "gst_amount": 97.00, "category": "Cost of Goods - Coffee Beans", "type": "expense", "paid_to_from": "Single Origin Coffee Roasters" },
+    { "id": "T068", "date": "2025-05-09", "description": "Coffee & food sales - weekly summary", "amount": 4187.30, "gst_amount": 380.66, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T069", "date": "2025-05-12", "description": "Refrigeration unit fault call-out fee", "amount": 385.00, "gst_amount": 35.00, "category": "Equipment Repairs & Maintenance", "type": "expense", "paid_to_from": "CoolTech Refrigeration" },
+    { "id": "T070", "date": "2025-05-14", "description": "Milk & dairy - weekly restock", "amount": 362.40, "gst_amount": 0.00, "category": "Cost of Goods - Milk & Dairy", "type": "expense", "paid_to_from": "Pepe's Milk Pty Ltd" },
+    { "id": "T071", "date": "2025-05-16", "description": "Coffee & food sales - weekly summary", "amount": 4021.60, "gst_amount": 365.60, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T072", "date": "2025-05-19", "description": "Superannuation - Q3 Jan-Mar contribution (casual staff)", "amount": 634.20, "gst_amount": 0.00, "category": "Superannuation", "type": "expense", "paid_to_from": "AustralianSuper" },
+    { "id": "T073", "date": "2025-05-21", "description": "Casual wages - fortnight ending 21 May", "amount": 2497.60, "gst_amount": 0.00, "category": "Wages - Casual Staff", "type": "expense", "paid_to_from": "Jordan Tran & Priya Sharma" },
+    { "id": "T074", "date": "2025-05-23", "description": "Coffee & food sales - weekly summary", "amount": 4234.90, "gst_amount": 384.99, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T075", "date": "2025-05-26", "description": "Cleaning supplies & sanitiser restock", "amount": 213.60, "gst_amount": 19.42, "category": "Cleaning & Consumables", "type": "expense", "paid_to_from": "Bunnings Warehouse" },
+    { "id": "T076", "date": "2025-05-28", "description": "Electricity bill - Apr-May", "amount": 934.70, "gst_amount": 84.97, "category": "Utilities - Electricity", "type": "expense", "paid_to_from": "AGL Energy" },
+    { "id": "T077", "date": "2025-05-30", "description": "Coffee & food sales - weekly summary", "amount": 4098.40, "gst_amount": 372.58, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T078", "date": "2025-05-31", "description": "Uber Eats delivery sales - May", "amount": 876.30, "gst_amount": 79.66, "category": "Sales Revenue - Delivery", "type": "income", "paid_to_from": "Uber Eats" },
+    { "id": "T079", "date": "2025-06-02", "description": "Coffee & food sales - weekly summary", "amount": 4412.70, "gst_amount": 401.15, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T080", "date": "2025-06-04", "description": "June rent - Campbell Parade", "amount": 5500.00, "gst_amount": 500.00, "category": "Rent", "type": "expense", "paid_to_from": "Bondi Beach Properties Pty Ltd" },
+    { "id": "T081", "date": "2025-06-04", "description": "Casual wages - fortnight ending 4 Jun", "amount": 2497.60, "gst_amount": 0.00, "category": "Wages - Casual Staff", "type": "expense", "paid_to_from": "Jordan Tran & Priya Sharma" },
+    { "id": "T082", "date": "2025-06-05", "description": "Coffee beans - June order", "amount": 1123.00, "gst_amount": 102.09, "category": "Cost of Goods - Coffee Beans", "type": "expense", "paid_to_from": "Single Origin Coffee Roasters" },
+    { "id": "T083", "date": "2025-06-09", "description": "Coffee & food sales - weekly summary", "amount": 4187.60, "gst_amount": 380.69, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T084", "date": "2025-06-11", "description": "Public liability insurance - monthly instalment", "amount": 234.17, "gst_amount": 21.29, "category": "Insurance", "type": "expense", "paid_to_from": "BizCover Insurance" },
+    { "id": "T085", "date": "2025-06-12", "description": "Milk & dairy - weekly restock", "amount": 354.80, "gst_amount": 0.00, "category": "Cost of Goods - Milk & Dairy", "type": "expense", "paid_to_from": "Pepe's Milk Pty Ltd" },
+    { "id": "T086", "date": "2025-06-16", "description": "Coffee & food sales - weekly summary", "amount": 4023.40, "gst_amount": 365.76, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T087", "date": "2025-06-18", "description": "Casual wages - fortnight ending 18 Jun", "amount": 2497.60, "gst_amount": 0.00, "category": "Wages - Casual Staff", "type": "expense", "paid_to_from": "Jordan Tran & Priya Sharma" },
+    { "id": "T088", "date": "2025-06-19", "description": "Council rates - Waverley Council Q4", "amount": 892.50, "gst_amount": 0.00, "category": "Council Rates", "type": "expense", "paid_to_from": "Waverley Council" },
+    { "id": "T089", "date": "2025-06-23", "description": "Coffee & food sales - weekly summary", "amount": 3876.90, "gst_amount": 352.45, "category": "Sales Revenue", "type": "income", "paid_to_from": "Customers" },
+    { "id": "T090", "date": "2025-06-24", "description": "Packaging restock - cups, lids, takeaway bags", "amount": 443.20, "gst_amount": 40.29, "category": "Packaging & Consumables", "type": "expense", "paid_to_from": "BioPak Australia" },
+    { "id": "T091", "date": "2025-06-25", "description": "Square POS fees - June", "amount": 148.70, "gst_amount": 13.52, "category": "POS & Payment Fees", "type": "expense", "paid_to_from": "Square Australia" },
+    { "id": "T092", "date": "2025-06-27", "description": "Uber Eats commission - June", "amount": 241.60, "gst_amount": 21.96, "category": "Platform Commissions", "type": "expense", "paid_to_from": "Uber Eats Australia" },
+    { "id": "T093", "date": "2025-06-30", "description": "Superannuation - Q4 Apr-Jun contribution (casual staff)", "amount": 582.40, "gst_amount": 0.00, "category": "Superannuation", "type": "expense", "paid_to_from": "AustralianSuper" },
+    { "id": "T094", "date": "2025-06-30", "description": "Uber Eats delivery sales - June balance", "amount": 812.40, "gst_amount": 73.85, "category": "Sales Revenue - Delivery", "type": "income", "paid_to_from": "Uber Eats" }
+  ],
+  "invoices": [
+    {
+      "invoice_number": "SOCR-20250106",
+      "supplier": "Single Origin Coffee Roasters",
+      "date": "2025-01-06",
+      "due_date": "2025-01-20",
+      "amount_ex_gst": 1130.00,
+      "gst": 113.00,
+      "total": 1243.00,
+      "status": "paid"
+    },
+    {
+      "invoice_number": "PPM-20250107",
+      "supplier": "Pepe's Milk Pty Ltd",
+      "date": "2025-01-07",
+      "due_date": "2025-01-21",
+      "amount_ex_gst": 387.45,
+      "gst": 0.00,
+      "total": 387.45,
+      "status": "paid"
+    },
+    {
+      "invoice_number": "BIOPAK-20250120",
+      "supplier": "BioPak Australia",
+      "date": "2025-01-20",
+      "due_date": "2025-02-03",
+      "amount_ex_gst": 435.36,
+      "gst": 43.54,
+      "total": 478.90,
+      "status": "paid"
+    },
+    {
+      "invoice_number": "PROESPRESSO-20250207",
+      "supplier": "Pro Espresso Service Sydney",
+      "date": "2025-02-07",
+      "due_date": "2025-02-21",
+      "amount_ex_gst": 2163.64,
+      "gst": 216.36,
+      "total": 2380.00,
+      "status": "paid"
+    },
+    {
+      "invoice_number": "SOCR-20250211",
+      "supplier": "Single Origin Coffee Roasters",
+      "date": "2025-02-11",
+      "due_date": "2025-02-25",
+      "amount_ex_gst": 998.18,
+      "gst": 99.82,
+      "total": 1098.00,
+      "status": "paid"
+    },
+    {
+      "invoice_number": "AGL-Q1-2025",
+      "supplier": "AGL Energy",
+      "date": "2025-01-15",
+      "due_date": "2025-02-05",
+      "amount_ex_gst": 1021.32,
+      "gst": 102.13,
+      "total": 1123.45,
+      "status": "paid"
+    },
+    {
+      "invoice_number": "SOCR-20250408",
+      "supplier": "Single Origin Coffee Roasters",
+      "date": "2025-04-08",
+      "due_date": "2025-04-22",
+      "amount_ex_gst": 1089.09,
+      "gst": 108.91,
+      "total": 1198.00,
+      "status": "paid"
+    },
+    {
+      "invoice_number": "COOLTECH-20250512",
+      "supplier": "CoolTech Refrigeration",
+      "date": "2025-05-12",
+      "due_date": "2025-05-26",
+      "amount_ex_gst": 350.00,
+      "gst": 35.00,
+      "total": 385.00,
+      "status": "paid"
+    },
+    {
+      "invoice_number": "BIOPAK-20250524",
+      "supplier": "BioPak Australia",
+      "date": "2025-05-24",
+      "due_date": "2025-06-07",
+      "amount_ex_gst": 402.91,
+      "gst": 40.29,
+      "total": 443.20,
+      "status": "paid"
+    },
+    {
+      "invoice_number": "SOCR-20250605",
+      "supplier": "Single Origin Coffee Roasters",
+      "date": "2025-06-05",
+      "due_date": "2025-06-19",
+      "amount_ex_gst": 1020.91,
+      "gst": 102.09,
+      "total": 1123.00,
+      "status": "paid"
+    },
+    {
+      "invoice_number": "PPM-20250612",
+      "supplier": "Pepe's Milk Pty Ltd",
+      "date": "2025-06-12",
+      "due_date": "2025-06-26",
+      "amount_ex_gst": 354.80,
+      "gst": 0.00,
+      "total": 354.80,
+      "status": "paid"
+    },
+    {
+      "invoice_number": "BRUPAST-20250114",
+      "supplier": "Brumby's Wholesale Bakery",
+      "date": "2025-01-14",
+      "due_date": "2025-01-28",
+      "amount_ex_gst": 654.20,
+      "gst": 0.00,
+      "total": 654.20,
+      "status": "paid"
+    },
+    {
+      "invoice_number": "AGL-Q2-2025",
+      "supplier": "AGL Energy",
+      "date": "2025-03-18",
+      "due_date": "2025-04-08",
+      "amount_ex_gst": 988.45,
+      "gst": 98.85,
+      "total": 1087.30,
+      "status": "paid"
+    },
+    {
+      "invoice_number": "PPM-20250603",
+      "supplier": "Pepe's Milk Pty Ltd",
+      "date": "2025-06-16",
+      "due_date": "2025-07-07",
+      "amount_ex_gst": 368.40,
+      "gst": 0.00,
+      "total": 368.40,
+      "status": "outstanding"
+    },
+    {
+      "invoice_number": "AGL-Q3-2025",
+      "supplier": "AGL Energy",
+      "date": "2025-05-27",
+      "due_date": "2025-06-17",
+      "amount_ex_gst": 849.73,
+      "gst": 84.97,
+      "total": 934.70,
+      "status": "paid"
+    }
+  ],
+  "payroll": [
+    {
+      "period": "January 2025",
+      "entries": [
+        {
+          "employee_id": "EMP001",
+          "name": "Jordan Tran",
+          "role": "Casual Barista",
+          "hours": 72,
+          "hourly_rate": 26.40,
+          "gross_pay": 1900.80,
+          "tax_withheld": 285.00,
+          "net_pay": 1615.80,
+          "superannuation": 199.58
+        },
+        {
+          "employee_id": "EMP002",
+          "name": "Priya Sharma",
+          "role": "Casual Kitchen & Service",
+          "hours": 68,
+          "hourly_rate": 25.10,
+          "gross_pay": 1706.80,
+          "tax_withheld": 247.00,
+          "net_pay": 1459.80,
+          "superannuation": 179.21
+        }
+      ]
+    },
+    {
+      "period": "February 2025",
+      "entries": [
+        {
+          "employee_id": "EMP001",
+          "name": "Jordan Tran",
+          "role": "Casual Barista",
+          "hours": 66,
+          "hourly_rate": 26.40,
+          "gross_pay": 1742.40,
+          "tax_withheld": 261.00,
+          "net_pay": 1481.40,
+          "superannuation": 182.95
+        },
+        {
+          "employee_id": "EMP002",
+          "name": "Priya Sharma",
+          "role": "Casual Kitchen & Service",
+          "hours": 62,
+          "hourly_rate": 25.10,
+          "gross_pay": 1556.20,
+          "tax_withheld": 218.00,
+          "net_pay": 1338.20,
+          "superannuation": 163.40
+        }
+      ]
+    },
+    {
+      "period": "March 2025",
+      "entries": [
+        {
+          "employee_id": "EMP001",
+          "name": "Jordan Tran",
+          "role": "Casual Barista",
+          "hours": 69,
+          "hourly_rate": 26.40,
+          "gross_pay": 1821.60,
+          "tax_withheld": 273.00,
+          "net_pay": 1548.60,
+          "superannuation": 191.27
+        },
+        {
+          "employee_id": "EMP002",
+          "name": "Priya Sharma",
+          "role": "Casual Kitchen & Service",
+          "hours": 65,
+          "hourly_rate": 25.10,
+          "gross_pay": 1631.50,
+          "tax_withheld": 231.00,
+          "net_pay": 1400.50,
+          "superannuation": 171.31
+        }
+      ]
+    },
+    {
+      "period": "April 2025",
+      "entries": [
+        {
+          "employee_id": "EMP001",
+          "name": "Jordan Tran",
+          "role": "Casual Barista",
+          "hours": 66,
+          "hourly_rate": 26.40,
+          "gross_pay": 1742.40,
+          "tax_withheld": 261.00,
+          "net_pay": 1481.40,
+          "superannuation": 182.95
+        },
+        {
+          "employee_id": "EMP002",
+          "name": "Priya Sharma",
+          "role": "Casual Kitchen & Service",
+          "hours": 62,
+          "hourly_rate": 25.10,
+          "gross_pay": 1556.20,
+          "tax_withheld": 218.00,
+          "net_pay": 1338.20,
+          "superannuation": 163.40
+        }
+      ]
+    },
+    {
+      "period": "May 2025",
+      "entries": [
+        {
+          "employee_id": "EMP001",
+          "name": "Jordan Tran",
+          "role": "Casual Barista",
+          "hours": 63,
+          "hourly_rate": 26.40,
+          "gross_pay": 1663.20,
+          "tax_withheld": 249.00,
+          "net_pay": 1414.20,
+          "superannuation": 174.64
+        },
+        {
+          "employee_id": "EMP002",
+          "name": "Priya Sharma",
+          "role": "Casual Kitchen & Service",
+          "hours": 59,
+          "hourly_rate": 25.10,
+          "gross_pay": 1480.90,
+          "tax_withheld": 204.00,
+          "net_pay": 1276.90,
+          "superannuation": 155.49
+        }
+      ]
+    },
+    {
+      "period": "June 2025",
+      "entries": [
+        {
+          "employee_id": "EMP001",
+          "name": "Jordan Tran",
+          "role": "Casual Barista",
+          "hours": 63,
+          "hourly_rate": 26.40,
+          "gross_pay": 1663.20,
+          "tax_withheld": 249.00,
+          "net_pay": 1414.20,
+          "superannuation": 174.64
+        },
+        {
+          "employee_id": "EMP002",
+          "name": "Priya Sharma",
+          "role": "Casual Kitchen & Service",
+          "hours": 59,
+          "hourly_rate": 25.10,
+          "gross_pay": 1480.90,
+          "tax_withheld": 204.00,
+          "net_pay": 1276.90,
+          "superannuation": 155.49
+        }
+      ]
+    }
+  ],
+  "gst_summary": {
+    "Q3_FY2025_Jan_Mar": {
+      "period": "1 January 2025 – 31 March 2025",
+      "bas_due_date": "2025-04-28",
+      "gst_collected_on_sales": 7436.82,
+      "gst_paid_on_purchases": 2107.44,
+      "net_gst_payable": 5329.38,
+      "notes": "BAS lodged and paid 27 March 2025 (early lodgement)"
+    },
+    "Q4_FY2025_Apr_Jun": {
+      "period": "1 April 2025 – 30 June 2025",
+      "bas_due_date": "2025-07-28",
+      "gst_collected_on_sales": 4810.14,
+      "gst_paid_on_purchases": 1628.38,
+      "net_gst_payable": 3181.76,
+      "notes": "BAS due July 2025 — not yet lodged as at 30 June 2025"
+    }
+  },
+  "account_balances": [
+    {
+      "month": "January 2025",
+      "opening_balance": 7234.18,
+      "total_income": 24602.40,
+      "total_expenses": 14752.07,
+      "closing_balance": 17084.51,
+      "notes": "Strong summer trading — Bondi tourist season peak"
+    },
+    {
+      "month": "February 2025",
+      "opening_balance": 17084.51,
+      "total_income": 21106.70,
+      "total_expenses": 22731.40,
+      "closing_balance": 15459.81,
+      "notes": "Espresso machine repair ($2,380) hit cash hard — stressful month"
+    },
+    {
+      "month": "March 2025",
+      "opening_balance": 15459.81,
+      "total_income": 19498.30,
+      "total_expenses": 21242.80,
+      "closing_balance": 13715.31,
+      "notes": "BAS payment of $3,214 in March reduced closing balance significantly"
+    },
+    {
+      "month": "April 2025",
+      "opening_balance": 13715.31,
+      "total_income": 15572.30,
+      "total_expenses": 14072.07,
+      "closing_balance": 15215.54,
+      "notes": "Easter helped offset slower post-summer foot traffic"
+    },
+    {
+      "month": "May 2025",
+      "opening_balance": 15215.54,
+      "total_income": 17430.00,
+      "total_expenses": 19353.10,
+      "closing_balance": 1842.44,
+      "notes": "CASH FLOW STRESS — super payment, fridge repair, and lower revenue converged"
+    },
+    {
+      "month": "June 2025",
+      "opening_balance": 1842.44,
+      "total_income": 17312.60,
+      "total_expenses": 16038.37,
+      "closing_balance": 1716.67,
+      "notes": "CASH FLOW STRESS — opening balance near zero; survived but extremely tight"
+    }
+  ]
+}
