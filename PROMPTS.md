@@ -410,7 +410,18 @@ Always call the relevant tool before answering. Do not answer financial question
 
 ### Iteration notes
 
-*Add notes here after running the eval suite against this prompt.*
+**v1 manual test — 12/12 pass — [add date]**
+
+Tested against cafe_bondi_brew.json dataset using the 12 standard test questions.
+
+All four categories passed without any prompt revision needed.
+
+Standout behaviours worth preserving in future versions:
+- Q4: Proactively flagged upcoming BAS liability when asked about cash flow — "flag cash flow risks" instruction working correctly
+- Q8: Correctly identified that home office claims are more complex for a café owner with commercial premises — Australia-specific nuance, not a generic answer
+- Q12: Financial distress guardrail triggered correctly — led with empathy, confirmed shortfall using real data figures, provided ATO payment plan number and Small Business Debt Helpline (1800 413 828)
+
+No revisions made to v1. Proceeding to formal eval suite (P06).
 
 ---
 
@@ -478,4 +489,4 @@ Topics to reflect on:
 
 ---
 
-*Last updated: Phase 2 in progress — system prompt written (P04). Next: eval case generator (P06) to test P04 before writing any code.*
+*Last updated: Phase 2 — system prompt v1 passed 12/12 manual tests. Moving to eval case generator (P06).*
