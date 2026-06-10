@@ -453,25 +453,123 @@ Defines the tools Claude can call to query the mock financial data. Tool use is 
 
 **Phase:** 2 — Prompt evaluation  
 **File output:** `evals/test_cases.json`  
-**Date written:** [add date]
+**Date written:** [add date when you run it]
 
 ### Purpose
-Before finalising the system prompt, generate a comprehensive set of test questions — across all three personas — to evaluate whether Ledger AI's answers are accurate, helpful, and appropriately bounded. Claude generates the test cases; the developer judges which answers are good.
+Generate 50 structured eval test cases across all three personas to systematically test whether Ledger AI's system prompt (P04) performs correctly, consistently, and safely at scale. Claude generates the test cases; the developer reviews and saves them. In Phase 3, these cases will be executed programmatically against Ledger AI with automated pass/fail scoring.
 
-*Full eval prompt to be documented in Phase 2.*
+### Distribution
+- 15 cases: café (Bondi Brew Co.)
+- 15 cases: electrician (Watts & Sons Electrical)
+- 15 cases: consultant (Clara Voss Creative)
+- 5 cases: shared edge cases (any persona)
 
-### Planned test categories
+### The prompt
 
-| Category | Example questions |
-|----------|------------------|
-| Basic retrieval | "What was my revenue in March?" |
-| Comparison | "Which month had the highest expenses?" |
-| Cash flow | "Am I cash flow positive this quarter?" |
-| GST / BAS | "How much GST have I collected this period?" |
-| Anomaly | "Is there anything unusual in my recent transactions?" |
-| Overdue | "Who owes me money right now?" (electrician only) |
-| Scenario | "Can I afford to hire a part-time staff member?" |
-| Out of scope | "Should I incorporate as a company?" (expect a graceful redirect) |
+```
+You are building an evaluation suite for Ledger AI — a plain-English financial assistant for Australian small business owners. Ledger AI uses the Claude API with tool use to answer questions about a user's financial data.
+
+Your task is to generate exactly 50 structured eval test cases in valid JSON format.
+
+The test cases must be distributed as follows:
+- 15 cases for persona: "cafe" (Bondi Brew Co. — sole trader café, Bondi Beach NSW)
+- 15 cases for persona: "electrician" (Watts & Sons Electrical — sole trader electrician, Melbourne VIC)
+- 15 cases for persona: "consultant" (Clara Voss Creative — marketing consultant, Fitzroy VIC)
+- 5 cases for persona: "shared" (edge cases that apply to any persona)
+
+Each test case must follow this exact JSON structure:
+{
+  "id": "eval_001",
+  "persona": "cafe",
+  "category": "retrieval",
+  "difficulty": "basic",
+  "question": "What was my total revenue for March?",
+  "expected_behaviour": "Retrieves total income transactions for March, states the exact figure inc and ex GST, provides brief context",
+  "must_include": ["specific dollar amount", "month name", "GST breakdown"],
+  "must_not_include": ["predictions", "invented figures"],
+  "tags": ["revenue", "monthly", "GST"]
+}
+
+Categories to use (distribute evenly across all personas):
+- "retrieval" — basic data lookup (revenue, expenses, balances)
+- "interpretation" — requires reasoning across data (trends, comparisons, causes)
+- "cash_flow" — questions about liquidity, timing, account balances
+- "gst_bas" — GST collected/paid, BAS readiness, quarterly summaries
+- "invoices" — invoice status, overdue amounts, payment patterns
+- "payroll" — wages, super, staff costs
+- "anomaly" — unusual transactions, patterns worth flagging
+- "tax_adjacent" — questions touching on deductions or tax treatment (must trigger tax agent referral)
+- "out_of_scope" — questions Ledger AI cannot answer (must trigger graceful redirect)
+- "edge_case" — ambiguous, incomplete, or adversarial inputs
+
+Difficulty levels:
+- "basic" — single data point lookup
+- "intermediate" — requires combining 2–3 data points or reasoning across months
+- "advanced" — requires multi-step reasoning, pattern detection, or nuanced handling
+
+Persona-specific constraints:
+- Café questions should reference: daily sales, seasonal patterns, wages, super, BAS, Uber Eats, supplier invoices, the anomalous espresso machine repair
+- Electrician questions should reference: overdue invoices, job_ref tracking, materials-before-payment timing, subcontractor payments, TPAR, vehicle log, cash flow gaps
+- Consultant questions should reference: retainer vs project income, slow-paying client pattern, PAYG instalments, home office expenses, income by client, quiet February, strong May
+
+Edge case questions (shared persona) must include:
+- One question with a deliberately ambiguous time period (e.g. "recently", "lately")
+- One question asking for something not in the data
+- One adversarial question trying to get Ledger AI to give tax advice directly
+- One question in informal/casual language (e.g. "am I doing ok?")
+- One multi-part question combining two different data types
+
+Quality requirements:
+- Questions must sound like real SME owners wrote them — natural, not clinical
+- No two questions should be testing the same thing
+- At least 8 questions must be difficulty "advanced"
+- At least 5 questions must be category "out_of_scope" or "edge_case"
+- Every "tax_adjacent" question must have "tax agent referral" in must_include
+- Every "out_of_scope" question must have "graceful redirect" in must_include
+
+Output the result as a single valid JSON object:
+{
+  "eval_suite": {
+    "version": "1.0",
+    "total_cases": 50,
+    "generated_for": "Ledger AI system prompt v1",
+    "personas": ["cafe", "electrician", "consultant", "shared"],
+    "categories": ["retrieval", "interpretation", "cash_flow", "gst_bas", "invoices", "payroll", "anomaly", "tax_adjacent", "out_of_scope", "edge_case"]
+  },
+  "test_cases": [
+    ... all 50 test cases here ...
+  ]
+}
+
+Output valid JSON only. No explanation, no markdown fences, no preamble.
+```
+
+### Design decisions
+
+| Decision | Reasoning |
+|----------|-----------|
+| Exact JSON schema with must_include / must_not_include | These fields make the eval suite programmable in Phase 3 — the eval runner checks for required elements and excluded ones automatically, enabling scoring without reading every response manually |
+| Persona-specific data constraints | Forces realistic, dataset-specific questions referencing the espresso machine anomaly, overdue invoices, PAYG instalments etc. — prevents Claude generating 50 generic questions |
+| 5 adversarial shared edge cases | Deliberate stress-tests: ambiguous time periods, missing data requests, direct tax advice attempts, casual language, multi-part questions — the inputs real users will actually send |
+| Minimum 8 advanced questions | Quality gate preventing an eval suite of trivial lookups. Advanced questions require multi-step reasoning or pattern detection — the hardest cases to get right |
+| tax agent referral in must_include | Every tax-adjacent question must verify the referral is present — the most critical safety behaviour in the system prompt |
+| "sounds like real SME owners" constraint | Prevents clinical, AI-sounding questions. Eval cases that match real user language produce more meaningful test results |
+
+### What to check when reviewing output
+
+- [ ] Exactly 50 test cases total
+- [ ] Distribution is correct: 15 café, 15 electrician, 15 consultant, 5 shared
+- [ ] All 10 categories are represented
+- [ ] At least 8 cases with difficulty "advanced"
+- [ ] All tax_adjacent cases have "tax agent referral" in must_include
+- [ ] All out_of_scope cases have "graceful redirect" in must_include
+- [ ] Questions feel natural — not like a QA engineer wrote them
+- [ ] No two questions test exactly the same thing
+- [ ] Output is valid JSON — run through a JSON validator before saving
+
+### Iteration notes
+
+*Add notes here after reviewing the generated eval cases.*
 
 ---
 
@@ -489,4 +587,4 @@ Topics to reflect on:
 
 ---
 
-*Last updated: Phase 2 — system prompt v1 passed 12/12 manual tests. Moving to eval case generator (P06).*
+*Last updated: Phase 2 complete — system prompt v1 passed 12/12 manual tests, eval case generator prompt written (P06). Run P06 to generate evals/test_cases.json then move to Phase 3.*
