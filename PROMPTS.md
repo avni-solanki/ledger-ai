@@ -725,7 +725,7 @@ Note: the datasets don't currently store an explicit `date_range` field on `busi
 
 ### Iteration notes
 
-**[add date]** — First fix attempt was directionally correct but ambiguous. The instruction told Claude "this dataset's most recent month is June 2025... resolve relative time periods relative to June 2025" — Claude read "relative to June 2025" as "treat June 2025 as the current month," so "last month" resolved to **May 2025**, not June. A defensible reading of the wording, but not the intended one: in a 6-month mock dataset, "last month" should mean the most recently completed month *in the data itself* (June), not the month before it.
+**23/07/2026** — First fix attempt was directionally correct but ambiguous. The instruction told Claude "this dataset's most recent month is June 2025... resolve relative time periods relative to June 2025" — Claude read "relative to June 2025" as "treat June 2025 as the current month," so "last month" resolved to **May 2025**, not June. A defensible reading of the wording, but not the intended one: in a 6-month mock dataset, "last month" should mean the most recently completed month *in the data itself* (June), not the month before it.
 
 **Refined fix** — made the instruction state the resolution directly instead of leaving Claude to derive it:
 
@@ -748,9 +748,54 @@ Also confirmed: each failed attempt happened inside the *same* running session, 
 
 **Lesson for interviews:** the first attempt at fixing an ambiguity bug can introduce a *new*, more subtle ambiguity rather than removing it outright. The fix isn't "correct" until it removes the interpretive step from Claude entirely — stating the resolved answer directly ("last month" = X) is more robust than stating a reference point and expecting the same inference every time.
 
-**[add date]** — Confirmed fix by re-asking "What was my biggest expense last month?" in a fresh session after the refined version; expect it to now resolve directly to June 2025 (Rent, $5,500).
+**23/07/2026** — Confirmed fix by re-asking "What was my biggest expense last month?" in a fresh session after the refined version; expect it to now resolve directly to June 2025 (Rent, $5,500).
 
-**[add date]** — Full re-run of all 12 Phase 2 manual test questions through the real, wired-up app (`python src/main.py`), after the time-context fix. All 12 answers now match the Phase 2 manual chat test results. This closes the loop opened by the earlier finding above (the January revenue discrepancy): once real tool use, the time-context fix, and grounded data retrieval were all in place, the app reproduces the same figures and behaviours that were designed and validated in Phase 2 — including the BAS-liability flag, the commercial-premises home-office nuance, and the financial-distress response. This is the first point in the project where the system prompt's designed behaviour and the running application are fully verified to agree.
+**23/07/2026** — Full re-run of all 12 Phase 2 manual test questions through the real, wired-up app (`python src/main.py`), after the time-context fix. All 12 answers now match the Phase 2 manual chat test results. This closes the loop opened by the earlier finding above (the January revenue discrepancy): once real tool use, the time-context fix, and grounded data retrieval were all in place, the app reproduces the same figures and behaviours that were designed and validated in Phase 2 — including the BAS-liability flag, the commercial-premises home-office nuance, and the financial-distress response. This is the first point in the project where the system prompt's designed behaviour and the running application are fully verified to agree.
+
+---
+
+## P09 — Cross-persona live testing (electrician & freelancer)
+
+**Phase:** 3 — Claude API engineering  
+**Used in:** live app testing across all three personas  
+**Date:** [add date]
+
+### Electrician (Watts & Sons Electrical) — 7/7 pass
+Ran 7 questions targeting this persona's distinct financial pattern: project-based income, overdue invoices, materials-before-payment cash flow risk, and subcontractor payments (rather than employee wages). All passed cleanly with no factual or scope errors. Notably:
+- Correctly distinguished subcontractor payments from employee payroll (no mention of superannuation or casual wages)
+- Proactively surfaced **TPAR** (Taxable Payments Annual Report) — an electrician-specific ATO obligation not present anywhere in the café dataset or system prompt examples, showing the general Australian tax context in the system prompt generalises correctly to a new context rather than only working for the persona it was tuned against
+- Correctly identified and reasoned about all four deliberately-planted materials-before-payment cash flow squeezes in the dataset, including the worst case (129-day gap)
+- The P08 time-context fix carried over correctly to a different persona/dataset (overdue invoice aged ~145 days from the dataset's own most recent month, not the real calendar date)
+
+### Freelancer (Clara Voss Creative) — found and fixed a real data bug
+Ran 6 questions targeting this persona's most different schema: no payroll, PAYG instalments instead of wages/super, and mixed retainer/project income. Five of six behaviours were correct on the first pass (graceful "no payroll" handling, correct PAYG-has-no-GST treatment, correctly identified the recurring slow payer with a worsening-lateness trend, correctly identified the deliberately quiet February, and a home-office answer correctly differentiated from the café's commercial-premises nuance).
+
+**The sixth question surfaced a genuine data integrity bug, not a prompt or tool bug.** Asked to compare retainer vs project income, Ledger AI's own answer flagged that project invoice totals looked inflated and that some invoices appeared to be counted twice — and it was right. Investigating the raw dataset confirmed:
+
+- Every **project** invoice in `freelancer_clara_voss_creative.json` had **two** separate `type: income` transaction entries — one logged when the invoice was issued, one logged again when it was paid — both counted as income
+- Every **retainer** invoice, by contrast, had only one entry — logged correctly, once
+- This inflated the "as recorded" project income total by exactly the sum of every paid project invoice ($73,590 raw vs $55,330 actual — a $18,260 overcount)
+- The dataset's own `invoices` array (22 invoices) was the correct source of truth throughout and was never affected — only the `transactions` array had the duplication
+
+### Why this is a notable finding
+This is the first bug in the project that Claude's own answer caught and flagged *before* being told to check — it noticed the numbers looked internally inconsistent and said so, rather than confidently reporting the inflated total. That's the "don't guess, flag ambiguity" guardrail from the P04 system prompt working exactly as designed, on a genuine, unplanned data defect rather than a planted test case. Arguably a stronger example of grounded, careful behaviour than any of the deliberately engineered eval scenarios, because nobody built this one on purpose.
+
+### The fix
+Wrote a small script to deduplicate `transactions.json` for this persona: for each project invoice with both an "issued" and a "paid" transaction entry, removed the "issued" entry and kept the "paid" one — consistent with how retainer invoices were already (correctly) recorded as a single entry. Verified the fix by cross-checking the new transaction total ($55,330) against the sum of the `invoices` array ($55,330) — an exact match, confirming the dataset is now internally consistent.
+
+Also noted, separately: the dataset's `income_by_client` summary field (a rollup object, not used by any tool in `src/`) has its own small pre-existing inconsistency of about $1,100 across two clients, unrelated to the transaction duplication. Left unfixed for now since nothing in the app reads that field, but flagged here for anyone extending the app to use it later.
+
+### Design decision
+| Decision | Reasoning |
+|----------|-----------|
+| Fix the data, not the tool | The tools (`get_transactions`, income summaries) behave correctly — summing all `type: income` transactions is the right general logic. The bug was specific to how this one dataset was generated, so the dataset is what needed correcting, not the tool logic that will run against all three personas |
+| Keep the "paid" entry over the "issued" entry | Matches the cash-accounting convention already used consistently for retainer invoices in the same dataset — one entry per invoice, dated to when cash actually changed hands |
+
+### Iteration notes
+
+**23/07/2026** — Re-ran the retainer-vs-project question after the fix; expect the tool-computed project income figure to now match the invoices-array total directly, with no discrepancy for Claude to flag.
+
+**Lesson for interviews:** manually generated mock data can contain the same category of bug real production data has — inconsistent event logging across sources. The interesting result here wasn't that the bug existed, but that the system's own guardrails (grounded-answers-only, flag ambiguity rather than guess) caught it without being specifically tested for it. That's a better argument for why grounding and honesty guardrails matter than a synthetic eval case would have been.
 
 ---
 
@@ -776,4 +821,4 @@ Topics to reflect on:
 - *Also caught during live testing: the Phase 2 "12/12 manual test" had been run in a simulated chat with no real tool calls — one figure it gave (January revenue) didn't match the real, tool-grounded figure the live app returns. Documented as a lesson: Phase 2 validated behaviour design, not factual grounding.*
 - *All 12 original manual test questions re-run through the live app (café persona) and now match the Phase 2 designed behaviour, with real data grounding confirmed.*
 
-*Not yet done in Phase 3: electrician and freelancer personas haven't been tested live yet (only café); the automated eval runner for the 50-case suite (`evals/test_cases.json`) hasn't been built. Phase 4 (README, ARCHITECTURE.md, demo, LinkedIn, GitHub publish) not started.*
+*All three personas now tested live and passing: café (12/12), electrician (7/7), freelancer (6/6 after fixing a data duplication bug — see P09). Not yet done in Phase 3: the automated eval runner for the 50-case suite (`evals/test_cases.json`) hasn't been built. Phase 4 (README, ARCHITECTURE.md, demo, LinkedIn, GitHub publish) not started.*
