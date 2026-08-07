@@ -2099,15 +2099,15 @@
     "CLIENT-BLOOM": {
       "client_name": "Bloom & Co",
       "client_type": "Retainer + Project",
-      "total_invoiced_inc_gst": 17050.0,
-      "total_gst_on_invoices": 1550.0,
-      "total_received_inc_gst": 17050.0,
-      "invoices_raised": 6,
+      "total_invoiced_inc_gst": 19470.0,
+      "total_gst_on_invoices": 1770.0,
+      "total_received_inc_gst": 19470.0,
+      "invoices_raised": 8,
       "retainer_invoices": 6,
       "project_invoices": 2,
       "outstanding_at_30_jun": 0.0,
-      "average_days_to_pay": 2,
-      "notes": "Reliable, prompt payer. Retainer + two ad hoc projects (brand voice guide in March, case studies in May)."
+      "notes": "Reliable, prompt payer. Retainer + two ad hoc projects (brand voice guide in March, case studies in May).",
+      "average_days_vs_due_date": -5.2
     },
     "CLIENT-HARLOW": {
       "client_name": "Harlow Digital",
@@ -2115,25 +2115,25 @@
       "total_invoiced_inc_gst": 21890.0,
       "total_gst_on_invoices": 1990.0,
       "total_received_inc_gst": 21890.0,
-      "invoices_raised": 8,
+      "invoices_raised": 9,
       "retainer_invoices": 6,
       "project_invoices": 3,
       "outstanding_at_30_jun": 0.0,
-      "average_days_to_pay": 3,
-      "notes": "Reliable retainer client. Email campaign in Jan, content strategy deck in Apr, annual report in Jun all paid on time."
+      "notes": "Reliable retainer client. Email campaign in Jan, content strategy deck in Apr, annual report in Jun all paid on time.",
+      "average_days_vs_due_date": -4.7
     },
     "CLIENT-RENEW": {
       "client_name": "Renew Wellness Pty Ltd",
       "client_type": "Project Only",
-      "total_invoiced_inc_gst": 8140.0,
-      "total_gst_on_invoices": 740.0,
-      "total_received_inc_gst": 8140.0,
-      "invoices_raised": 5,
+      "total_invoiced_inc_gst": 6820.0,
+      "total_gst_on_invoices": 620.0,
+      "total_received_inc_gst": 6820.0,
+      "invoices_raised": 4,
       "retainer_invoices": 0,
-      "project_invoices": 5,
+      "project_invoices": 4,
       "outstanding_at_30_jun": 0.0,
-      "average_days_to_pay": 24,
-      "notes": "SLOW PAYER \u2014 consistently pays 14\u201322 days after due date. Web copy, social media packs, EDM campaigns. All eventually paid but always late."
+      "notes": "Slow payer relative to Bloom/Harlow, who consistently pay early. Renew paid their first invoice 10 days early (Jan), then every subsequent invoice 4-7 days after the due date (Feb, Apr, Jun). All invoices eventually paid in full, but the pattern of late project payments since January is worth watching.",
+      "average_days_vs_due_date": 1.5
     },
     "CLIENT-LUMEN": {
       "client_name": "Lumen Labs Pty Ltd",
@@ -2145,8 +2145,8 @@
       "retainer_invoices": 0,
       "project_invoices": 1,
       "outstanding_at_30_jun": 0.0,
-      "average_days_to_pay": 10,
-      "notes": "New client, May 2025. Melbourne startup - paid large brand campaign invoice ahead of due date. Potential for retainer relationship."
+      "notes": "New client, May 2025. Melbourne startup - paid large brand campaign invoice ahead of due date. Potential for retainer relationship.",
+      "average_days_vs_due_date": -4.0
     }
   }
 }
