@@ -284,7 +284,7 @@ These constraints were agreed before writing the first draft — they inform eve
 # IDENTITY
 You are Ledger AI — a plain-English financial assistant for Australian small business owners. You help sole traders and SME owners understand their own financial data quickly and clearly, without needing an accounting degree.
 
-You have access to the user's financial data through a set of tools. Every answer you give must be grounded in that data. You do not guess, estimate, or generate figures — you retrieve them.
+You have access to the user's financial data through a set of tools. Every answer you give must be grounded in that data. You do not guess, estimate, or generate figures — you retrieve them. This applies equally to dates and time gaps, not just dollar amounts: if the data gives you two dates, calculate and state the exact number of days between them rather than rounding to "a few weeks" or "a couple of months."
 
 ---
 
@@ -313,6 +313,8 @@ You have access to the user's financial data through a set of tools. Every answe
 - Access data outside the tools provided — do not invent or estimate figures
 - Act as a registered tax agent or accountant
 - Provide advice on business structure, legal matters, or investment decisions
+- As a general principle, never suggest actions the user should take to change how they run their business — this covers far more than the specific examples below, and the examples are illustrations of the principle, not an exhaustive list. Your job is to help the user understand their existing data clearly; deciding what to do about it — including any strategic, operational, or structural change — is always the user's call, made with an advisor if they want one. If you notice yourself about to write "you might want to," "consider," "worth exploring," or similar language pointed at a business decision (rather than a follow-up question about the data itself), stop and redirect to an advisor instead. This applies whether the suggestion is about a specific tactic (e.g. what deposit percentage to request, how to restructure payment terms) or a broader strategic direction (e.g. diversifying income sources, changing which clients to prioritise, growing a particular part of the business) — the scope of the suggestion doesn't matter, only whether it's telling the user what to do
+- Give a verdict on whether a specific client or supplier relationship is "worth it" or should be kept or dropped — even if the user asks this directly. You can present the factual payment history and timing clearly, but stop short of a "bottom line" judgement on the relationship itself (e.g. "they're a solid client" or "worth keeping on"). Treat this the same as other out-of-scope business-relationship advice: give the user the data, then suggest that decision is theirs to make (optionally with an advisor), rather than making it for them
 
 ---
 
@@ -320,7 +322,7 @@ You have access to the user's financial data through a set of tools. Every answe
 - GST rate: 10%. Registered businesses collect GST on taxable sales and claim GST credits on business purchases
 - BAS (Business Activity Statement): filed quarterly with the ATO, aligned to the Australian financial year. Q1 = Jul–Sep, Q2 = Oct–Dec, Q3 = Jan–Mar, Q4 = Apr–Jun
 - Superannuation: employer contributions are 11% of ordinary time earnings (FY2025 rate)
-- PAYG instalments: sole traders with tax owing above a threshold pay quarterly income tax instalments to the ATO — these are not GST and are not deductible
+- PAYG instalments: sole traders with tax owing above a threshold pay quarterly income tax instalments to the ATO — these are not GST and are not deductible. Important: "PAYG" refers to two genuinely different things, and answers must not conflate them. "PAYG withholding" is what a business withholds from an *employee's* wages and remits to the ATO — it only applies if the business has staff. "PAYG instalments" are prepayments of the *business owner's own* income tax (most relevant for sole traders) — these apply regardless of whether the business has any employees at all, since they're about the owner's personal tax, not payroll. A sole trader with zero employees can still have PAYG instalment obligations; "no employees" does not mean "no PAYG obligations." If a question touches on either PAYG concept, be explicit about which one you're referring to, and address both if the question is broad (e.g. "do I have payroll obligations")
 - Financial year: 1 July – 30 June
 - Always use AUD. Never reference USD or other currencies
 
@@ -334,10 +336,38 @@ Always retrieve data using your tools before answering. Structure your response 
 2. Brief context — what does this mean for the business?
 3. If relevant — a follow-up the user might want to ask
 
+When a user asks about their balance, income, or position using present-tense language like "right now," "currently," or "at the moment," answer with the most recent figure in the data, but note explicitly that it's the last recorded figure in the dataset, not necessarily today's real position — e.g. "as at 30 June 2025 (the most recent data I have), your balance was $46,278.77." Don't state a historical closing figure as if it were confirmed to be the literal current balance; the data has a fixed end point, and the user should know that's what they're seeing.
+
+When answering questions about invoices, check the `direction` field the tool returns before saying anything about who owes whom — invoices are either "payable" (a bill the business owes a supplier) or "receivable" (an invoice the business issued, owed to it by a client). These are opposite directions of money flow. Never assume all invoice data represents one direction by default; state the correct direction explicitly if there's any chance of confusion (e.g. "this is money you owe Pepe's Milk" vs "this is money owed to you by a client").
+
+When you mention two or more related outstanding amounts together (e.g. multiple overdue or unpaid invoices contributing to the same cash flow picture), also state their combined total explicitly — don't leave the user to add up figures you've already retrieved and listed separately.
+
+If a search term could match multiple distinct jobs, projects, or invoices with similar names (e.g. "Tarneit Stage 1" and "Tarneit Stage 2" for the same client), and the question uses singular phrasing that implies one specific job rather than all related work (e.g. "the Tarneit job," not "all my Tarneit work"), retrieve and answer about the single most specific match rather than silently combining multiple distinct jobs into one merged total. If it's genuinely unclear which one is meant, say so and ask, rather than guessing by merging them.
+
+When a client or supplier only has one invoice in the whole dataset (no prior history), note that this is a new/first-time relationship — that's meaningful context for interpreting the data (e.g. a large first invoice paid promptly is a strong first impression worth flagging), not just another data point to list alongside established, recurring counterparties. Describing that a new relationship *looks* promising based on its data (large first invoice, paid early) is a factual, descriptive interpretation — that's different from recommending an action the user should take about it (e.g. "you should pursue a retainer with them," "worth reaching out about ongoing work"), which stays out of scope under the business-advice principle above. Characterise the pattern; don't recommend acting on it.
+
+When reviewing invoice data for anomalies or unusual activity, always check the `notes` field for escalation flags — a solicitor referral, debt collector engagement, or write-off — and surface these explicitly. These are the most important business-risk signals available and should never be dropped even when summarising many findings at once; if you're not sure whether something counts as a serious escalation, err on the side of naming exactly what the notes field says rather than paraphrasing it into a milder-sounding category (e.g. don't say "no debt collector involved" when the real note says "referred to a solicitor" — those are two different things, and reporting the absence of one doesn't mean the other isn't happening).
+
+Whenever you report a revenue or income figure, state both the GST-inclusive and GST-exclusive amount. The GST-inclusive figure is what came into the account, but the GST component isn't the business's money — it's being held for the ATO. Making that distinction explicit is core to the "understand your own numbers" value of this app, not optional extra detail.
+
 Example:
 User: "What was my biggest expense last month?"
 Good: "Your biggest expense in March was rent at $3,200 (ex GST). That's 18% of your total expenses for the month. Would you like to see a full breakdown of March expenses by category?"
 Bad: "Your expenses appear to be quite high. You should review your spending."
+
+Example:
+User: "What was my total revenue for January?"
+Good: "Your total revenue for January was $24,602.40 inc. GST — of that, $22,365.82 is ex-GST (yours to keep), and $2,236.58 is GST you're holding on behalf of the ATO."
+Bad: "Your total revenue for January was $24,602.40." (states the figure but never separates out the GST component, so the user can't tell what's actually theirs)
+
+When a user asks "how much did I bring in / receive / make" for a period, answer with cash actually received (use total_amount_cash_received from get_transactions where available), not invoiced-but-unpaid amounts. If any income in that period is still outstanding, mention it separately rather than folding it into the headline figure — e.g. "you received $19,030 in June, plus you invoiced a further $8,470 that's still outstanding." Only use the full accrual total if the user specifically asks what they've invoiced or billed, as distinct from what they've been paid.
+
+When a user asks a broad "how's my balance/cash position looking" style question (rather than asking about one specific month), don't just report the most recent month's own opening-to-closing movement — that's only a snapshot of one month's activity, not the trend the question is actually asking about. Retrieve the balance at the start of the earliest month in the data too, and frame the answer around the change across the whole period (e.g. "you've grown from $8,234.50 in January to $46,278.77 now — a $38,044.27 increase over the financial year"), since that full trajectory is what actually answers "how am I doing."
+
+Example:
+User: "What's my bank balance looking like at the end of the financial year?"
+Good: "You closed the financial year with $46,278.77 — up from $8,234.50 back in January, a $38,044.27 increase over the six months. June itself was a strong month too: you started the month at $40,614.63 and grew by $5,664.14."
+Bad: "Your closing balance for June was $46,278.77, up from an opening balance of $40,614.63." (only shows June's own movement, missing the full-year growth story the question is actually asking about)
 
 ## Tax-adjacent questions
 When a user asks something that touches on tax (deductions, GST treatment, BAS):
@@ -345,11 +375,18 @@ When a user asks something that touches on tax (deductions, GST treatment, BAS):
 2. Provide relevant general AU tax context
 3. Always close with: "For advice specific to your situation, I'd recommend speaking with a registered tax agent or BAS agent."
 
+This whole section applies when the user's question is actually about tax, or when you can't avoid touching on claimability while answering something else. It does NOT mean you should proactively raise tax treatment on a question that wasn't about tax at all. If a user asks about an anomaly, a cash flow pattern, or an expense category, and one of the relevant transactions happens to be something like a repair, just describe the transaction (amount, date, vendor, category) — don't volunteer an aside about how the ATO treats repairs vs improvements, or suggest the user check with a tax agent, unless they actually asked something tax-related. Bringing up deductibility unprompted is a bigger departure from the question than just describing the data, even when the tax content itself is correctly hedged.
+
+"General AU tax context" has a specific, narrow meaning: naming *what concepts, distinctions, and schemes exist* (e.g. "the ATO distinguishes repairs from improvements," "there's a logbook method for claiming vehicle costs," "an instant asset write-off scheme exists for eligible small businesses"). It does NOT mean applying specific numbers, thresholds, percentages, or durations to the user's situation — even as a hedged illustration. Do not state a specific dollar threshold (e.g. "$20,000"), a specific rule duration (e.g. "12 continuous weeks"), or a specific percentage (even a hypothetical example like "if your logbook shows 75%") — naming the exact figure makes it feel authoritative regardless of how it's hedged, and these are exactly the numbers that change or vary by circumstance. Instead, say that a threshold/percentage/duration exists and applies, and that the tax agent will confirm the actual figure for their situation. Similarly, never state that a specific expense category "is" or "is generally" deductible as if that's settled (e.g. "repairs are immediately deductible") — say that the ATO draws a distinction (e.g. between repairs and improvements) and that which side of it applies here is for the tax agent to confirm, not something you determine.
+
+Never speculate about the scale of the user's tax liability, even hedged with "could" or "may" — this includes projecting what their full-year income or tax bill might be from partial-year data, or characterising whether a stated instalment/payment amount seems adequate, low, or high relative to their likely liability. That determination requires their complete financial picture and is exactly what a tax agent is for. This restriction is about the user's *tax liability* specifically — it doesn't mean avoiding simple arithmetic on their own recorded data. If they've paid four quarterly PAYG instalments of $1,800 each, stating that this totals $7,200 paid so far is a plain, safe sum of their own transactions, not a liability estimate — say it directly. The line is: totals of what's already happened are fine; any claim about what they'll owe, or whether that total is enough, is not.
+
 Example:
 User: "Can I claim my home office expenses?"
-Good: "Your data shows $1,840 in home office expenses this quarter, recorded as a partial business-use portion. Generally, sole traders in Australia can claim a deduction for the business-use percentage of home office costs — including rent, internet, and electricity. The ATO accepts either the fixed rate method (67c/hour) or the actual expenses method. For advice on which method suits your situation and what records you need, I'd recommend speaking with a registered tax agent."
+Good: "Your data shows $1,840 in home office expenses this quarter, recorded as a partial business-use portion. Generally, sole traders in Australia can claim a deduction for the business-use percentage of home office costs. The ATO offers a couple of different methods for calculating this, each with its own rules about what you can include and what records you need — a registered tax agent can help you work out which one applies to you and what the actual claimable amount would be."
 Bad: "Yes, you can claim those expenses."
 Bad: "I can't answer questions about tax deductions."
+Bad: "The ATO accepts either the fixed rate method (67c/hour) or the actual expenses method." (states a specific rate as settled fact, rather than naming that methods exist without applying a number)
 
 ## Out-of-scope questions
 When a user asks something outside your scope (business structure, legal advice, investment):
@@ -367,9 +404,13 @@ Bad: "I can't answer that question."
 # GUARDRAILS
 - Never present general tax information as personalised advice
 - If the data is ambiguous or incomplete, say so explicitly — do not fill gaps with assumptions
-- If a question requires data you cannot retrieve, tell the user what data is missing and why
+- If the user's question uses a vague time reference ("lately," "recently," "these days," "how's it been going") rather than naming a specific period, don't silently pick an interpretation and answer as if it were the obvious one. Say explicitly what period you're using and why (e.g. "since you didn't specify a period, I'm comparing the last month against your 6-month average — let me know if you meant something more specific"), so the user can see the assumption and correct it if it's wrong. This is different from the earlier rule about resolving "last month" to the most recent month in the dataset — that rule handles a specific, well-defined phrase with exactly one correct meaning within the dataset's timeframe. Words like "lately" and "recently" don't have one specific meaning at all — different users could reasonably mean the last week, the last month, or the last quarter — so treat these as genuinely ambiguous every time, even though your instinct may be to resolve them the same confident way you resolve "last month."
+- If a question requires data you cannot retrieve, tell the user what data is missing and why. If the question asks about a period outside your data (e.g. an earlier financial year), explicitly name the period your data DOES cover (e.g. "my data only covers January–June 2025, FY2025") rather than a vague reference like "a more recent period" — the user needs the actual date range to know what you can and can't help with, not just that some unspecified range exists
 - Never suggest the user avoid, minimise, or delay tax obligations
 - If the user seems to be in financial distress (e.g. mentions inability to pay staff or ATO debt), respond with empathy and suggest they contact a financial counsellor or the ATO's payment plan service
+- This applies regardless of the question's category: if your answer mentions whether an expense can be claimed, whether GST can be credited, or any other deductibility/claimability judgement — even in passing, on a question that isn't primarily about tax — treat it the same as a tax-adjacent question. Give general context only, and close with a recommendation to speak with a registered tax agent
+- Do not speculate about the technical cause, severity, or diagnosis of a flagged expense — e.g. what specifically was wrong with a piece of equipment, or how serious a repair was. Describe what the transaction data actually shows (amount, date, category, vendor) without venturing a technical opinion you can't verify from the data
+- When you flag an anomalous or unusual expense, note whether that period's expenses exceeded income, if they did — this connects the anomaly to its actual cash-flow impact rather than leaving it as an isolated fact
 
 ---
 
@@ -725,7 +766,7 @@ Note: the datasets don't currently store an explicit `date_range` field on `busi
 
 ### Iteration notes
 
-**23/07/2026** — First fix attempt was directionally correct but ambiguous. The instruction told Claude "this dataset's most recent month is June 2025... resolve relative time periods relative to June 2025" — Claude read "relative to June 2025" as "treat June 2025 as the current month," so "last month" resolved to **May 2025**, not June. A defensible reading of the wording, but not the intended one: in a 6-month mock dataset, "last month" should mean the most recently completed month *in the data itself* (June), not the month before it.
+**[add date]** — First fix attempt was directionally correct but ambiguous. The instruction told Claude "this dataset's most recent month is June 2025... resolve relative time periods relative to June 2025" — Claude read "relative to June 2025" as "treat June 2025 as the current month," so "last month" resolved to **May 2025**, not June. A defensible reading of the wording, but not the intended one: in a 6-month mock dataset, "last month" should mean the most recently completed month *in the data itself* (June), not the month before it.
 
 **Refined fix** — made the instruction state the resolution directly instead of leaving Claude to derive it:
 
@@ -748,9 +789,9 @@ Also confirmed: each failed attempt happened inside the *same* running session, 
 
 **Lesson for interviews:** the first attempt at fixing an ambiguity bug can introduce a *new*, more subtle ambiguity rather than removing it outright. The fix isn't "correct" until it removes the interpretive step from Claude entirely — stating the resolved answer directly ("last month" = X) is more robust than stating a reference point and expecting the same inference every time.
 
-**23/07/2026** — Confirmed fix by re-asking "What was my biggest expense last month?" in a fresh session after the refined version; expect it to now resolve directly to June 2025 (Rent, $5,500).
+**[add date]** — Confirmed fix by re-asking "What was my biggest expense last month?" in a fresh session after the refined version; expect it to now resolve directly to June 2025 (Rent, $5,500).
 
-**23/07/2026** — Full re-run of all 12 Phase 2 manual test questions through the real, wired-up app (`python src/main.py`), after the time-context fix. All 12 answers now match the Phase 2 manual chat test results. This closes the loop opened by the earlier finding above (the January revenue discrepancy): once real tool use, the time-context fix, and grounded data retrieval were all in place, the app reproduces the same figures and behaviours that were designed and validated in Phase 2 — including the BAS-liability flag, the commercial-premises home-office nuance, and the financial-distress response. This is the first point in the project where the system prompt's designed behaviour and the running application are fully verified to agree.
+**[add date]** — Full re-run of all 12 Phase 2 manual test questions through the real, wired-up app (`python src/main.py`), after the time-context fix. All 12 answers now match the Phase 2 manual chat test results. This closes the loop opened by the earlier finding above (the January revenue discrepancy): once real tool use, the time-context fix, and grounded data retrieval were all in place, the app reproduces the same figures and behaviours that were designed and validated in Phase 2 — including the BAS-liability flag, the commercial-premises home-office nuance, and the financial-distress response. This is the first point in the project where the system prompt's designed behaviour and the running application are fully verified to agree.
 
 ---
 
@@ -793,9 +834,699 @@ Also noted, separately: the dataset's `income_by_client` summary field (a rollup
 
 ### Iteration notes
 
-**23/07/2026** — Re-ran the retainer-vs-project question after the fix; expect the tool-computed project income figure to now match the invoices-array total directly, with no discrepancy for Claude to flag.
+**[add date]** — Re-ran the retainer-vs-project question after the fix; expect the tool-computed project income figure to now match the invoices-array total directly, with no discrepancy for Claude to flag.
 
 **Lesson for interviews:** manually generated mock data can contain the same category of bug real production data has — inconsistent event logging across sources. The interesting result here wasn't that the bug existed, but that the system's own guardrails (grounded-answers-only, flag ambiguity rather than guess) caught it without being specifically tested for it. That's a better argument for why grounding and honesty guardrails matter than a synthetic eval case would have been.
+
+---
+
+## P10 — Automated eval runner
+
+**Phase:** 3 — Claude API engineering  
+**Used in:** `src/eval_runner.py`  
+**Date written:** [add date]
+
+### Purpose
+Runs all 50 cases from `evals/test_cases.json` (P06) against the live app automatically, scoring each one pass/fail, instead of the manual review the project used up to this point. This is the last piece of P06's original intent — "in Phase 3 these will drive an automated eval runner that scores Ledger AI responses without manual review."
+
+### The key design decision: an LLM judge, not string matching
+Inspecting the actual generated eval cases showed `must_include` fields are a mix of two different kinds of criteria:
+- **Literal values** — e.g. `"$24,602.40"` — that could, in principle, be checked with a plain substring match
+- **Descriptive criteria** — e.g. `"GST breakdown"`, `"income figure ex-GST"`, `"specific dollar amount"` — that describe *what the answer should do*, not text the answer will literally contain. A correct answer that says "you collected $2,238.40 in GST on $24,602.40 of sales" satisfies "GST breakdown" in spirit but will never contain the literal phrase "GST breakdown"
+
+A naive scorer checking `if criterion in answer_text` would therefore fail almost every case incorrectly, regardless of how good the actual answer was. The runner instead sends the question, the expected behaviour, the must_include/must_not_include lists, and the actual answer to a separate Claude call acting as a judge, and asks it to assess each criterion "in spirit." This is the standard approach for evaluating natural-language outputs against natural-language criteria (an "LLM-as-judge" pattern).
+
+### Other design decisions
+
+| Decision | Reasoning |
+|----------|-----------|
+| A fresh `LedgerAgent` per case | Each eval question is a standalone, single-turn scenario, not part of a multi-turn conversation — carrying history over between unrelated eval cases would contaminate results (this is the same lesson learned in P08, where a poisoned session gave misleading test signal) |
+| A separate, lighter judge model (`claude-sonnet-4-6`) rather than reusing the agent's own model | The judge's task — comparing an answer against explicit criteria — doesn't need the same reasoning budget as answering an open financial question, so a lighter model keeps 50-case runs affordable |
+| Judge calls are wrapped so they can never crash the run | A malformed judge response (e.g. non-JSON output) is recorded as a failed case with a reason, rather than halting the whole 50-case run |
+| Results written to a timestamped file under `evals/results/` | Keeps a permanent record of each eval run rather than overwriting the last one — supports the regression-testing use case described back in P06 ("running the same questions repeatedly lets you detect if a prompt change that fixes one thing breaks another") |
+| `--limit=N` and `--persona=X` flags | Lets a smoke-test run on a handful of cases (cheap) before committing to a full 50-case run (more expensive) |
+
+### Cost note before running this
+Running all 50 cases means 50 full agent conversations (each with real tool-use calls) plus 50 judge calls. `MODEL` in `src/agent.py` has now been switched from `claude-opus-4-8` to `claude-sonnet-4-6` (confirmed [add date]), which should keep a full 50-case run considerably cheaper than the ~$10 Phase 3 scaffold session. Still worth running `python src/eval_runner.py --limit=5` first as a cheap smoke test to confirm the runner itself works correctly before committing to all 50.
+
+### Iteration notes
+
+*Add notes here after the first eval run — overall pass rate, and pull out any specific cases that fail so they can be traced back to a prompt, tool, or data fix (the way P08 and P09's findings were).*
+
+---
+
+## P11 — Eval smoke test findings (data reconciliation + guardrail gap)
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### What happened
+Ran the P10 eval runner as a 5-case smoke test on the café persona before committing to the full 50 cases. 2 of 5 cases failed — both genuine findings, not judge errors.
+
+### Finding A — café dataset had the same category of bug as the freelancer dataset, worse in scale
+`eval_001` ("What was my total revenue for January?") returned **$35,337.70** — the app's own `account_balances` summary for January says **$24,602.40**. Investigating showed this wasn't a one-off: the raw `transactions` list didn't reconcile with `account_balances` for 5 of the 6 months (income overstated by $4,300–$10,735 per month; expenses understated by a similar range). Only June's two data sources agreed.
+
+This had gone undetected through all of Phase 2's manual testing and the earlier Phase 3 live-testing session (café: 12/12, reported in P08's closing note) because whichever tool path got used for a given question happened to return the "intended" figure. Switching the agent's model from Opus to Sonnet (per this session) likely changed which tool Claude reached for on this exact question, which is what exposed the mismatch — the model switch didn't cause the bug, it just stopped masking it.
+
+Unlike the freelancer duplication bug (P09), there was no clean, identifiable duplicate transaction to remove — for January specifically, the discrepancy ($10,735.30) was larger than any single transaction in the month, so no one-line fix existed for every month.
+
+**Fix — three passes were needed to get this right, documented honestly:**
+
+*Pass 1:* `account_balances` was kept as ground truth. Each month's income and expense transactions were proportionally rescaled so their sums reconciled exactly to the stated totals.
+
+*Pass 2 — a new problem introduced by Pass 1:* the blanket proportional rescale had also altered the café's one deliberately planted anomaly (P01) — the $2,380 espresso machine repair — changing it to $3,409.47. This surfaced when the eval smoke test was re-run: `eval_005` failed again, but for a *different* reason than before (the judge flagged an "invented" transaction amount and "fabricated vendor details" — actually a correct, grounded answer against now-incorrect data, not a hallucination). Fixed by holding the anomaly fixed at its original $2,380 and rescaling only the *other* transactions in that month to absorb the reconciliation.
+
+*Pass 3 — a second, more serious problem found while checking Pass 2's work:* the same blanket rescale had also distorted **rent**, a cost that should be flat every month, into wildly different values per month ($5,841 Jan, $8,298 Feb, $6,076 Jun) — a realism problem undermining the exact "grounded, believable data" quality this project is built on. Worse, while implementing the rent fix, an arithmetic error was introduced: GST was recomputed using `amount × 10/11` instead of the correct `amount ÷ 11` (an order-of-magnitude error), and applied indiscriminately to *every* expense transaction — including wages, superannuation, and BAS payments to the ATO, none of which carry GST under Australian law. Final correction: rent fixed at $5,500/month across all six months; GST recomputed correctly (`amount ÷ 11`) for every taxable expense category; GST explicitly zeroed for wages, superannuation, BAS payments, and council rates (all GST-free under Australian GST law); the planted anomaly re-verified at exactly $2,380 / $216.36 GST. Final validation: every month's income and expense totals reconcile to the cent against `account_balances`, GST is correct across every transaction category, rent is consistent, and no negative values exist anywhere.
+
+**Why this sequence is worth keeping in the record, not smoothing over:** each pass fixed a real problem and, in two cases, introduced a new one — a smaller-scope fix (single transaction) surfaced a realism problem (rent), and fixing that surfaced an actual arithmetic bug in the fix itself (GST formula) with real domain consequences (charging GST on wages, which is simply wrong under Australian tax law). The lesson generalises well beyond this project: a data or code fix isn't verified by "the test I was chasing now passes" — it needs its own independent validation pass, checking dimensions the original bug report never mentioned. Here, validating GST correctness by category (not just the top-line reconciliation) was what caught the final, most serious error.
+
+### Finding B — a real, previously undiscovered guardrail gap
+`eval_005` (an anomaly-detection question, not a tax question) got an answer that said the espresso machine repair's GST *"can be claimed back as a GST credit on your BAS."* This is a specific claimability statement given without the tax-agent-referral treatment — because the P04 guardrails only enforced that referral in the tax-adjacent question category, not for tax/GST commentary that comes up incidentally in an otherwise unrelated answer.
+
+**Fix:** added a new guardrail to P04: the tax-agent-referral rule now applies any time the answer touches GST claimability or deductions, regardless of the question's category.
+
+### Finding C — a legitimate, previously-unnoticed gap in the answer format itself
+Re-running the smoke test after fixing Findings A and B confirmed the dollar figure was now exactly correct ($24,602.40), but `eval_001` failed again for a different reason: the answer never separated GST-inclusive from GST-exclusive income, even though the eval case explicitly expects both figures. Checked whether this was a new regression — it wasn't; even the very first successful live test of the app (before any of this session's fixes) gave revenue without an ex-GST breakdown. It's a consistent, pre-existing gap that the earlier Phase 2/3 manual "12 questions" check never specifically tested for (it checked "cites exact figures," not "separates GST correctly").
+
+This is a genuinely valuable fix, not just an eval-satisfying one: for a GST-registered SME owner, knowing that only part of a revenue figure is actually theirs (the rest is being held for the ATO) is core to the app's whole value proposition, not an edge case.
+
+**Fix:** added an explicit rule to P04's answer-format guidance — any time a revenue/income figure is reported, state both the GST-inclusive and GST-exclusive amount, with a short explanation of why the difference matters (it's not the business's money). Added as its own worked example alongside the existing expense-answer example, rather than leaving it as an inferred behaviour.
+
+### Why all three findings matter
+This is now the second time (after P09) that the eval process caught something a designed test case wasn't specifically built to catch, and the first time it caught a genuine gap in the *prompt's own instructions* rather than the underlying data. Together, Findings A–C show the eval suite doing its actual job across all three layers of the system — data, guardrails, and answer format — not just one. Also worth noting for interviews: the model swap (Opus → Sonnet) that started this whole investigation looked like a pure cost optimisation, but had the side effect of exposing a dormant data bug — changing which model powers an agent can change *behaviour*, not just cost, even when the system prompt and tools stay identical.
+
+### Iteration notes
+
+**[add date]** — Re-ran the 5-case smoke test after the Finding A/B fixes. `eval_005` passed cleanly (anomaly correctly identified at $2,380, no tax advice given). `eval_001` still failed, but on a new and different criterion (GST breakdown missing) — confirming the dollar-figure bug was genuinely fixed, and surfacing Finding C above.
+
+**[add date]** — Applied the Finding C fix to P04. Next: re-run the smoke test once more to confirm `eval_001` passes on all four criteria, then proceed to the full 50-case run.
+
+---
+
+## P12 — Eval judge false positive (the judge, not the app, was wrong)
+
+**Phase:** 3 — Claude API engineering  
+**Used in:** `src/eval_runner.py` judge prompt  
+**Date:** [add date]
+
+### What happened
+After fixing Findings A–C in P11, `eval_001` still failed the smoke test, but on a new criterion: "invented figures," citing a $1,748.32 Uber Eats sub-total in the answer. Rather than assume this was another real bug, it was checked directly against the dataset first: `data/cafe_bondi_brew.json` has exactly two January Uber Eats transactions, $441.95 and $1,306.37, summing to precisely $1,748.32. The figure was completely real and grounded — the app's answer was correct.
+
+Notably, the judge's own reasoning shows it doing (and passing) the exact same kind of check for the GST split in the same answer ("$22,365.82 × 1.1 = $24,602.40 — actually this checks out") and then, in the very next sentence, failing the case anyway over a different figure it never verified at all. The judge demonstrated the right method and then didn't apply it consistently.
+
+### Why this matters
+This is a limitation of the LLM-as-judge pattern itself, not of Ledger AI. A `must_not_include: "invented figures"` criterion can nudge a judge toward treating any sufficiently specific, granular number as suspicious — exactly backwards, since a genuinely grounded, tool-use-driven answer *should* cite individual line items and sub-totals, not just headline numbers. Worth being explicit in the eval design: the judge needs its own instruction to verify a figure's consistency with the rest of the answer before flagging it, the same way a human reviewer would, rather than pattern-matching on "does this look like a made-up number."
+
+### Fix
+Tightened `JUDGE_SYSTEM_PROMPT` in `src/eval_runner.py` with an explicit instruction: before flagging any figure as invented, check whether it's arithmetically consistent with the rest of the answer or a plausible component of a stated total, and only fail the criterion if the figure is inconsistent with the answer's own numbers or clearly fabricated context (a named person, invoice number, or event with no basis in the question) — not simply because it's specific.
+
+### Iteration notes
+
+*Add notes here after re-running the smoke test with the corrected judge prompt — confirm eval_001 passes cleanly (5/5), then proceed to the full 50-case run.*
+
+**Lesson for interviews:** building an automated eval system doesn't remove the need for judgment — it moves the judgment problem one level up, into the judge itself. This project ended up needing two rounds of debugging: debugging Ledger AI's answers against the eval suite, and then debugging the eval suite's own judge against the app's genuinely correct answers. Both are real engineering work, and conflating "the eval failed" with "the app is wrong" would have led to fixing something that was never broken.
+
+---
+
+## P13 — Electrician & freelancer eval smoke tests
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### Electrician smoke test — two real findings, both fixed
+
+Running the eval runner on 5 electrician cases surfaced two genuine issues, neither a judge false positive this time.
+
+**Finding A — the same duplicate-transaction pattern as P09 (freelancer), but systemic, not isolated.** `eval_019` ("What did I bring in for June?") returned $35,970 instead of the correct figure, because INV-2523 appeared twice in the transactions ledger. Rather than assume this was a one-off like the single freelancer invoice in P09, the whole dataset was scanned for the same pattern first — it turned out to affect **9 invoices**, not 1. For the 8 that are genuinely paid, the "issued" duplicate was removed and the "paid" entry kept (same rule as P09). The 9th, INV-2523, is still outstanding/unpaid — its second entry was misleadingly labelled "final draw" even though no payment has occurred, so that duplicate was removed and the "issued" entry kept instead. Verified: total income transactions across the whole dataset now match the sum of all invoices (paid + outstanding) exactly, $84,458.
+
+**A deeper issue this surfaced, deliberately left as an open design question rather than papered over:** after the data fix, June's income transactions summed to $27,500 — but this *still* includes INV-2523's $8,470, because that invoice was *issued* in June even though it hasn't been *paid*. Whether "type: income" in this dataset should mean "invoiced" (accrual) or "cash received" (cash-basis) was never made explicit, and the two events (issued, paid) are both tagged the same way. This is noted in `ARCHITECTURE.md` as a real limitation worth addressing if this became a production system — the fix here was applied to the *eval case*, not the *data or tool*, because it's genuinely ambiguous which interpretation is "right" without a product decision, not a bug with one correct answer.
+
+**Fix applied to the eval case:** `eval_019` itself had a self-contradiction — its own `must_not_include` explicitly forbade counting invoices not yet paid, while its `expected_behaviour` and `must_include` included INV-2523's $8,470 in the expected total anyway, and even the stated total ($27,740) didn't arithmetically match its own listed components ($27,500). Corrected `evals/test_cases.json` to expect $19,030 (cash-basis: only the three invoices actually paid in June — INV-2521, INV-2522, INV-2508), explicitly excluding INV-2523, and resolving the internal contradiction.
+
+**Finding B — a real, separate tool bug.** `eval_016` failed because the answer didn't mention that INV-2505 (Bergman) had been referred to a solicitor. Checked the raw data first: the detail *is* there, in the invoice's `notes` field — but `_normalise_invoice()` in `src/tools.py` was silently dropping the `notes` field during normalisation, so Claude never had access to it at all. This wasn't a prompt or reasoning failure; the information was structurally unavailable to the model. Fixed by adding `notes` to the normalised invoice shape.
+
+### Why this matters
+This session repeatedly required checking *which* layer a failure belonged to — data, tool, prompt, judge, or the eval case itself — before touching anything, rather than assuming the app was wrong by default. Three of the last four "failures" across this project (P11's café findings, P12's judge false positive, and this session's electrician findings) turned out to require fixes in different places: the mock data, the eval judge, and the eval suite's own test cases, in addition to one genuine tool bug (Finding B). Knowing which one to fix — and confirming it with direct evidence before editing anything — is arguably the more transferable skill here than any single fix.
+
+### Iteration notes
+
+*Add notes here after re-running the electrician smoke test with all fixes applied — confirm eval_016 and eval_019 both pass, then check the freelancer persona's smoke test before the full 50-case run.*
+
+---
+
+## P14 — Closing the accrual-vs-cash-basis gap (follow-up to P13)
+
+**Phase:** 3 — Claude API engineering  
+**Used in:** `src/tools.py` (`get_transactions`), P04 system prompt  
+**Date:** [add date]
+
+### What happened
+Re-ran the electrician smoke test after the P13 fixes. `eval_016` now passed (the `notes` fix worked). `eval_019` still failed — but for exactly the reason anticipated and documented as an open question in `ARCHITECTURE.md`: the app's answer still included INV-2523's $8,470 as "brought in" income for June, even though that invoice remains unpaid. This wasn't a new bug; it was confirmation that the deeper design gap flagged in P13 was real and still live, since only the eval case and data had been fixed at that point — not the tool or prompt behaviour itself.
+
+### Decision: fix it, don't just document it
+Given the eval case and `ARCHITECTURE.md` had already committed to cash-basis being the correct interpretation for "what did I bring in" style questions, leaving the app's actual behaviour unfixed would have meant the documentation and the running code disagreed with each other. Chose to close the loop rather than leave this as a permanent known limitation.
+
+### Fix
+`get_transactions` now cross-references every income transaction against the `invoices` list (matching by invoice number extracted from the transaction description, the same `INV-\d{4}` pattern already used for duplicate detection in P09/P13 — so this works across all three personas without special-casing). It returns both:
+- `total_amount` — the full accrual total (unchanged, still available)
+- `total_amount_cash_received` — the same total minus any transaction tied to an invoice whose status isn't `paid`
+- `not_yet_received_count` and a `_linked_invoice_status` flag on any affected transaction, so the model can see *which* transactions were excluded and why, rather than the exclusion being invisible
+
+Added a matching instruction to P04: default to `total_amount_cash_received` for "how much did I bring in/receive" questions, mention any still-outstanding income separately rather than folding it into the headline figure, and only use the full accrual total if the user specifically asks what's been invoiced/billed rather than received.
+
+Verified directly against the electrician dataset before re-running the eval: `total_amount_cash_received` for June returns exactly $19,030, matching the corrected `eval_019` expectation, with INV-2523 correctly flagged as `outstanding` and excluded.
+
+### Why this is worth keeping as its own entry rather than folding into P13
+It's a good example of the difference between *documenting* a limitation and *deciding* whether to fix it. P13 correctly chose not to guess at a fix under time pressure, and wrote the ambiguity into `ARCHITECTURE.md` instead of a rushed patch — but the very next smoke test made clear the ambiguity had a real, defensible answer once the eval case's own logic was worked through properly, so it was worth resolving rather than leaving as permanent scope.
+
+### Iteration notes
+
+*Add notes here after re-running the electrician smoke test — confirm eval_019 passes, then re-check the freelancer persona's smoke test before the full 50-case run. Also worth noting in `ARCHITECTURE.md`: this fix resolves the ambiguity, so that document's "known limitation" framing may need a short follow-up note pointing back here.*
+
+---
+
+## P15 — Time-gap precision and an operational-advice guardrail gap
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### What happened
+`eval_018` (electrician, previously untested by the smoke test) failed on two genuine, independent findings — not a regression from any earlier fix, and not a judge error.
+
+### Finding A — "never estimate" wasn't applied to time gaps
+Asked to identify the materials-before-payment cash flow pattern, the answer described the JOB-2506 gap as "~6 weeks." The actual dates (materials 27 Jan, payment received 20 Mar) are exactly 52 days apart — confirmed directly against the raw transaction data, which even has this written into its own description ("paid 52 d[ays late]"). The identity section of P04 has always said "you do not guess, estimate, or generate figures — you retrieve them," but that principle had only ever been tested against dollar figures throughout this project. Nothing in the prompt explicitly extended it to date/time-gap calculations, so the model defaulted to natural, rounded language ("a few weeks") the same way a person would in casual conversation — reasonable general behaviour, wrong for a financial precision tool.
+
+**Fix:** added a sentence to P04's identity section explicitly extending the grounding principle to dates: calculate and state exact day counts rather than rounding to weeks/months.
+
+### Finding B — a real, previously-unenforced guardrail gap
+The same answer went on to suggest specific tactics: negotiating a deposit, setting up supplier trade credit, restructuring payment terms. Checking P04's "WHAT YOU CANNOT DO" list, none of the existing restrictions (tax, legal, investment, business-structure advice) actually cover this — operational/cash-flow-management suggestions were simply never addressed. This isn't a new behaviour either: the electrician's very first manual test (Phase 3, before any automated eval existed) produced the same kind of suggestions ("upfront deposits," "shorter payment terms," "materials line of credit") and it wasn't flagged as a problem at the time, because nothing was explicitly testing for it.
+
+**Fix:** added an explicit line to P04's "WHAT YOU CANNOT DO," treating operational/contractual strategy suggestions the same way business-structure advice is already handled — describe the pattern and the risk, then redirect to an accountant or advisor, rather than prescribing a specific tactic.
+
+### Why this is a good answer to "why does something always seem to be failing"
+Both findings are honestly the eval suite doing exactly its job: this is the first time `eval_018` specifically has been run through the smoke test, so it isn't a regression — it's the first time this particular combination of question and criteria has ever been checked. The project has now moved through data bugs (P11), a false-positive judge (P12), duplicate-transaction and tool-visibility bugs (P13), a genuine design ambiguity resolved with an actual fix (P14), and now two prompt-precision gaps that had been present since Phase 2 but never specifically tested. Each fix is real and durable; the "something's always failing" feeling is what iterative eval-driven development looks like when the eval suite is actually doing useful work, rather than a sign that fixes aren't holding.
+
+### Iteration notes
+
+*Add notes here after re-running the electrician smoke test with both P04 fixes applied — confirm eval_018 passes, then move to the freelancer persona smoke test and, if that's clean, the full 50-case run across all three personas.*
+
+---
+
+## P16 — Judge robustness fix + two more real guardrail gaps (café regression check)
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### What happened
+Re-ran the café smoke test to make sure the electrician-focused fixes in P14/P15 hadn't broken anything for café, since the P04 changes are global, not persona-specific. 2 of 5 café cases failed — one was a tooling bug, one was a genuine (pre-existing, previously undetected) guardrail gap re-surfaced by normal answer-to-answer variance.
+
+### Finding A — a real eval_runner robustness bug, not an app problem
+`eval_001` failed with "Judge did not return valid JSON." Checked the actual app answer first — it was completely correct on every criterion. The judge's own output had been cut off mid-JSON, almost certainly because `JUDGE_MAX_TOKENS=1024` wasn't enough once it had to write a full "reason" string for all 7 criteria (4 must_include + 3 must_not_include) on an answer that's gotten more detailed since the P04 GST-breakdown and precision fixes earlier in this session. This produced a false "fail" purely from a token budget limit, unrelated to answer quality.
+
+**Fix:** raised `JUDGE_MAX_TOKENS` to 2048, and instructed the judge to keep each "reason" to one short sentence — both reduce the chance of truncation, from either direction.
+
+### Finding B — `eval_005` failed on a criterion that's been in the eval suite since P06, but had never actually been triggered before
+`must_not_include: "diagnosis of the machine fault"` has existed in this eval case since the original 50-case suite was generated. This run's answer said the repair "suggests it was a significant fix, not routine maintenance" — genuine technical speculation about the mechanical issue, going beyond what the transaction data actually states (amount, date, vendor, category). Earlier runs of the same question hadn't included this kind of commentary, so the criterion had simply never been exercised until this particular answer happened to include it — this is normal LLM response variance surfacing a guardrail gap that was always there, not something the recent P04 changes caused.
+
+The same answer also missed `must_include: "expenses exceeded income"` — again, a criterion that's passed in some earlier runs and been missing in others, suggesting the model doesn't consistently connect a flagged anomaly to whether it coincided with expenses exceeding income, even though the underlying data has supported that connection since the P11 data fix.
+
+**Fix:** added two new lines to P04's guardrails: (1) don't speculate about the technical cause or severity of a flagged expense — describe what the data shows, not a technical opinion about it; (2) when flagging an anomaly, explicitly note whether that period's expenses exceeded income, connecting the anomaly to its actual cash-flow impact rather than leaving it isolated. Both are written as general, durable rules rather than narrow patches for this one eval case's exact wording.
+
+### Why this is worth understanding clearly
+This wasn't a regression from the electrician-focused fixes — none of P14 or P15's changes touch anomaly detection, technical speculation, or judge token limits. It's the eval suite continuing to do its job: every fresh run generates a genuinely new answer, and different answers exercise different criteria. A criterion sitting unused in `must_not_include` for several runs doesn't mean the underlying guardrail gap wasn't there — it means nothing had triggered it yet. This is also why persona-specific fixes need a broader regression check afterward (as done here) rather than assuming a fix scoped to one persona's failing case is fully isolated.
+
+### Iteration notes
+
+*Add notes here after re-running the café smoke test with both fixes applied — confirm eval_001 and eval_005 pass, then re-confirm electrician (P14/P15 fixes), then freelancer, before the full 50-case run across all three personas.*
+
+---
+
+## P17 — Three bugs found while preparing for the full 50-case run
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### Context
+With café and electrician both passing their 5-case smoke tests cleanly (electrician: 5/5, confirming P14/P15's fixes held), the next step was the freelancer smoke test before committing to the full 50-case run. Attempting `--persona=freelancer` returned "No cases run" — investigating this surfaced two latent bugs that would otherwise have silently affected the full run, plus one more judge over-strictness issue on the café side.
+
+### Finding A — a genuine, one-cent judge over-strictness (P12, recurring)
+`eval_001` failed again, flagging the Uber Eats ex-GST sub-total ($1,589.39) as "invented" because $1,589.39 × 1.1 = $1,748.29, not the stated $1,748.32 — a 3-cent discrepancy from rounding at the transaction level rather than the total level. This is the same category of issue P12 fixed (the judge correctly attempting arithmetic verification, but with no tolerance for the completely normal cent-level rounding that occurs whenever real financial figures are rounded at each calculation step). The P12 fix stopped the judge from flagging any specific figure as automatically suspicious, but hadn't given it a numeric tolerance for its own verification math.
+
+**Fix:** added explicit guidance to the judge prompt: allow for normal cent-level rounding (a difference of one or two cents between a calculated check and a stated figure is expected, not evidence of fabrication), only flag a figure as invented if it's inconsistent by more than a trivial rounding margin.
+
+### Finding B — freelancer eval cases were mislabelled, and would have silently failed the full run
+The eval suite's `persona` field for the freelancer's 15 cases was `"consultant"`, not `"freelancer"` — inconsistent with the actual persona key used everywhere else in the codebase (`agent.py`'s `PERSONA_FILES`, the `--persona` CLI flag, the dataset filename). This wasn't just a minor labelling inconvenience: `agent.py` raises a `ValueError` for any unrecognised persona, and `eval_runner.py` catches exceptions per-case rather than crashing — meaning all 15 freelancer cases would have quietly failed with an "error" verdict during a full 50-case run, easy to miss inside a large batch of results, rather than surfacing as an obvious problem.
+
+**Fix:** relabelled all 15 cases in `evals/test_cases.json` from `"consultant"` to `"freelancer"`.
+
+### Finding C — the same class of bug, for the 5 "shared" edge-case questions
+The 5 cases tagged `persona: "shared"` (deliberately persona-agnostic edge cases — ambiguous time periods, out-of-range data requests, informal tone, multi-part questions) have the same problem: `"shared"` isn't a real persona `agent.py` can load either, so these would also have silently failed during a full run.
+
+**Fix:** `eval_runner.py` now substitutes a real persona (`cafe`, as a sensible default) when instantiating the agent for a `"shared"` case, while still reporting the case's original `"shared"` label in results — so the question runs against real data, but stays correctly categorised in the pass-rate breakdown.
+
+### Why this matters
+Both Finding B and C are a direct example of why the runner's per-case exception handling (deliberately built in P10 so one bad case can't crash a 50-case run) is a double-edged design choice: it's the right call for resilience, but it also means a structural bug affecting an entire category of cases won't announce itself loudly — it just shows up as a cluster of "error" verdicts that need to actually be read, not just counted. Both were caught here specifically *because* the freelancer smoke test was attempted before the full run, rather than skipping straight to it.
+
+### Iteration notes
+
+*Add notes here after confirming: (1) café passes 5/5 with the rounding-tolerance fix, (2) freelancer's smoke test now actually runs (`--persona=freelancer`), (3) then commit to the full 50-case run across all three personas plus the 5 shared edge cases.*
+
+---
+
+## P18 — Freelancer eval cases traced back to a data bug flagged weeks ago and left unfixed
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### What happened
+The freelancer smoke test (the last of the three personas to be checked) failed 3 of 5 cases, all with app answers that looked detailed, specific, and — unusually — internally consistent across two entirely separate questions (`eval_032` and `eval_034` independently agreed on the same 4 Renew Wellness invoices, same amounts, same dates). That consistency was the signal to check the data directly before assuming the app was wrong, rather than the eval case.
+
+### The root cause — traced to something already known and deliberately left alone
+Checking the `invoices` array directly confirmed the app was completely correct: Renew Wellness has 4 invoices totalling $6,820, not the 5 invoices / $8,140 the eval case expected. That $8,140 / 5-invoice figure turned out to be an *exact* match for the dataset's `income_by_client` summary field — the same field flagged back in P09's investigation as internally inconsistent with the real `invoices` array (Bloom & Co and Renew Wellness were both off by one invoice's worth, at the time). P09 deliberately chose not to fix `income_by_client`, reasoning that nothing in `src/` actually read it, so it was low priority.
+
+That reasoning turned out to be incomplete: nothing in the *running app* reads `income_by_client`, but the **eval suite generation** (P06) evidently did, when it was originally written. The error in that summary field propagated directly into at least three eval cases' expected figures (`eval_031`'s February total, `eval_032`'s full Renew Wellness figure, and `eval_034`'s Bloom & Co figure) — cases that had simply never been run through the automated eval process before this session, since freelancer was the last persona checked.
+
+### A second, independent issue found in the same case
+`eval_031` had a second problem, unrelated to the data bug: it expected February's income to be retainers-only ($4,840), explicitly on an accrual basis ("no project invoices were raised in February"). But a Renew Wellness invoice raised in January was actually *paid* in February (14 Feb) — and per the cash-basis convention deliberately established in P14 (for the electrician persona), "how much did I bring in" should answer on cash received, not cash invoiced. `eval_031` was written before that policy existed, so it was testing against the old, un-updated assumption. The app's answer ($6,160, correctly including the February-received payment) was right; the eval case was stale.
+
+### Fix
+- Recomputed `income_by_client` in `data/freelancer_clara_voss_creative.json` directly from the authoritative `invoices` array for every client (totals, invoice counts, retainer/project split, and a new `average_days_vs_due_date` field replacing the old, misleadingly-precise `average_days_to_pay`). Also corrected the Renew Wellness `notes` field, which still described a "14–22 days late" pattern that never matched the real per-invoice data (one early payment, three payments 4-7 days late).
+- Corrected `eval_031`, `eval_032`, and `eval_034` in `evals/test_cases.json` to match the verified real figures, and updated `eval_031` specifically to reflect the P14 cash-basis convention.
+
+### Why this is a genuinely important finding, not just another data fix
+This is the clearest example yet of a decision made earlier in the project ("leave `income_by_client` broken, nothing uses it") turning out to have a real, delayed consequence that wasn't visible at the time. The field genuinely wasn't used by the running app — but it *was* used, once, upstream, to help generate the eval suite that's now supposed to be the project's source of truth for correctness. A "nothing currently depends on this" judgement call is only ever true at the moment it's made; it's worth revisiting when a new automated process (like the eval suite) gets built later, rather than assuming an earlier decision is permanent.
+
+### Iteration notes
+
+*Add notes here after re-running the freelancer smoke test with all fixes applied — confirm eval_031, eval_032, and eval_034 all pass, then finally commit to the full 50-case run across all three personas and the 5 shared edge cases.*
+
+---
+
+## P19 — Judge false positive, round three: making the fix structural instead of incremental
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### What happened
+With electrician and freelancer both fully clean (5/5 each, confirming every fix in P13–P18 held), café's `eval_001` failed again on the "invented figures" criterion — the same revenue-by-source breakdown ($22,854.08 in-store + $1,748.32 Uber Eats = $24,602.40) that had already triggered false positives twice before (P12, then again with a one-cent rounding variant in P17). This time the judge didn't even attempt the arithmetic — it asserted the figures "cannot be verified as arithmetically consistent" despite them summing exactly, no rounding involved at all.
+
+### Why the first two fixes weren't enough
+Both P12 and P17 added *guidance* — "check consistency before flagging," "allow for rounding" — but guidance is a suggestion, not a requirement, and an LLM judge can simply skip the suggested step under time/token pressure and default back to its instinct that a granular, unrequested figure looks suspicious. Two rounds of asking nicely hadn't fixed the underlying tendency.
+
+### The fix — structural, not incremental
+Rather than adding a third increment of similar wording, the judge prompt was rewritten to require rather than suggest:
+- **Default assumption reversed explicitly:** a specific, plausible sub-total is REAL by default, not suspicious by default.
+- **Verification made mandatory:** the judge may only conclude a figure is invented if it shows the actual arithmetic in its `reason` field and that arithmetic reveals a genuine mismatch. "Cannot be verified" is explicitly ruled out as a valid reason on its own — if the judge hasn't done the sum, it isn't allowed to fail the criterion.
+- **A concrete worked example matching the exact recurring pattern** (the café's own in-store/Uber Eats breakdown) is now embedded directly in the judge prompt as a "do NOT fail this" reference case, rather than trusting the judge to generalise correctly from abstract guidance alone.
+
+### Why this is worth documenting as its own entry rather than folding into P12
+The pattern across three attempts is itself the interesting finding: incremental prompt patches (adding one more sentence of guidance) can fail to close a gap that a structural change (making a step mandatory and giving a concrete reference example) closes decisively. This mirrors a broader lesson about prompt engineering generally, not just eval judges — if the same failure mode keeps recurring after a guidance-based fix, the fix probably needs to change *what's required*, not just *what's suggested*.
+
+### Iteration notes
+
+*Add notes here after re-running the café smoke test with the restructured judge prompt — confirm eval_001 passes cleanly. If this specific false-positive pattern recurs a fourth time even after this structural fix, that would be a genuinely interesting finding in its own right about the limits of prompting a judge model, worth investigating with a completely different approach (e.g. a deterministic arithmetic check in code before the judge call, rather than relying on the judge to do the maths correctly at all).*
+
+---
+
+## P20 — Two new judge issues surfaced by the P19 fix itself, plus a minor data/prompt inconsistency
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### Context
+Re-running the café smoke test after P19 confirmed the original "invented figures" false positive was genuinely fixed — `eval_002`, `eval_004`, and `eval_005` all show the judge correctly showing its arithmetic and passing appropriately. But `eval_001` and `eval_003` failed for two *new* reasons, both side effects of the P19 fix itself.
+
+### Finding A — the judge started narrating outside the JSON structure
+Asking the judge to "show your work" (P19) had an unintended effect: it began writing free-text reasoning like *"Let me check the arithmetic carefully..."* before the JSON object, rather than putting that reasoning inside a JSON field. This violated the existing "respond with ONLY valid JSON" instruction and made the whole response fail to parse — a false "fail" caused entirely by a parsing problem, not the app or the judge's actual conclusion.
+
+**Fix (two layers, belt and suspenders):** `eval_runner.py` now extracts the outermost `{...}` block from the judge's response instead of assuming the entire response is pure JSON, so leading/trailing prose no longer breaks parsing. The judge prompt was also tightened to explicitly say all reasoning must go inside the JSON's `reason` fields, with a concrete example showing where a calculation like "$22,854.08 + $1,748.32 = $24,602.40" belongs.
+
+### Finding B — the judge started inventing its own "should be" formulas
+`eval_003`'s judge output computed *"Jordan super: $1,663.20 × 0.11 = $182.95 (answer says $174.64) ✗"* and used that to fail the case. Checked directly against `data/cafe_bondi_brew.json`: the app's $174.64 figure is the exact, correctly-retrieved stored payroll value — the mock data consistently uses a 10.5% super rate throughout (verified across January–June), not 11%. The judge assumed 11% from its own general knowledge, treated that assumption as ground truth, and flagged a correct answer as fabricated because it didn't match a rate the judge invented rather than verified.
+
+This is a different failure mode than the earlier "invented figures" false positives (P12, P17, P19), which were about checking whether an answer's *own* numbers were mutually consistent. This one is about the judge fabricating an *external* expectation for a figure the answer never claimed to derive via any formula — superannuation here is a retrieved fact from stored payroll records, not something Ledger AI computes live from a rate.
+
+**Fix:** added an explicit boundary to the judge prompt — arithmetic checks must stay internal to the answer's own stated numbers (e.g. does a stated net pay equal a stated gross pay minus a stated tax withheld), never an external "should be X%" assumption the judge supplies from its own knowledge. Superannuation is called out directly as an example of a figure that's normally retrieved, not derived, and therefore not something the judge has grounds to independently recompute and treat a mismatch against.
+
+### A related, lower-priority finding: P04's stated super rate doesn't match the mock data
+While verifying Finding B, it became clear that P04's "AUSTRALIA CONTEXT" section states superannuation as "11% of ordinary time earnings (FY2025 rate)," but the café dataset consistently uses 10.5% throughout. This hasn't caused a visible failure, because the app only ever retrieves the stored figure rather than recomputing it from the stated rate — but if a user directly asked something like "is my super being calculated correctly" or "what rate am I paying," Claude could cite the system prompt's "11%" while the actual data shows 10.5%, producing a confusing, self-contradictory answer. Noted here as a known inconsistency worth resolving in a future pass (either correct the mock data to 11%, or correct P04's stated rate to match the data), but not fixed in this session since it hasn't yet produced an actual failing case.
+
+### Iteration notes
+
+**[add date]** — Re-ran café after Finding A and B's fixes. `eval_003` passed cleanly, confirming the "external formula" fix worked. `eval_001` failed again, but differently this time: the JSON now starts correctly (no more leading prose — the Finding A fix worked too), but it's being cut off mid-generation before the object closes. Checked the eval suite: the heaviest case has 10 total criteria (`eval_016`, which has been passing reliably), so 2048 tokens clearly isn't a safe margin even with the "keep reasons to one sentence" instruction, since compliance with that instruction isn't perfectly reliable either. Raised `JUDGE_MAX_TOKENS` to 4096, and added explicit truncation detection (checking `response.stop_reason == "max_tokens"`) so any future recurrence reports itself clearly as a token-budget problem rather than a generic "invalid JSON" message that requires re-investigating from scratch each time.
+
+*Add further notes here after re-running the café smoke test with the larger token budget — confirm eval_001 passes. If all three personas are simultaneously clean at that point, proceed to the full 50-case run.*
+
+---
+
+## P21 — A cross-persona figure copied into the wrong eval case
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### What happened
+`eval_033` (freelancer, "what's my bank balance at end of financial year") failed, with the judge noting the answer didn't mention "growth from the January opening balance ($7,234.18)." That figure looked suspicious immediately — $7,234.18 is the café's January opening balance, not something that should appear in a freelancer eval case.
+
+Checked both datasets directly: the freelancer's actual January opening balance is **$8,234.50**; the café's is $7,234.18. These are two different, coincidentally-similar-looking numbers (both roughly $7,000–8,000, both featuring similar digits), and the eval case had simply picked up the wrong persona's figure — almost certainly a copy/paste or cross-referencing slip from when the 50-case suite was originally generated across all three personas in one batch.
+
+The app's answer was correct to never mention $7,234.18, since that number doesn't exist anywhere in the freelancer's data. The eval case itself had the error.
+
+### Fix
+Corrected `eval_033` in `evals/test_cases.json` to reference the freelancer's real January opening balance ($8,234.50), keeping the underlying expectation intact — that a "balance at end of financial year" question should contextualise with growth across the full year, not just the final month's movement — since that's a reasonable ask once the correct number is used.
+
+### Checked for the same pattern elsewhere in the suite
+Given this was a new category of bug (not a data reconciliation issue, not a duplicate transaction, not a judge false positive — a straightforward cross-contamination between personas), it was worth checking whether it was isolated or systemic. Scanned all 50 cases for any persona-distinctive marker (names, client names, business names, specific figures) appearing in a case tagged for a different persona. Result: clean — `eval_033` was an isolated one-off, not a pattern.
+
+### Why this is worth documenting even though it's a small fix
+It's a different failure category from everything else found in Phase 3 so far (P11's data reconciliation, P13/P18's duplicate transactions, P12/P17/P19/P20's judge behaviour). Worth keeping the taxonomy complete: an eval suite generated across multiple related datasets in one pass has a real, if small, risk of details bleeding between them, and it's cheap to check for systematically (as done here) rather than assuming a single caught instance is the only one.
+
+### Iteration notes
+
+*Add notes here after re-running the freelancer smoke test — confirm eval_033 passes. If café, electrician, and freelancer are all simultaneously clean, proceed to the full 50-case run.*
+
+---
+
+## P22 — Full-period context gap, and a missing manual prompt edit found during audit
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### Finding A — eval_033 was a real, recurring gap, not variance
+Unlike `eval_005`'s one-off miss (likely ordinary answer-to-answer variance), `eval_033` had failed consistently across multiple runs on the same criterion: the app never mentioned the January opening balance or full-financial-year growth when asked "how's my bank balance looking at the end of the financial year." Investigating showed this is a genuine, repeatable gap — the app was correctly reporting the most recent month's own opening-to-closing movement, but a broad "how am I doing" style question is actually asking about the trend across the whole period, not just the final month's snapshot.
+
+**Fix:** added explicit guidance to P04's answer-format section: for broad balance/cash-position questions (as opposed to a specific month), retrieve the earliest month's opening balance too and frame the answer around the full-period change, not just the most recent month's movement.
+
+### Finding B — a full audit of the live system prompt against every fix requested this session
+Given how many manual `prompts/system_prompt_v1.txt` edits had been requested across this session (P14, P15 ×2, P16 ×3), it was worth checking the actual live file directly rather than assuming everything landed. The user pasted the full file for review. Result: P15 and P16's five additions were all correctly present, word for word — that wasn't the cause of `eval_005`'s tax-advice slip after all (that one really does look like ordinary variance, since the rule that should have caught it was genuinely there).
+
+What *was* missing: the P14 cash-basis instruction (answer "how much did I bring in" with cash received, not invoiced-but-unpaid amounts). This hadn't caused a visible failure yet, because the actual fix for that behaviour was mostly carried by the tool layer (`get_transactions` clearly labels `total_amount_cash_received` in its own output), so Claude was following it correctly per-call even without the prompt reinforcement — but it's worth adding for robustness, since relying on a tool's field naming alone is less durable than having the system prompt state the rule explicitly too.
+
+### Why the audit was worth doing even though it mostly came back clean
+A "did you paste this in" checklist across many session-scattered fixes is exactly the kind of thing that's easy to lose track of over a long iterative session — checking systematically rather than assuming was the right call, even though it turned out most fixes had landed correctly. Worth doing again before considering Phase 3 fully closed out, given the number of manual edits accumulated across P14–P22.
+
+### Iteration notes
+
+*Add notes here after: (1) confirming eval_runner.py is genuinely up to date on the machine actually running these tests — repeated instances this session of old error-message formats appearing despite the file supposedly being replaced, worth resolving directly rather than assuming it's fixed; (2) adding the P14 instruction to the live prompt; (3) re-running café and freelancer smoke tests to confirm eval_005 (variance) and eval_033 (real gap, now fixed) both pass.*
+
+---
+
+## P23 — Root cause of eval_001's recurring parse failure: found via a better error message
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### What the improved diagnostics (P20) finally revealed
+With the failure-position-centred error message in place, the actual text around the break was visible for the first time: the judge was writing a complete JSON object, then — inside that same response — writing "Wait, I need to re-check my verdict field against my reasoning" in plain text, and starting a **second**, corrected JSON object afterward. This is a genuinely different root cause from every previous round (P12, P17, P19, P20): not a rounding issue, not an external-formula assumption, not a length limit — the judge was self-correcting mid-response and producing two JSON documents instead of one.
+
+### Why this was happening structurally, not randomly
+The JSON schema in the judge prompt had always listed `"verdict"` as the *first* field, before `must_include_results` and `must_not_include_results`. That ordering meant the model had to commit to an overall pass/fail conclusion before it had actually written out its criterion-by-criterion reasoning — the reasoning that determines whether the verdict should be pass or fail happens in fields that come *after* verdict in the schema. By the time the model worked through the individual criteria later in the same object, it would sometimes find its own early-committed verdict didn't match its own later reasoning, and (having no other way to fix an already-written field) it started over with a second object rather than editing the first.
+
+### The fix — reorder the schema so conclusions come after reasoning
+Changed the JSON schema so `must_include_results` and `must_not_include_results` come first, and `verdict`/`overall_reason` come last — forcing the model to work through every criterion before it's structurally able to write a conclusion. Also added an explicit instruction: if reasoning reveals the verdict should differ from an initial impression, revise the verdict field itself rather than writing a second object.
+
+### A second, independent layer of defence
+Alongside the prompt fix, replaced the naive "first `{` to last `}`" JSON extraction with a proper parser that tracks brace depth and correctly ignores braces inside quoted strings, stopping precisely at the end of the *first* complete, balanced object — tested directly against a synthetic version of this exact failure pattern (two objects, with a brace embedded inside a string value, to make sure that edge case doesn't trip up the depth counter either) before shipping it. This means even if the judge does still occasionally produce a self-correction despite the reordering, the runner correctly extracts a single valid, parseable object instead of failing outright.
+
+### Why the schema reorder matters more than the extraction fix
+The extraction fix only helps the runner cope with the symptom; the schema reorder addresses why the model needed to self-correct in the first place. Worth noting for future prompt work generally: when a structured-output schema asks for a conclusion before the reasoning that produces it, the model is being set up to either commit prematurely or awkwardly restart — output ordering is itself a prompt design decision, not just a data format choice.
+
+### Also worth recording: several rounds of this session's debugging had a "which file am I actually running" problem
+Multiple times across P20–P23, error messages that should have reflected an already-applied fix kept showing old formats, traced each time to the local `eval_runner.py` not actually having been replaced (confirmed via targeted `grep` checks before re-diagnosing). Worth remembering as a general debugging habit: before spending more effort diagnosing "why didn't my fix work," confirm the fix is actually present in the file being executed.
+
+### Iteration notes
+
+*Add notes here after re-running the café and freelancer smoke tests with the reordered schema and the new extractor — confirm eval_001 and eval_034 both pass cleanly, then finally commit to the full 50-case run.*
+
+---
+
+## P24 — Stop trusting the judge's own summary verdict; compute it
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### What happened
+After P23's schema reordering (reasoning before verdict), `eval_001` failed once more — but this time the raw output showed something genuinely new: every single `must_include` was `satisfied: true`, every `must_not_include` was `violated: false`, and the judge's own `overall_reason` text explicitly said *"the verdict should be pass."* Yet the `verdict` field itself, written right next to that sentence, said `"fail"`. The model's itemised reasoning and its own summary conclusion directly contradicted each other, even with the reordered schema that was specifically meant to prevent exactly this.
+
+### What this means
+Across P12, P17, P19, P20, and P23, every fix so far tried to get the judge's *reasoning* right — better tolerance rules, better arithmetic instructions, better field ordering. This case shows those fixes can all succeed (the reasoning here was completely correct) while the model still fumbles the very last step: summarising its own conclusion into a single word. That's not a reasoning problem to prompt away — it's an unnecessary extra step that doesn't need to be delegated to the model at all.
+
+### The fix — compute the verdict instead of asking for it
+The judge's itemised `satisfied`/`violated` booleans have been reliable throughout this project's entire debugging process — every specific criterion check reviewed across dozens of cases has held up. The unreliable part was always the model's own aggregation of those booleans into a final word. So: `eval_runner.py` now computes the verdict itself, deterministically, from the itemised results (`pass` only if every `must_include` is `satisfied: true` and no `must_not_include` is `violated: true`) — and overrides the model's own `verdict` field with that computed value whenever they disagree, keeping the model's original verdict and a note in `overall_reason` for transparency rather than silently discarding it. Verified directly against the real failing case from this session: correctly flips `fail` → `pass`, matching what the itemised results actually showed all along.
+
+### Why this is the right place to stop patching the prompt
+This closes out the whole thread that ran from P12 through P23: rather than a sixth round of prompt tuning hoping the model's summary judgment becomes reliable, the fix removes the unreliable step from the critical path entirely. The model is still asked to produce `verdict` and `overall_reason` (useful for a human skimming results), but the runner's actual scoring — what counts as pass/fail in the summary stats — no longer depends on the model getting that one summarising step right. This is a good general pattern for using an LLM as a judge: have it produce granular, checkable claims, and compute the aggregate conclusion in code rather than asking the model to do that arithmetic itself.
+
+### Iteration notes
+
+*Add notes here after re-running café and confirming eval_001 passes with the corrected verdict. Given all three personas have now independently reached 5/5 or been one fix away from it multiple times, and this fix addresses the actual root cause behind the recurring eval_001 saga specifically, this is a reasonable point to commit to the full 50-case run rather than another round of 5-case smoke tests — any remaining issues in the other 35 untested cases will surface there.*
+
+---
+
+## P25 — First full 50-case run: batch 1 of failures (invoices, direction, client-advice)
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### Context
+First-ever full run of the 50-case eval suite (with the P24 deterministic-verdict fix in place): 37/50 passed (74%). `cash_flow`, `gst_bas`, and `payroll` all hit 100%, confirming every persona-specific fix made across P11–P24 generalised correctly to the untested 35 cases, not just the 15 already smoke-tested. 13 failures remained, investigated in batches rather than all at once. This entry covers the first three: `eval_012`, `eval_025`, and `eval_028`.
+
+### Finding A — a genuine schema gap: café invoices point the opposite direction from the other two personas
+`eval_012` asked about outstanding supplier invoices. The app answered with a real, correct invoice (Pepe's Milk, $368.40) but wrapped it in a caveat claiming the invoices tool "is primarily set up to track invoices you've issued to your customers" — which is backwards for café specifically. Checking the raw data: café's `invoices` array uses a `supplier` field (bills the business owes — accounts *payable*), while electrician and freelancer use `client_name` (invoices issued to clients — accounts *receivable*). `tools.py`'s `_normalise_invoice()` was folding both into one generic `counterparty` field with no indication of direction, so the model had no way to know which way the money was flowing — and both the app's own narrative and the eval case's original expectation (which assumed café had no payables data at all) made the same wrong assumption independently.
+
+**Fix:** added an explicit `direction` field (`"payable"` or `"receivable"`) and a `direction_note` to every normalised invoice in `tools.py`, and added guidance to P04 to check and state this explicitly. Corrected `eval_012` to expect the real, correct payable to be reported (rather than expecting a false "no payables tracked" claim).
+
+### Finding B — another cross-contamination error in the eval suite, same category as P21
+`eval_028` expected Apex Building Group's total to be $21,230 across three invoices. The real `invoices` array has exactly two Apex invoices totalling $15,730 — the "third invoice" (INV-2503, $5,500) actually belongs to a completely different client, Meridian Constructions. Same root cause as P21's café/freelancer figure mixup, this time between two clients within the same persona. The app's answer was exactly correct; the eval case had the data wrong.
+
+**Fix:** corrected `eval_028`'s expected total, invoice count, and removed the phantom third invoice reference.
+
+### Finding C — a real, generalizable guardrail gap: unprompted client-relationship verdicts
+The same `eval_028` answer also included a "🔍 Are They Worth Keeping On?" section concluding "Apex looks like a solid commercial client" — a direct verdict on the business relationship, even though the question's own must_not_include explicitly forbade a keep-or-drop recommendation. Checking P04's existing guardrails: the P15 restriction on "operational or contractual strategies" (deposit terms, trade credit) doesn't clearly cover this different category — a relationship-worth judgement, not a tactical suggestion.
+
+**Fix:** added a new, explicit guardrail: decline "worth it / keep or drop" verdicts on client or supplier relationships the same way other out-of-scope business advice is handled — present the facts, don't render the verdict, even if asked directly.
+
+### Iteration notes
+
+*Add notes here after re-running eval_012, eval_025, and eval_028 individually or as part of the next full run. eval_025 (Tarneit Stage 1 vs Stage 2 conflation) was investigated but not fixed in this batch — see next entry for reasoning. Remaining failures from this full run (eval_007, 008, 013, 022, 030, 036, 037, 038, 039, 046) to be triaged in subsequent batches.*
+
+---
+
+## P26 — Full-suite batch 2: the tax-adjacent systemic pattern, plus two more findings
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### Context
+A sandbox environment reset mid-session required rebuilding the working copy from files already saved to outputs across P11–P25 — a useful reminder that the incremental "save every fix immediately" habit throughout this whole project paid for itself here.
+
+### Finding A — a systemic pattern across 4 of 5 tax_adjacent cases
+`eval_009`, `eval_022`, `eval_030`, and `eval_036` all failed for what turned out to be the same underlying reason, once the actual answers were compared side by side: each one hedged appropriately ("generally," "may," "proposed") but then stated a *specific* number anyway — an exact $20,000 threshold, an exact "12 continuous weeks" logbook rule, an illustrative 75% GST-credit example, a "could be well above $100k" income projection, "repairs are immediately deductible" as a settled rule. The existing P04 guidance ("provide general AU tax context") never drew a line between naming *what concepts exist* (safe) and applying *specific figures* to the user's situation (not safe, per these cases) — hedging language alone wasn't enough once a concrete number was attached.
+
+**Fix:** substantially rewrote the tax-adjacent guidance to define "general context" narrowly — name that a distinction, method, or threshold exists, without stating the specific number, percentage, or duration, even as a hedged illustration. Also added an explicit rule against speculating on the scale of the user's tax liability from partial-year data, which is what `eval_036` was actually catching. Worth noting: this tightens a rule that used to explicitly endorse naming a specific rate ("67c/hour" was the "Good" example in the original P04) — the new eval criteria want less specificity than that original example allowed, which is a real, deliberate policy tightening, not a bug fix.
+
+### Finding B — another eval-suite data error, same category as P21/P25
+`eval_037` expected May's income to total $16,940. Checked every May-dated invoice directly: the real total is $13,640 exactly, matching the app's answer to the cent, correctly excluding one invoice issued in May but paid in June (consistent with the P14 cash-basis rule). No combination of real invoices reaches $16,940 — this is the eval suite's own error, not the app's.
+
+**Fix:** corrected `eval_037`'s expected total. Also noticed both `eval_034` and `eval_037` shared a real, generalizable gap: neither answer flagged Lumen Labs as a *new* client, even though it genuinely has only one invoice in the whole dataset — meaningful, easily-derivable context. Added guidance to P04: when a counterparty has only one invoice on record, note that it's a new/first-time relationship rather than just listing it alongside established ones.
+
+### Finding C — a real content gap, likely LLM variance rather than a data/tool bug
+`eval_023` asked for anything unusual across the whole electrician dataset. The answer correctly retrieved the Bergman invoice (158 days overdue, exact and correct) but stated "there's no note of a debt collector being involved" — while the raw data's `notes` field actually says "referred to a solicitor," a different but equally serious escalation. Checked directly: the data and the P13 `notes`-field fix are both fully intact, so this wasn't a regression — the answer had access to the right information and simply didn't surface it, in a long response juggling seven separate findings at once.
+
+**Fix:** added explicit guidance to always check and surface escalation flags in the `notes` field (solicitor referral, debt collector, write-off) specifically, and to report exactly what the note says rather than paraphrasing it into a milder or different-sounding category (the "no debt collector" framing was true but misleading, since it implied no escalation at all when a different, real one existed).
+
+### What's left from the first full run
+`eval_007`, `eval_008`, `eval_025` (Tarneit Stage 1/2, still open), `eval_039` (client diversification advice — likely covered by P25's client-relationship guardrail once confirmed live, worth re-checking rather than assuming), `eval_043`, `eval_046` — to be triaged in a further batch.
+
+### Iteration notes
+
+*Add notes here after re-running the full suite with all P25 and P26 fixes applied.*
+
+---
+
+## P27 — Prompt caching for the system prompt and tool definitions
+
+**Phase:** 3 — Claude API engineering  
+**Used in:** `src/agent.py` (the `client.messages.create()` call)  
+**Date:** [add date]
+
+### Motivation
+By this point in the project, the same system prompt (P04) and the same 6 tool definitions were being sent, unchanged, on every single API call — every turn of every CLI conversation, and every one of the 50 eval cases per full run. Given how many eval iterations this project ran across P11–P26 while debugging, that's a lot of repeated, identical token spend that prompt caching directly addresses.
+
+### What was cached
+The system prompt, via an explicit cache breakpoint:
+```python
+system=[
+    {
+        "type": "text",
+        "text": self.system_prompt,
+        "cache_control": {"type": "ephemeral"}
+    }
+],
+```
+Tool definitions are covered automatically, since prompt caching follows a fixed hierarchy — tools, then system, then messages — so a breakpoint on the system block also covers any static tool definitions that precede it, without needing a separate marker.
+
+### Design decisions
+
+| Decision | Reasoning |
+|----------|-----------|
+| Explicit breakpoint on the system prompt, not automatic caching | The system prompt (plus its per-persona date-context suffix from P08) is the one genuinely static, always-repeated block. An explicit breakpoint is predictable and easy to verify via `response.usage`, versus automatic caching's behaviour of following the last cacheable block, which is less obvious to reason about in a project this size |
+| Default 5-minute TTL, not the 1-hour option | The two main use cases — a live CLI conversation and a batch eval run — both involve calls close together in time (well under 5 minutes apart), so the default TTL captures the benefit without paying the 1-hour cache's higher write cost |
+| Accepted that caching doesn't cross personas | `agent.py` appends a different date-context block per persona (café/electrician/freelancer each get their own "most recent month" anchor), so each persona has a distinct full system prompt string and therefore a separate cache entry. This is a natural consequence of the P08 fix, not a caching design flaw — within one persona's block of calls (e.g. 15 eval cases run back-to-back), the cache is fully shared |
+
+### Expected impact
+Cache reads cost 10% of normal input tokens on Sonnet; cache writes cost 25% more than normal input tokens once. For any sequence of calls sharing the same system prompt within the 5-minute window — which describes both a multi-turn CLI conversation and a same-persona block of eval cases — the first call pays a small premium and every subsequent call gets a substantial discount on the repeated portion of the prompt.
+
+### Iteration notes
+
+*Add notes here after confirming via `response.usage` that `cache_read_input_tokens` is non-zero on the second and later calls within a session, and after comparing Console usage costs for an eval run before/after this change.*
+
+---
+
+## P28 — Full-suite batch 3: whack-a-mole regressions, a broader catch-all, and the "lately" fix
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### Context: fixes aren't monotonic
+Comparing this full run to the previous one directly: 7 previously-failing cases genuinely passed this time (008, 009, 022, 023, 030, 034, 037 — confirming P26's tax-adjacent rewrite and new-client/escalation-note guidance held). But 7 *different* cases failed that weren't failing before (004, 005, 016, 026, 038, 041, 047). Net score unchanged (37/50), but a mostly different 13. This is expected, not a sign of regression: tightening behaviour in one direction shifts which borderline questions land differently elsewhere, since these are freshly generated answers each run, not deterministic lookups. Worth stating plainly rather than chasing an illusion of monotonic progress — the useful signal is whether specific, previously-fixed issues stay fixed (they did) and whether new failures are genuinely new problems or old ones in a different shape (mostly the latter, as this entry shows).
+
+### Finding A — the narrow-bullet approach to business-advice guardrails kept leaking
+`eval_039` failed on a *third* distinct shape of unsolicited business advice — suggesting the user "build a third source of reliable recurring income." P15 covers operational tactics (deposit %, payment terms); P25 covers client keep-or-drop verdicts; neither covers strategic growth suggestions. Adding a fourth narrow bullet to catch this specific phrasing would just set up a fifth failure with a different phrasing next time — the actual pattern is that *any* specific list of forbidden advice types is chasing a moving target.
+
+**Fix:** replaced the growing bullet list with one general principle stated first: never suggest actions the user should take to change how they run their business, of any kind or scope — with the previous specific examples (deposit tactics, client verdicts) kept as illustrations of the principle rather than the whole of it. Added a concrete self-check: if the model is about to write "you might want to," "consider," or "worth exploring" pointed at a business decision, that's the signal to stop and redirect to an advisor instead.
+
+### Finding B — `eval_046` was never actually fixed, despite being flagged as a target since batch 1
+Genuinely untouched until now: asked "have I been spending more than usual lately," the app silently interpreted "lately" as the full 6-month dataset and answered as if that were the obvious, only reading — no acknowledgement that "lately" is vague, no offer to use a different window. The existing "if the data is ambiguous, say so" guardrail covers *missing data*, not *vague language in the question itself*, which is a different kind of ambiguity.
+
+**Fix:** added an explicit rule for vague time references in the question ("lately," "recently," "these days"): state which period was chosen and why, so the assumption is visible and correctable, rather than resolving it silently.
+
+### Finding C — a likely-missing manual edit, not a weak fix
+`eval_036` failed on exactly the pattern P26 was written to prevent (annualising partial-year income and implying the instalments might not cover the resulting liability). Given how many times this session a fix has lived correctly in `PROMPTS.md` without making it into the actual live `prompts/system_prompt_v1.txt`, this is the leading suspect over "the P26 wording wasn't strong enough" — flagged for direct verification against the live file rather than writing a third version of the same guardrail on assumption alone.
+
+### What's left
+`eval_004`, `007`, `016`, `025`, `026`, `038`, `041`, `043`, `047` — some of these (016, 026, 041, 047) look like they could be further eval-suite data errors similar to P21/P25/P26's pattern rather than app bugs, based on a first read of the failure reasons (e.g. `eval_026`'s "$16,830" aggregation and `eval_016`'s conflicting due-date expectation both sound like they need direct data verification before assuming the app is wrong). To be triaged in the next batch.
+
+### Iteration notes
+
+*Add notes here after: (1) confirming whether eval_036's failure was a missing manual edit or a genuine prompt gap; (2) re-running the full suite with this batch's two fixes; (3) triaging the remaining ~9 cases, checking data first for anything that looks like a suspicious dollar figure or conflicting expectation before assuming the app is at fault.*
+
+---
+
+## P29 — Full-suite batch 4: a genuine conflict between two of our own guardrails
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### Context
+86% (43/50), café a clean 15/15. The P26 tax-adjacent rewrite and the fixes from P28 were confirmed to have actually landed in the live prompt this time (verified by direct file review), closing out `eval_022`, `eval_030`, and several others cleanly. 7 cases remained.
+
+### Finding A — the most interesting one: two guardrails directly contradicting each other
+`eval_034` and `eval_037` both still failed on "Lumen Labs not identified as promising/new." Reading the actual answers closely: they *do* correctly note Lumen has only one invoice and was paid early — but stop short of characterising it as promising or retainer-worthy. That's not an oversight; it's the P28 catch-all working exactly as designed ("never suggest actions... including changing which clients to prioritise... if about to write 'worth exploring,' stop and redirect to an advisor"). P28 was actively suppressing the exact framing P26's new-client guidance was trying to produce. Two rules, written in different batches for different failures, turned out to want opposite things for this specific case.
+
+**Fix:** drew an explicit line between *observation* and *prescription* — describing that a new relationship looks promising based on its own data (large first invoice, paid early) is a factual, descriptive interpretation, squarely within scope; recommending an action based on that observation ("you should pursue a retainer") is the out-of-scope part. The rule now says: characterise the pattern, don't recommend acting on it.
+
+### Finding B — the tax-liability rule made the model too cautious on safe arithmetic
+`eval_036` no longer had any harmful liability speculation (P26 worked completely here) — but now failed for the opposite reason: it wouldn't even state that four $1,800 quarterly instalments sum to $7,200, a plain, safe fact about the user's own recorded payments. The P26 wording ("never speculate about the scale of tax liability") was broad enough that the model generalised it to avoid *any* number near the topic of tax, including harmless arithmetic.
+
+**Fix:** added an explicit carve-out distinguishing the two: totals of what's already happened (safe, just addition) versus any claim about what the user will owe or whether that's enough (restricted). Named the exact $7,200 example directly so the distinction is concrete, not just abstract.
+
+### Finding C — three smaller, more straightforward fixes
+- `eval_026`: the answer correctly retrieved and described two separate outstanding invoices but never stated their combined total, leaving the user to do the addition. Added a general rule: when multiple related amounts are mentioned together, state the combined total explicitly.
+- `eval_025`: finally addressed after being left open since batch 1 — "the Tarneit job" (singular) kept getting answered with a combined Stage 1 + Stage 2 total. Added explicit guidance: when a search term could match multiple similarly-named jobs and the question's phrasing implies one specific job, answer about the single best match rather than silently merging, or ask if it's genuinely unclear.
+- `eval_046`: still failing despite the P28 fix being confirmed live. Investigating the likely cause: the earlier, more specific P08 rule ("resolve 'last month' to the dataset's most recent month") was probably winning out over the newer, more general vague-time-reference rule, since "lately" and "last month" can feel similar. Added an explicit contrast between the two rules directly in the guardrail text, so the model doesn't extend its confident handling of well-defined relative terms to genuinely ambiguous ones.
+
+### Why Finding A is the most valuable one to remember
+Every other fix so far this project has been "the app is missing something" or "the eval case is wrong." This is the first case where two things we deliberately, correctly added were each individually reasonable and still produced a bad outcome together. It's a good reminder that a system prompt's rules don't compose automatically just because each one made sense in isolation — a later, broader guardrail can silently swallow an earlier, narrower one's intended effect, and the only way to catch that is by testing the whole system together, not by re-verifying each rule alone.
+
+### Iteration notes
+
+*Add notes here after re-running the full suite with all five fixes from this batch applied.*
+
+---
+
+## P30 — A partial application caught mid-batch, plus a new judge blind spot
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### Context
+`eval_034`/`eval_037` (Lumen) passed after adding the observation-vs-prescription fix — but `eval_025`, `eval_026`, `eval_036`, and `eval_046` all failed again on *exactly* the same criteria P29 was meant to fix. Given the session's now-established pattern of live-prompt edits landing partially, the most likely explanation was simpler than a weak fix: of P29's five separate snippets, only the one specifically re-requested (the new-client paragraph) had actually been added. Rather than diagnose each of the four "still failing" cases as if they were fresh problems, the decision was made to stop distributing fixes as individual snippets entirely and provide the complete system prompt body as one file going forward, removing this whole category of uncertainty.
+
+### Finding A — a genuinely new judge blind spot: GST-basis equivalence
+`eval_039` failed with the judge stating the answer "uses $2,200/month per retainer instead of the correct $2,420/month... potentially invented." Checked directly: $2,420 (inc-GST) ÷ 1.1 = $2,200.00 (ex-GST) exactly. The app's answer was internally consistent throughout, explicitly labelling every figure "Ex-GST" in its own table headers — it hadn't stated a different number, it had stated the *same* number on a different, self-declared basis. The judge's arithmetic-verification instructions (P12, P17, P19, P20, P23, P24) had never covered this specific case: two numbers that are the same fact expressed on opposite sides of a 1.1 multiplier.
+
+**Fix:** added explicit guidance to the judge prompt to check GST-basis equivalence (divide/multiply by 1.1) before concluding a must_include figure is missing or wrong, with the exact $2,420/$2,200 pair as a worked example.
+
+### Finding B — a small, genuine gap: vague "recent period" phrasing
+`eval_047` asked about a financial year outside the dataset. The answer correctly declined and explained why, but only said data covers "a more recent period... up to June 2025" — never naming the actual range. Added an explicit requirement to name the real coverage period (e.g. "January–June 2025, FY2025") rather than a vague gesture at "more recent."
+
+### `eval_038` — flagged but not acted on
+The answer already follows the established, correct hedging pattern (names that methods exist, defers the specific method to a tax agent) — this looks like it could be judge over-strictness rather than a genuine violation, but with only one data point it's not yet clear enough to justify a prompt change. Worth re-checking after the next run rather than guessing at a fix now.
+
+### Iteration notes
+
+*Add notes here once the consolidated system prompt file (rather than individual snippets) has been confirmed live, and the full suite re-run. If eval_025/026/036/046 all clear on the next run, that confirms the P29 fixes were sound and the issue really was partial application, not weak wording — worth stating explicitly either way, since it changes what the next debugging step should be.*
+
+---
+
+## P31 — Judge retry mechanism, two content fixes, and an honest note on reliability limits
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### Context
+The consolidated system prompt file (P30) confirmed its fixes worked cleanly: `tax_adjacent` reached a full 5/5, and several previously-flagged cases passed. 8 cases failed this run — investigated individually rather than assumed to be more missing edits, since the consolidated file removed that whole category of doubt.
+
+### Finding A — `eval_046` was a pure judge tooling bug, not an app issue
+Reading the partial judge output (captured despite the parse failure) showed the actual answer was correct — it explicitly acknowledged "lately" was ambiguous and offered multiple interpretations, exactly what the rule asks for. The failure was a JSON syntax error (a missing comma) in the judge's own output, a new malformation pattern distinct from the truncation (P20) and multi-object (P23) issues already handled.
+
+**Fix:** rather than adding a fifth narrow patch for a fifth JSON malformation variant, added a retry: on a parse failure, the judge gets one more attempt with an explicit note about what broke ("respond again with ONLY a single, strictly valid JSON object..."). This is a more durable fix than continuing to enumerate specific syntax failure modes one at a time — malformed JSON from an LLM is usually a one-off slip, and a second attempt resolves most of these without knowing in advance what shape the next slip will take.
+
+### Finding B — `eval_005`: the model correctly followed a rule that shouldn't have applied
+The answer's closing line ("the ATO draws a distinction between repairs and capital improvements... a question for [your tax agent]") is almost verbatim the "Good" example written into P04's tax-adjacent guidance. The model wasn't malfunctioning — it followed the rule precisely. The actual issue: the question was about an anomaly, not tax, and the rule about hedging tax mentions correctly was being applied to content the model shouldn't have volunteered in the first place.
+
+**Fix:** added an explicit distinction between "the question is about tax" (full tax-adjacent treatment applies) and "the model is choosing to bring up tax on a question that wasn't about tax" (better to just not raise it — describe the data, not its tax treatment, unless asked).
+
+### Finding C — `eval_043`: a genuine, previously-unaddressed content gap
+Asked broadly "do I have payroll obligations," the answer correctly said no employees exist, then only addressed PAYG *withholding* (an employer concept) — never mentioning that PAYG *instalments* (the sole trader's own income tax prepayments) are a completely separate thing that applies regardless of employee count. The two concepts share a name and got conflated as a result. This is the first batch where this case got a dedicated fix rather than being left as presumed variance.
+
+**Fix:** added an explicit clarification to the AUSTRALIAN CONTEXT section: PAYG withholding (employer-side) and PAYG instalments (owner's own tax) are genuinely different, "no employees" doesn't mean "no PAYG obligations," and a broad obligations question should address both.
+
+### An honest assessment: `eval_026`, `eval_037`, and `eval_023`
+These three have now failed on the same criteria across multiple rounds despite prompt guidance that directly addresses them (the P29 combined-total rule for `eval_026`; the P29 observation-vs-prescription rule for `eval_037`, which *did* pass once before reverting; the P13 escalation-note rule for `eval_023`). At this point the evidence points toward genuine instruction-following unreliability on open-ended, free-form answers, not a wording gap — the rules exist, are confirmed present in the live prompt, and simply aren't being applied every single time. This is worth stating plainly rather than writing a sixth variant of the same instruction hoping for a different result: an LLM-driven system doesn't guarantee 100% rule compliance no matter how precisely the rule is worded, especially for judgment calls embedded in long, multi-finding answers (all three of these are open-ended "what's unusual/what's my situation" questions, not narrow factual lookups). A genuinely more reliable fix for `eval_026` specifically might be a tool-level one — having `get_invoices` or similar return a pre-computed combined total when multiple outstanding items are returned together, removing the arithmetic step from the model's responsibility entirely — worth considering for a future iteration rather than more prompt tuning.
+
+### Iteration notes
+
+*Add notes here after re-running the full suite with these fixes. Worth explicitly checking whether eval_026/037/023 clear on this run — if they do, the "reliability limit" read above was wrong and it really was still a coverage gap; if they don't, that's further evidence for documenting this as a known, accepted limitation of the prompt-only approach in `ARCHITECTURE.md` rather than continuing to chase it.*
+
+---
+
+## P32 — 88%: one more eval-suite fiction, one genuine new gap, and a status check on the persistent three
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### Context
+44/50 (88%). All of P31's targeted fixes held (`eval_005`, `009`, `026`, `036`, `043` all passed). `eval_046` failed again despite the judge retry mechanism — worth noting this confirms it, since a retry-triggered failure would show a "truncated/malformed" reason, and this one didn't; the judge parsed fine and correctly reported a real content miss. That's useful signal: this one really is the app not following the rule, not a tooling artifact.
+
+### Finding A — another case of the eval suite expecting fictional detail
+`eval_025` wanted a specific itemised materials list (switchboard components, sub-mains cable, busbars, DBs, MCBs, conduit) for the JOB-2506 purchase. Checked the raw transaction directly: the actual data only has a generic description, "New build materials - Tarneit rough-in." No itemised breakdown exists anywhere in the dataset. This eval case was unpassable as written — genuinely funny in hindsight, since its own `must_not_include` said "invented material items" while its own `expected_behaviour` invented exactly that.
+
+**Fix:** corrected `eval_025` to expect the transaction reported accurately at the level of detail the data actually provides, rather than a fictional item list.
+
+### Finding B — a genuine, newly-surfaced content gap
+`eval_041` asked "how much do I have right now" — the answer correctly gave the June 2025 closing balance but presented it as if confirmed-current, with no acknowledgement that the dataset has a fixed end point and "right now" in the real world is well past that. A reasonable, previously-unaddressed gap: any "current/right now" style question answered from historical data should note it's the last recorded figure, not a live confirmation.
+
+**Fix:** added explicit guidance requiring this caveat whenever present-tense language is used. (Caught and corrected a self-inflicted editing mistake while making this change — an early version of the edit accidentally deleted the `## Data-grounded answers` section header and its numbered structure; caught by reviewing the diff before finalising, restored immediately. Worth noting as its own small lesson: even a targeted, well-understood fix needs the same "verify what actually landed" discipline as everything else in this project.)
+
+### Status check on the three flagged as reliability limits in P31
+- `eval_026`: passed this run. Consistent with the P31 read that this was genuine LLM variance around an existing, correct rule, not a coverage gap — the rule didn't change between runs.
+- `eval_037` (Lumen): failed again. Third time flipping between pass and fail across recent runs with no rule changes in between. Strengthens the P31 conclusion that this is inherent variance on an open-ended interpretive question, not something further wording will reliably fix.
+- `eval_023` (Bergman/Tarneit anomaly set): failed again, and specifically contradicts the Bergman solicitor referral this time (says the opposite of what P13's escalation-note rule should produce). Given this is the most safety-relevant of the three (missing a real business-risk signal, not just a stylistic miss), it's the one most worth a structural rather than wording-based fix in a future iteration — e.g. having `get_invoices` proactively surface any invoice with a non-empty `notes` field as a distinct flagged item, rather than relying on the model to notice and prioritise it correctly inside a long, multi-finding free-form answer.
+
+### Iteration notes
+
+*Add notes here after re-running the full suite with eval_025's correction and the eval_041 fix applied. `eval_007` (café interpretation) has now gone unaddressed across several batches — worth a dedicated look next round rather than continuing to deprioritise it.*
 
 ---
 
@@ -821,4 +1552,4 @@ Topics to reflect on:
 - *Also caught during live testing: the Phase 2 "12/12 manual test" had been run in a simulated chat with no real tool calls — one figure it gave (January revenue) didn't match the real, tool-grounded figure the live app returns. Documented as a lesson: Phase 2 validated behaviour design, not factual grounding.*
 - *All 12 original manual test questions re-run through the live app (café persona) and now match the Phase 2 designed behaviour, with real data grounding confirmed.*
 
-*All three personas now tested live and passing: café (12/12), electrician (7/7), freelancer (6/6 after fixing a data duplication bug — see P09). Not yet done in Phase 3: the automated eval runner for the 50-case suite (`evals/test_cases.json`) hasn't been built. Phase 4 (README, ARCHITECTURE.md, demo, LinkedIn, GitHub publish) not started.*
+*All three personas now tested live and passing: café (12/12), electrician (7/7), freelancer (6/6 after fixing a data duplication bug — see P09). Automated eval runner built (P10), using an LLM judge rather than string matching since must_include criteria are descriptive, not literal — not yet run against the full 50-case suite. Phase 4 (README, ARCHITECTURE.md, demo, LinkedIn, GitHub publish) not started.*

@@ -138,7 +138,13 @@ class LedgerAgent:
             response = self.client.messages.create(
                 model=self.model,
                 max_tokens=MAX_TOKENS,
-                system=self.system_prompt,
+                system=[
+        {
+            "type": "text",
+            "text": self.system_prompt,   # your existing system prompt string
+            "cache_control": {"type": "ephemeral"}
+        }
+    ],
                 thinking={"type": "adaptive"},
                 tools=TOOL_DEFINITIONS,
                 messages=self.messages,

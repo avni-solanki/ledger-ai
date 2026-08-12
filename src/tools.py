@@ -118,7 +118,15 @@ def _round(value: Any) -> Any:
 # --------------------------------------------------------------------------- #
 
 def _normalise_invoice(inv: dict) -> dict:
-    """Map a persona-specific invoice onto a single common shape."""
+    """Map a persona-specific invoice onto a single common shape.
+
+    Important: the personas' invoice records point in OPPOSITE directions.
+    Café invoices are supplier bills the business owes ("supplier" field) —
+    accounts payable. Electrician/freelancer invoices are bills issued to
+    clients ("client_name" field) — accounts receivable. Getting this
+    backwards produces confidently wrong statements about who owes whom, so
+    it's tracked explicitly rather than left for the model to guess.
+    """
     amount_inc = inv.get("amount_inc_gst")
     if amount_inc is None:
         amount_inc = inv.get("total")  # café uses "total"
@@ -126,9 +134,18 @@ def _normalise_invoice(inv: dict) -> dict:
     if gst is None:
         gst = inv.get("gst")  # café uses "gst"
 
+    is_payable = "supplier" in inv  # café-style: money the business owes
+    direction = "payable" if is_payable else "receivable"
+
     return {
         "invoice_number": inv.get("invoice_number"),
         "counterparty": inv.get("client_name") or inv.get("supplier"),
+        "direction": direction,
+        "direction_note": (
+            "This is a bill FROM a supplier that the business OWES (accounts payable)."
+            if is_payable
+            else "This is an invoice the business ISSUED to a client, so it's money OWED TO the business (accounts receivable)."
+        ),
         "description": (
             inv.get("job_description")
             or inv.get("project_description")
@@ -141,6 +158,7 @@ def _normalise_invoice(inv: dict) -> dict:
         "status": inv.get("status"),
         "date_paid": inv.get("date_paid"),
         "invoice_type": inv.get("invoice_type"),  # freelancer only (retainer/project)
+        "notes": inv.get("notes"),  # important context (e.g. solicitor referral, write-offs)
     }
 
 
@@ -185,6 +203,34 @@ def get_transactions(
     total_amount = _round(sum(t.get("amount", 0) or 0 for t in matched))
     total_gst = _round(sum(t.get("gst_amount", 0) or 0 for t in matched))
 
+    # Cash-basis vs accrual distinction: an income transaction tied to an
+    # invoice that hasn't actually been paid yet represents work invoiced,
+    # not cash received. Cross-reference against the invoices list so
+    # "how much did I bring in" can answer cash received by default, while
+    # the full (accrual) total remains available if genuinely asked for.
+    invoice_status_by_number = {
+        inv.get("invoice_number"): (inv.get("status") or "").lower()
+        for inv in data.get("invoices", [])
+        if inv.get("invoice_number")
+    }
+    inv_pattern = re.compile(r"INV-\d{4}")
+
+    not_yet_received = []
+    for t in matched:
+        if t.get("type") != "income":
+            continue
+        m = inv_pattern.search(t.get("description", ""))
+        if not m:
+            continue  # not tied to an invoice (e.g. daily takings) -> treated as cash received
+        status = invoice_status_by_number.get(m.group(0))
+        if status and status != "paid":
+            t["_linked_invoice_status"] = status  # surfaced to the model, not hidden
+            not_yet_received.append(t)
+
+    cash_received_amount = _round(
+        total_amount - sum(t.get("amount", 0) or 0 for t in not_yet_received)
+    )
+
     return {
         "filters": {
             "start_date": start_date,
@@ -194,7 +240,14 @@ def get_transactions(
         },
         "count": len(matched),
         "total_amount": total_amount,
+        "total_amount_note": (
+            "This is the accrual total: it includes any income transaction tied to an "
+            "invoice that has been issued but not yet paid. For 'how much did I actually "
+            "bring in / receive' questions, use total_amount_cash_received instead."
+        ),
+        "total_amount_cash_received": cash_received_amount,
         "total_gst": total_gst,
+        "not_yet_received_count": len(not_yet_received),
         "transactions": matched,
     }
 

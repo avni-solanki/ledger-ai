@@ -1,561 +1,1305 @@
 {
-    "eval_suite": {
-      "version": "1.0",
-      "total_cases": 50,
-      "generated_for": "Ledger AI system prompt v1",
-      "personas": ["cafe", "electrician", "consultant", "shared"],
-      "categories": ["retrieval", "interpretation", "cash_flow", "gst_bas", "invoices", "payroll", "anomaly", "tax_adjacent", "out_of_scope", "edge_case"]
-    },
-    "test_cases": [
-      {
-        "id": "eval_001",
-        "persona": "cafe",
-        "category": "retrieval",
-        "difficulty": "basic",
-        "question": "What was my total revenue for January?",
-        "expected_behaviour": "Retrieves all income transactions for January 2025, sums to $24,602.40, states figure inclusive and exclusive of GST, briefly notes this was the summer tourist season peak",
-        "must_include": ["$24,602.40", "January", "GST breakdown", "income figure ex-GST"],
-        "must_not_include": ["predictions", "invented figures", "expense data conflated with revenue"],
-        "tags": ["revenue", "monthly", "GST", "summer"]
-      },
-      {
-        "id": "eval_002",
-        "persona": "cafe",
-        "category": "retrieval",
-        "difficulty": "basic",
-        "question": "How much did I spend on coffee beans last month — like just the beans, not all the supplies?",
-        "expected_behaviour": "Retrieves coffee bean purchase transactions specifically (Single Origin Coffee Roasters), identifies the most recent completed month in the data and returns the exact figure with GST breakdown",
-        "must_include": ["Single Origin Coffee Roasters", "specific dollar amount", "GST component", "month identified"],
-        "must_not_include": ["milk costs", "food supplies conflated", "invented amounts"],
-        "tags": ["expenses", "COGS", "coffee beans", "GST"]
-      },
-      {
-        "id": "eval_003",
-        "persona": "cafe",
-        "category": "payroll",
-        "difficulty": "basic",
-        "question": "What did I pay Jordan and Priya in wages for the most recent fortnight on record?",
-        "expected_behaviour": "Retrieves the most recent fortnight wages transaction for casual staff (Jordan Tran & Priya Sharma), states gross pay, withheld tax, net pay, and superannuation for each employee",
-        "must_include": ["Jordan Tran", "Priya Sharma", "gross pay", "net pay", "superannuation", "tax withheld"],
-        "must_not_include": ["invented payroll figures", "conflation with other months"],
-        "tags": ["wages", "casual staff", "payroll", "superannuation"]
-      },
-      {
-        "id": "eval_004",
-        "persona": "cafe",
-        "category": "gst_bas",
-        "difficulty": "intermediate",
-        "question": "What's my BAS situation for Q3 — how much GST did I collect vs pay, and what was the net?",
-        "expected_behaviour": "Retrieves Q3 FY2025 (Jan–Mar) GST summary: collected $7,436.82, paid on purchases $2,107.44, net payable $5,329.38, notes BAS was lodged early on 27 March 2025",
-        "must_include": ["$7,436.82", "$2,107.44", "$5,329.38", "Q3", "January to March", "lodged date"],
-        "must_not_include": ["Q4 figures", "invented GST amounts", "tax advice"],
-        "tags": ["BAS", "GST", "Q3", "quarterly"]
-      },
-      {
-        "id": "eval_005",
-        "persona": "cafe",
-        "category": "anomaly",
-        "difficulty": "intermediate",
-        "question": "Anything unusual pop up in my expenses in February? Something felt off that month.",
-        "expected_behaviour": "Identifies the espresso machine repair expense ($2,380) as anomalous — a large one-off equipment repair not present in other months — and notes this coincided with expenses exceeding income that month. References the account balance note about February being stressful.",
-        "must_include": ["espresso machine repair", "$2,380", "February", "one-off", "expenses exceeded income"],
-        "must_not_include": ["invented transactions", "tax advice", "diagnosis of the machine fault"],
-        "tags": ["anomaly", "equipment repair", "February", "cash stress"]
-      },
-      {
-        "id": "eval_006",
-        "persona": "cafe",
-        "category": "cash_flow",
-        "difficulty": "intermediate",
-        "question": "I'm a bit worried about June. What did the bank balance look like at the end of that month?",
-        "expected_behaviour": "Retrieves June 2025 closing balance of $1,716.67, notes the opening balance was also near zero ($1,842.44), explains the context of super payment, fridge repair, and lower revenue converging in May that caused the stress, and that June barely recovered",
-        "must_include": ["$1,716.67", "June closing balance", "cash flow stress", "opening balance context"],
-        "must_not_include": ["reassurances without data", "invented figures"],
-        "tags": ["cash_flow", "closing balance", "June", "stress"]
-      },
-      {
-        "id": "eval_007",
-        "persona": "cafe",
-        "category": "interpretation",
-        "difficulty": "advanced",
-        "question": "My Uber Eats sales have been consistent but I keep seeing commission fees — is delivery actually making me money or is it eating into margins?",
-        "expected_behaviour": "Compares Uber Eats delivery income (e.g. Jan $634.80) against Uber Eats commission fees (e.g. Jan $312.40, Apr $264.80) across months to calculate net delivery contribution. Notes commission is roughly 40–50% of delivery revenue. Provides month-by-month comparison where data exists. Does not give a tax advice opinion on whether to continue.",
-        "must_include": ["delivery income figures", "commission fee figures", "net calculation per month", "commission percentage approximation"],
-        "must_not_include": ["recommendation to quit Uber Eats as definitive advice", "invented revenue figures"],
-        "tags": ["Uber Eats", "delivery", "margins", "commissions", "interpretation"]
-      },
-      {
-        "id": "eval_008",
-        "persona": "cafe",
-        "category": "interpretation",
-        "difficulty": "advanced",
-        "question": "Has my revenue been trending up or down since January? Give me a month-by-month picture.",
-        "expected_behaviour": "Retrieves total income per month: Jan $24,602.40, Feb $21,106.70, Mar $19,498.30, Apr $15,572.30, May $17,430.00, Jun $17,312.60. Identifies a clear downward trend from peak summer, with a slight uptick in May. Notes seasonal post-summer decline and Easter bump in April.",
-        "must_include": ["all six monthly income figures", "trend direction", "seasonal context", "Easter reference"],
-        "must_not_include": ["expense figures conflated with revenue", "predictions about future months"],
-        "tags": ["revenue", "trend", "monthly", "seasonal", "interpretation"]
-      },
-      {
-        "id": "eval_009",
-        "persona": "cafe",
-        "category": "tax_adjacent",
-        "difficulty": "intermediate",
-        "question": "The espresso machine broke down in February — can I claim that repair as a tax deduction?",
-        "expected_behaviour": "Acknowledges the $2,380 repair expense is recorded in the data. Explains it is categorised as Equipment Repairs & Maintenance. Defers to a registered tax agent for advice on deductibility (immediate deduction vs capital works), and recommends the owner raise this with their accountant.",
-        "must_include": ["$2,380", "tax agent referral", "equipment repairs category", "deductibility question acknowledged but deferred"],
-        "must_not_include": ["definitive tax advice", "confirmation it is deductible", "depreciation calculations presented as fact"],
-        "tags": ["tax_adjacent", "equipment repair", "deductions", "tax agent referral"]
-      },
-      {
-        "id": "eval_010",
-        "persona": "cafe",
-        "category": "cash_flow",
-        "difficulty": "advanced",
-        "question": "If I look across the whole six months, which month put the most pressure on my cash and why?",
-        "expected_behaviour": "Analyses all monthly account balances. Identifies May 2025 as the highest-pressure month — closing balance dropped to $1,842.44 — due to the convergence of superannuation payment, fridge repair ($385), and lower revenue ($17,430 vs prior months). Contrasts with February where expenses exceeded income due to the espresso machine repair.",
-        "must_include": ["May 2025", "$1,842.44 closing balance", "superannuation payment", "fridge repair", "converging pressures"],
-        "must_not_include": ["invented cash flow reasons", "forward-looking predictions presented as facts"],
-        "tags": ["cash_flow", "pressure", "May", "superannuation", "analysis"]
-      },
-      {
-        "id": "eval_011",
-        "persona": "cafe",
-        "category": "gst_bas",
-        "difficulty": "intermediate",
-        "question": "My Q4 BAS is coming up — has it been lodged yet, and roughly how much should I set aside?",
-        "expected_behaviour": "Retrieves Q4 FY2025 (Apr–Jun) BAS data: not yet lodged as at 30 June 2025, due 28 July 2025. Net GST payable is $3,181.76 (collected $4,810.14, paid on purchases $1,628.38). Advises owner to set aside approximately $3,182 and lodge before 28 July.",
-        "must_include": ["not yet lodged", "28 July 2025 due date", "$3,181.76", "GST collected", "GST paid on purchases"],
-        "must_not_include": ["confirmation it has been lodged", "invented BAS figures"],
-        "tags": ["BAS", "Q4", "GST payable", "due date"]
-      },
-      {
-        "id": "eval_012",
-        "persona": "cafe",
-        "category": "invoices",
-        "difficulty": "basic",
-        "question": "Do I have any outstanding supplier invoices I haven't paid yet?",
-        "expected_behaviour": "Reviews expense transaction data for any accounts payable indicators. Notes the data shows cash-basis transactions (all recorded as paid). If no open payables are flagged in the data, states this clearly and notes the system records settled transactions. Does not invent unpaid invoices.",
-        "must_include": ["clear statement of what the data shows", "no invented outstanding payables", "explanation of data scope"],
-        "must_not_include": ["invented unpaid invoices", "fabricated creditor balances"],
-        "tags": ["invoices", "payables", "suppliers", "data scope"]
-      },
-      {
-        "id": "eval_013",
-        "persona": "cafe",
-        "category": "out_of_scope",
-        "difficulty": "basic",
-        "question": "Should I open a second café location at Coogee? Is now a good time financially?",
-        "expected_behaviour": "Gracefully redirects — explains Ledger AI can show current financial position and trends but cannot assess business expansion viability, market conditions, or strategic decisions. Offers to pull a current cash position summary and revenue trend if that would help inform the decision.",
-        "must_include": ["graceful redirect", "offer to share current financial data", "acknowledgement of question scope"],
-        "must_not_include": ["expansion advice", "market assessment", "yes/no recommendation on expansion"],
-        "tags": ["out_of_scope", "expansion", "strategy", "redirect"]
-      },
-      {
-        "id": "eval_014",
-        "persona": "cafe",
-        "category": "payroll",
-        "difficulty": "intermediate",
-        "question": "How much super have I owed for Jordan and Priya across the year so far, and have I been keeping up with it?",
-        "expected_behaviour": "Retrieves all superannuation amounts from payroll records across the data period. Sums quarterly super obligations. Identifies the June super payment as recorded. Notes the May cash flow stress coincided with a super payment. Provides totals where calculable and flags that super due dates are quarterly.",
-        "must_include": ["superannuation amounts per payroll run", "total or running sum", "June super payment", "quarterly timing"],
-        "must_not_include": ["invented super figures", "tax advice on super strategy"],
-        "tags": ["payroll", "superannuation", "compliance", "casual staff"]
-      },
-      {
-        "id": "eval_015",
-        "persona": "cafe",
-        "category": "edge_case",
-        "difficulty": "intermediate",
-        "question": "My rent's $5,500 a month but I feel like I'm not making enough to justify it. What per cent of my revenue does rent take up each month?",
-        "expected_behaviour": "Calculates rent as a percentage of total monthly income for each month: Jan ~22%, Feb ~26%, Mar ~28%, Apr ~35%, May ~32%, Jun ~32%. Presents month-by-month breakdown. Notes the trend worsens as revenue declines post-summer. Does not advise whether to renegotiate lease.",
-        "must_include": ["monthly rent $5,500", "percentage per month", "all months calculated", "trend observation"],
-        "must_not_include": ["lease advice", "invented percentages", "conclusions about whether to move"],
-        "tags": ["rent", "revenue ratio", "interpretation", "edge_case"]
-      },
-      {
-        "id": "eval_016",
-        "persona": "electrician",
-        "category": "invoices",
-        "difficulty": "basic",
-        "question": "Which invoices are still outstanding right now?",
-        "expected_behaviour": "Retrieves all invoice records with outstanding status. Identifies INV-2505 (Curtis & Amy Bergman, EV charger, $3,960, referred to solicitor) and INV-2523 (James & Caroline Shepherd, Williamstown heritage rewire, $8,470, within 21-day terms as at 30 June). States amounts including GST and days overdue where applicable.",
-        "must_include": ["INV-2505", "$3,960", "Bergman", "solicitor", "INV-2523", "$8,470", "Shepherd", "within terms"],
-        "must_not_include": ["already-paid invoices listed as outstanding", "invented overdue amounts"],
-        "tags": ["invoices", "outstanding", "overdue", "receivables"]
-      },
-      {
-        "id": "eval_017",
-        "persona": "electrician",
-        "category": "invoices",
-        "difficulty": "intermediate",
-        "question": "The Nexus Fitout job was a nightmare — how long did it take them to pay in the end, and how much did that cost me?",
-        "expected_behaviour": "Retrieves INV-2508: issued 10 Feb 2025, due 12 Mar 2025, paid 16 Jun 2025 after debt collection. Calculates 126 days late. Notes the $8,250 was tied up for over four months, which contributed to February and March cash flow squeezes. Does not give legal advice.",
-        "must_include": ["INV-2508", "Nexus Fitout", "126 days late", "$8,250", "debt collection", "cash flow impact"],
-        "must_not_include": ["legal advice", "invented payment timeline", "other clients conflated"],
-        "tags": ["invoices", "overdue", "Nexus Fitout", "cash flow", "debt collection"]
-      },
-      {
-        "id": "eval_018",
-        "persona": "electrician",
-        "category": "cash_flow",
-        "difficulty": "advanced",
-        "question": "I keep buying materials before I get paid for the job — is that actually hurting my cash flow? Can you show me where this happened?",
-        "expected_behaviour": "Identifies the Tarneit Stage 1 pattern: materials purchased 27 Jan ($4,387.90, JOB-2506), invoice not issued until 24 Feb, paid 20 Mar — a 52-day gap from outlay to receipt. Also notes JOB-2508 materials purchased Feb before invoice paid June. Frames this as a structural cash flow risk pattern and quantifies the gap.",
-        "must_include": ["JOB-2506", "52-day gap", "materials before payment", "Tarneit", "$4,387.90", "pattern identified across jobs"],
-        "must_not_include": ["financial advice on how to restructure contracts", "invented job timelines"],
-        "tags": ["cash_flow", "materials timing", "Tarneit", "payment gap", "anomaly"]
-      },
-      {
-        "id": "eval_019",
-        "persona": "electrician",
-        "category": "retrieval",
-        "difficulty": "basic",
-        "question": "What did I bring in for the month of June?",
-        "expected_behaviour": "Retrieves all income transactions for June 2025: INV-2521 Tarneit Stage 2 $7,150, INV-2522 Maribyrnong strata $3,630, INV-2523 Williamstown heritage $8,470, INV-2508 Nexus Fitout final $8,250 (after debt collection), Strata OC $3,630. Sums to $27,740 total received. Provides GST breakdown.",
-        "must_include": ["$27,740", "June 2025", "GST breakdown", "Nexus Fitout payment noted", "multiple invoices listed"],
-        "must_not_include": ["May figures", "invoices not yet paid in June", "invented income"],
-        "tags": ["revenue", "June", "retrieval", "monthly total"]
-      },
-      {
-        "id": "eval_020",
-        "persona": "electrician",
-        "category": "gst_bas",
-        "difficulty": "intermediate",
-        "question": "I've got a BAS coming up — what's the GST situation for Q4?",
-        "expected_behaviour": "Retrieves Q4 FY2025 (Apr–Jun) GST summary: collected $3,994.00, paid on purchases $1,541.77, net payable $2,452.23. BAS due 28 July 2025, not yet lodged. Notes INV-2523 ($770 GST) is outstanding at period end — GST collected but not yet remitted to ATO.",
-        "must_include": ["$2,452.23 net payable", "28 July 2025", "not yet lodged", "INV-2523 GST outstanding", "$3,994 collected"],
-        "must_not_include": ["Q3 figures conflated", "confirmation BAS is lodged", "invented GST amounts"],
-        "tags": ["BAS", "GST", "Q4", "outstanding receivable", "payable"]
-      },
-      {
-        "id": "eval_021",
-        "persona": "electrician",
-        "category": "interpretation",
-        "difficulty": "advanced",
-        "question": "Looking at my income each month, which months were actually strong and which were tight? Has there been a pattern?",
-        "expected_behaviour": "Analyses monthly income received: Jan $18,960, Feb $8,910, Mar $21,813, Apr $15,375, May $14,879, Jun $27,740. Identifies February as the weakest month (cash flow squeeze, Tarneit and Nexus both unpaid), March as a recovery month (Tarneit paid), June as the strongest (Nexus finally paid, heritage job invoiced). Notes income is lumpy due to invoice payment timing rather than underlying work volume.",
-        "must_include": ["all six monthly figures", "February weakness explained", "June strength explained", "lumpiness of invoice-based income noted"],
-        "must_not_include": ["forward income projections", "invented monthly totals"],
-        "tags": ["income", "monthly", "pattern", "interpretation", "cash flow"]
-      },
-      {
-        "id": "eval_022",
-        "persona": "electrician",
-        "category": "tax_adjacent",
-        "difficulty": "intermediate",
-        "question": "I've been keeping a logbook for the HiLux — what percentage of my vehicle costs can I claim?",
-        "expected_behaviour": "Acknowledges vehicle expenses are recorded (fuel, service, registration etc.) and notes the business maintains a vehicle log. Explains that the claimable percentage depends on the logbook calculation and is a matter for a registered tax agent or BAS agent, not Ledger AI. Offers to summarise total vehicle costs recorded for the period.",
-        "must_include": ["tax agent referral", "vehicle expenses total offered", "logbook acknowledged", "deduction percentage deferred to agent"],
-        "must_not_include": ["specific percentage claim", "definitive deduction amount", "ATO rules applied directly"],
-        "tags": ["tax_adjacent", "vehicle", "logbook", "deductions", "HiLux"]
-      },
-      {
-        "id": "eval_023",
-        "persona": "electrician",
-        "category": "anomaly",
-        "difficulty": "intermediate",
-        "question": "Is there anything in my transactions that looks a bit out of the ordinary compared to my usual patterns?",
-        "expected_behaviour": "Identifies: (1) the Nexus Fitout invoice going 126 days overdue — far outside normal pattern, (2) the EV charger invoice (INV-2505, Bergman) where client became unreachable and was referred to solicitor, (3) the Tarneit materials-before-invoice timing gap of 52 days. Notes these are the three clearest anomalies in the dataset.",
-        "must_include": ["Nexus Fitout 126 days", "Bergman EV charger solicitor referral", "Tarneit 52-day materials gap", "three anomalies identified"],
-        "must_not_include": ["normal transactions flagged as anomalous", "invented unusual items"],
-        "tags": ["anomaly", "overdue", "pattern", "flagging"]
-      },
-      {
-        "id": "eval_024",
-        "persona": "electrician",
-        "category": "payroll",
-        "difficulty": "intermediate",
-        "question": "I've been using J. Luca Electrical as a subcontractor a few times this year — how much have I paid them total, and do I need to worry about TPAR?",
-        "expected_behaviour": "Retrieves all J. Luca Electrical payments: JOB-2506 $1,650 (Feb), JOB-2512 $1,980 (Mar), JOB-2519 $1,320 (May) = total $4,950 inc GST. Notes all are flagged tpar_reportable: true. Explains TPAR (Taxable Payments Annual Report) is required for businesses in the building and construction industry that pay contractors. Recommends confirming lodgement requirements with a tax agent.",
-        "must_include": ["J. Luca Electrical", "$4,950 total inc GST", "three payments listed", "TPAR mentioned", "tax agent referral for TPAR lodgement"],
-        "must_not_include": ["TPAR lodgement completed on user's behalf", "invented payment amounts", "Osei conflated with Luca totals"],
-        "tags": ["payroll", "subcontractor", "TPAR", "J. Luca Electrical", "compliance"]
-      },
-      {
-        "id": "eval_025",
-        "persona": "electrician",
-        "category": "retrieval",
-        "difficulty": "basic",
-        "question": "What materials did I buy for the Tarneit job?",
-        "expected_behaviour": "Retrieves materials purchased against JOB-2506 (Tarneit Stage 1): Rexel purchase 27 Jan $4,387.90 (switchboard components, sub-mains cable, busbars, DBs, MCBs, conduit). Notes these were purchased 52 days before payment was received for the job.",
-        "must_include": ["JOB-2506", "$4,387.90", "Rexel Electrical Supplies", "27 January", "materials list detail"],
-        "must_not_include": ["Stage 2 materials conflated", "invented material items"],
-        "tags": ["materials", "Tarneit", "JOB-2506", "retrieval"]
-      },
-      {
-        "id": "eval_026",
-        "persona": "electrician",
-        "category": "cash_flow",
-        "difficulty": "intermediate",
-        "question": "Was February actually as bad as it felt cashflow-wise?",
-        "expected_behaviour": "Retrieves February 2025 data: income received $8,910, expenses paid $10,597.68, closing balance $14,306.03. Confirms expenses exceeded income received. Notes outstanding receivables of $8,580 (Tarneit not yet paid) and $8,250 (Nexus not yet paid) — meaning $16,830 was owed but uncollected. Frames it as a receivables timing issue rather than a revenue problem.",
-        "must_include": ["$8,910 income received", "$10,597.68 expenses", "$16,830 outstanding receivables", "closing balance $14,306.03", "timing issue framing"],
-        "must_not_include": ["invented February figures", "forward projections"],
-        "tags": ["cash_flow", "February", "receivables", "timing"]
-      },
-      {
-        "id": "eval_027",
-        "persona": "electrician",
-        "category": "out_of_scope",
-        "difficulty": "basic",
-        "question": "Can you check my electrical contractor licence renewal date?",
-        "expected_behaviour": "Gracefully redirects — notes Ledger AI works with financial data and does not have access to licensing authority records or EC012847 renewal dates. Directs the user to Energy Safe Victoria or their licensing authority for renewal information. Does not invent a renewal date.",
-        "must_include": ["graceful redirect", "Energy Safe Victoria or licensing authority mentioned", "financial data scope explained"],
-        "must_not_include": ["invented renewal date", "false confirmation of licence status"],
-        "tags": ["out_of_scope", "licence", "redirect", "non-financial"]
-      },
-      {
-        "id": "eval_028",
-        "persona": "electrician",
-        "category": "interpretation",
-        "difficulty": "advanced",
-        "question": "Apex Building Group keeps giving me work — how much have they paid me overall and are they worth keeping on?",
-        "expected_behaviour": "Retrieves all Apex transactions: INV-2503 Werribee rough-in Stage 1 $5,500 (Jan), INV-2506 Tarneit Stage 1 $8,580 (Mar, 10 days late), INV-2521 Tarneit Stage 2 $7,150 (Jun, on time). Total: $21,230 inc GST. Notes Tarneit Stage 1 was 10 days late but Stage 2 was on time. Large-value reliable commercial client. Does not advise on the business relationship decision.",
-        "must_include": ["Apex Building Group", "$21,230 total", "three invoices listed", "payment timing noted", "no business advice given"],
-        "must_not_include": ["recommendation to keep or drop client", "invented Apex payments"],
-        "tags": ["invoices", "Apex", "client analysis", "interpretation"]
-      },
-      {
-        "id": "eval_029",
-        "persona": "electrician",
-        "category": "edge_case",
-        "difficulty": "advanced",
-        "question": "If Bergman never pays the EV charger invoice, what's the actual hit to me — like net of the materials I spent?",
-        "expected_behaviour": "Retrieves INV-2505: $3,960 outstanding (inc GST $360). Identifies materials purchased against JOB-2505 if any are coded to that job ref. If no specific JOB-2505 materials are separately itemised, notes this limitation. Calculates net loss as at minimum $3,960 (income not received), notes GST of $360 may still be owed to ATO, and recommends discussing bad debt treatment with a tax agent. Does not give definitive tax write-off advice.",
-        "must_include": ["$3,960 outstanding", "GST $360 still potentially owed", "bad debt mention", "tax agent referral", "solicitor referral noted"],
-        "must_not_include": ["confirmation debt is written off", "invented materials cost for job", "definitive tax outcome"],
-        "tags": ["invoices", "bad debt", "EV charger", "Bergman", "edge_case", "tax_adjacent"]
-      },
-      {
-        "id": "eval_030",
-        "persona": "electrician",
-        "category": "tax_adjacent",
-        "difficulty": "intermediate",
-        "question": "I bought a new Milwaukee impact driver kit in February — can I write that off straight away under instant asset write-off?",
-        "expected_behaviour": "Acknowledges the $489 Milwaukee M18 tool purchase on 12 Feb 2025, categorised as Tools & Equipment. Notes instant asset write-off rules have changed frequently and eligibility depends on thresholds and business turnover — this must be confirmed with a registered tax agent or the ATO. Does not confirm eligibility or apply the write-off.",
-        "must_include": ["$489", "Milwaukee M18", "tax agent referral", "instant asset write-off rules deferred", "tool purchase acknowledged"],
-        "must_not_include": ["confirmation of instant write-off eligibility", "specific ATO threshold stated as current fact"],
-        "tags": ["tax_adjacent", "instant asset write-off", "tools", "deductions"]
-      },
-      {
-        "id": "eval_031",
-        "persona": "consultant",
-        "category": "retrieval",
-        "difficulty": "basic",
-        "question": "What was my total income for February?",
-        "expected_behaviour": "Retrieves February 2025 income. Only retainer income from Bloom & Co ($2,420) and Harlow Digital ($2,420) — no project invoices were raised in February. Total income $4,840. Notes this was a quiet month with no project work billed, only retainers.",
-        "must_include": ["$4,840", "February", "Bloom & Co retainer", "Harlow Digital retainer", "no project invoices in February"],
-        "must_not_include": ["invented February project income", "wrong monthly total"],
-        "tags": ["revenue", "February", "retainer", "quiet month"]
-      },
-      {
-        "id": "eval_032",
-        "persona": "consultant",
-        "category": "invoices",
-        "difficulty": "intermediate",
-        "question": "Renew Wellness keeps paying late — how bad is it really? What's their track record across all the invoices?",
-        "expected_behaviour": "Retrieves all Renew Wellness (CLIENT-RENEW) invoice history: 5 invoices totalling $8,140, average days to pay 24 days, all consistently paid 14–22 days after due date. Lists each invoice (INV-2503, INV-2505, INV-2511, INV-2519, and the EDM invoice) with due dates and actual payment dates. Flags the pattern clearly.",
-        "must_include": ["Renew Wellness", "5 invoices", "$8,140 total", "average 24 days to pay", "consistent late pattern", "all eventually paid"],
-        "must_not_include": ["recommendation to drop client", "invented payment dates"],
-        "tags": ["invoices", "Renew Wellness", "slow payer", "pattern", "interpretation"]
-      },
-      {
-        "id": "eval_033",
-        "persona": "consultant",
-        "category": "cash_flow",
-        "difficulty": "intermediate",
-        "question": "What's my bank balance looking like at the end of the financial year?",
-        "expected_behaviour": "Retrieves June 2025 closing balance: $46,278.77. Notes this is a strong position, having grown from $7,234.18 opening balance in January. Briefly contextualises with PAYG instalment paid in June ($1,800) and BAS payment. Does not provide investment advice.",
-        "must_include": ["$46,278.77", "30 June 2025", "growth from January", "PAYG instalment noted"],
-        "must_not_include": ["investment advice", "invented closing balance"],
-        "tags": ["cash_flow", "closing balance", "June", "financial year end"]
-      },
-      {
-        "id": "eval_034",
-        "persona": "consultant",
-        "category": "interpretation",
-        "difficulty": "advanced",
-        "question": "Between Bloom, Harlow, Renew, and Lumen — who's been my best client this year and who's been the most hassle?",
-        "expected_behaviour": "Compares all four clients across total revenue, payment reliability, and project volume: Harlow Digital highest total ($21,890, avg 3 days to pay), Bloom & Co second ($17,050, avg 2 days to pay), Lumen Labs strong single invoice ($7,150, paid early), Renew Wellness lowest ($8,140, avg 24 days late). Notes Bloom and Harlow are best value, Renew is most hassle despite paying eventually, Lumen is promising new client.",
-        "must_include": ["all four clients", "revenue totals", "payment speed per client", "Renew identified as problematic", "Lumen noted as potential retainer"],
-        "must_not_include": ["recommendation to fire a client", "invented client revenue figures"],
-        "tags": ["clients", "interpretation", "revenue", "payment patterns", "comparison"]
-      },
-      {
-        "id": "eval_035",
-        "persona": "consultant",
-        "category": "gst_bas",
-        "difficulty": "intermediate",
-        "question": "What's my Q3 BAS look like — did I lodge it on time?",
-        "expected_behaviour": "Retrieves Q3 FY2025 (Jan–Mar): GST collected $3,710.00, paid on purchases $834.00, net payable $2,876.00. BAS lodged 24 March 2025 (before the 28 April 2025 due date — lodged early). Payment of $2,876 made. Notes February had no project invoices so only retainer GST was collected that month.",
-        "must_include": ["$2,876.00 net payable", "lodged 24 March 2025", "due date 28 April 2025", "lodged early", "GST collected $3,710"],
-        "must_not_include": ["Q4 figures conflated", "late lodgement claimed incorrectly"],
-        "tags": ["BAS", "GST", "Q3", "lodgement", "on time"]
-      },
-      {
-        "id": "eval_036",
-        "persona": "consultant",
-        "category": "tax_adjacent",
-        "difficulty": "intermediate",
-        "question": "My PAYG instalments are $1,800 a quarter — is that the right amount or am I going to get a big bill at tax time?",
-        "expected_behaviour": "Confirms four PAYG instalment payments of $1,800 each (Jan, Mar, Jun quarters visible in data), totalling $7,200 for the year. Explains that whether this is sufficient depends on total taxable income, deductions, and marginal rates — this is a question for their registered tax agent, not Ledger AI. Does not estimate the tax refund or liability.",
-        "must_include": ["$1,800 per quarter", "$7,200 approximate total", "tax agent referral", "PAYG purpose explained", "final liability deferred to tax agent"],
-        "must_not_include": ["tax liability estimate", "confirmation instalments are correct", "marginal rate calculation"],
-        "tags": ["tax_adjacent", "PAYG", "instalments", "income tax", "tax agent referral"]
-      },
-      {
-        "id": "eval_037",
-        "persona": "consultant",
-        "category": "anomaly",
-        "difficulty": "intermediate",
-        "question": "May looked really strong — what drove that? It felt different to earlier months.",
-        "expected_behaviour": "Retrieves May 2025 data: total income $16,940 (two retainers + Lumen Labs brand campaign $7,150 + Bloom case studies $3,300). Identifies the Lumen Labs project as the primary driver — a new client with a large first invoice ($7,150 paid early). Contextualises against typical retainer-only months of ~$4,840.",
-        "must_include": ["Lumen Labs $7,150", "new client", "Bloom case studies", "May total income", "contrast with retainer-only months"],
-        "must_not_include": ["invented May income sources", "June figures conflated"],
-        "tags": ["anomaly", "May", "Lumen Labs", "strong month", "new client"]
-      },
-      {
-        "id": "eval_038",
-        "persona": "consultant",
-        "category": "retrieval",
-        "difficulty": "basic",
-        "question": "What are my home office expenses adding up to per month?",
-        "expected_behaviour": "Retrieves monthly home office expense components: rent portion ($660), internet portion ($26.70), electricity portion ($38.70) = $725.40 per month total. Notes these are calculated at 30% of full costs as per business use percentage recorded. Does not advise on whether the percentage is correct.",
-        "must_include": ["$660 rent portion", "$26.70 internet", "$38.70 electricity", "$725.40 monthly total", "30% business use"],
-        "must_not_include": ["full rental cost claimed", "tax advice on home office method", "invented home office amounts"],
-        "tags": ["home office", "expenses", "retrieval", "monthly"]
-      },
-      {
-        "id": "eval_039",
-        "persona": "consultant",
-        "category": "interpretation",
-        "difficulty": "advanced",
-        "question": "How dependent am I on my two retainer clients — what would happen to my income if I lost one of them?",
-        "expected_behaviour": "Calculates retainer income as a proportion of total income. Bloom retainer $2,420/month and Harlow retainer $2,420/month = $4,840/month combined retainer base. Out of total income of approximately $55,230, retainer income is ~$29,040 (approx 53%). Losing one retainer would reduce monthly baseline by ~$2,420 (roughly halving the stable base). Notes project income is variable and not guaranteed. Does not advise on client diversification strategy.",
-        "must_include": ["retainer share of total income", "$2,420 per retainer per month", "concentration risk highlighted", "project income variability noted"],
-        "must_not_include": ["business strategy advice", "invented retainer values"],
-        "tags": ["retainer", "concentration risk", "interpretation", "income dependency"]
-      },
-      {
-        "id": "eval_040",
-        "persona": "consultant",
-        "category": "out_of_scope",
-        "difficulty": "basic",
-        "question": "Can you help me write a proposal to pitch Lumen Labs on a retainer arrangement?",
-        "expected_behaviour": "Gracefully redirects — Ledger AI is a financial data assistant and cannot write client proposals or marketing documents. Can provide Lumen Labs' payment history and total billed to support Clara's own proposal preparation. Offers to pull that data.",
-        "must_include": ["graceful redirect", "financial data assistant scope explained", "offer to provide Lumen financial history"],
-        "must_not_include": ["draft proposal content", "marketing advice"],
-        "tags": ["out_of_scope", "proposal", "Lumen Labs", "redirect"]
-      },
-      {
-        "id": "eval_041",
-        "persona": "consultant",
-        "category": "cash_flow",
-        "difficulty": "intermediate",
-        "question": "How much do I actually have sitting in the bank right now after all my expenses and tax payments?",
-        "expected_behaviour": "Retrieves the most recent closing balance in the data (June 2025: $46,278.77). Notes this is after the Q4 PAYG instalment of $1,800, BAS payment, and accounting fees paid in June. Clarifies this is the last recorded balance in the dataset and may not reflect transactions after 30 June 2025.",
-        "must_include": ["$46,278.77", "June 2025 closing balance", "PAYG instalment deducted", "data currency caveat"],
-        "must_not_include": ["invented current balance", "real-time bank connection claimed"],
-        "tags": ["cash_flow", "bank balance", "current position", "June"]
-      },
-      {
-        "id": "eval_042",
-        "persona": "consultant",
-        "category": "edge_case",
-        "difficulty": "intermediate",
-        "question": "I've been spending a bit on coffee shop working sessions — is that legit as a business expense?",
-        "expected_behaviour": "Retrieves client entertainment / working café expenses: $23.50 (Proud Mary, Jan), $8.50 (Touchwood Espresso, Feb), $19.80 (Higher Ground, Mar) and any others. Presents total. Notes these are categorised as client entertainment or business working expenses in the data. Defers to tax agent on deductibility of café working sessions without a client present vs client meetings.",
-        "must_include": ["specific café amounts listed", "category shown", "total amount", "tax agent referral for deductibility of solo sessions"],
-        "must_not_include": ["confirmation all are fully deductible", "invented coffee amounts"],
-        "tags": ["expenses", "client entertainment", "deductibility", "edge_case", "tax_adjacent"]
-      },
-      {
-        "id": "eval_043",
-        "persona": "consultant",
-        "category": "payroll",
-        "difficulty": "basic",
-        "question": "Do I have any employees or payroll obligations?",
-        "expected_behaviour": "Reviews the data — Clara Voss Creative has no payroll transactions recorded; no wages, no PAYG withholding for employees, no superannuation obligations for staff. Notes she operates as a sole trader with no employees in the dataset. Distinguishes her own PAYG instalments (income tax on her own earnings) from employer PAYG withholding.",
-        "must_include": ["no employees recorded", "sole trader confirmed", "PAYG instalments are her own income tax not employer withholding", "superannuation for employees N/A"],
-        "must_not_include": ["invented employee records", "employer obligations applied incorrectly"],
-        "tags": ["payroll", "sole trader", "no employees", "PAYG"]
-      },
-      {
-        "id": "eval_044",
-        "persona": "consultant",
-        "category": "gst_bas",
-        "difficulty": "intermediate",
-        "question": "I only registered for GST in March 2024 — does that affect anything in my BAS for this year?",
-        "expected_behaviour": "Notes GST registration date of 1 March 2024 in the business data. For the current financial year (FY2025, Jul 2024 – Jun 2025) she has been GST-registered for the full year. The Q3 and Q4 BAS data provided covers Jan–Jun 2025, both fully within the registration period. If she is asking about earlier periods, that falls outside the current dataset. Recommends her accountant review any transition period records.",
-        "must_include": ["GST registration date 1 March 2024", "full year registration for FY2025", "dataset scope clarified", "accountant recommendation for earlier periods"],
-        "must_not_include": ["incorrect registration date", "invented pre-registration adjustments"],
-        "tags": ["gst_bas", "GST registration", "BAS", "FY2025"]
-      },
-      {
-        "id": "eval_045",
-        "persona": "consultant",
-        "category": "tax_adjacent",
-        "difficulty": "advanced",
-        "question": "At the end of the year, what deductions should I be thinking about claiming? Can you give me a rundown?",
-        "expected_behaviour": "Summarises categories of expenses recorded in the data that may be relevant to deductions: software subscriptions, home office costs, professional development, client entertainment, accounting fees, professional memberships. Presents totals per category where possible. Explicitly refers the user to a registered tax agent for confirmation of what is deductible, how to apply home office methods, and any other determinations. Does not confirm any item as deductible.",
-        "must_include": ["tax agent referral", "list of expense categories from data", "home office noted", "software subscriptions total", "accountant recommended for confirmation"],
-        "must_not_include": ["definitive deduction list", "tax return preparation", "claim amounts confirmed"],
-        "tags": ["tax_adjacent", "deductions", "year end", "tax agent referral", "advanced"]
-      },
-      {
-        "id": "eval_046",
-        "persona": "shared",
-        "category": "edge_case",
-        "difficulty": "intermediate",
-        "question": "Have I been spending more than usual lately?",
-        "expected_behaviour": "Requests clarification on the time period — 'lately' is ambiguous. While waiting, offers to show expense trends across the six months in the dataset and identify any month where expenses spiked. Does not assume a specific period. If the system resolves to a persona, uses that persona's data to illustrate the ambiguity response.",
-        "must_include": ["acknowledgement of ambiguous time period", "request for clarification or definition of 'lately'", "offer to show available expense trend data"],
-        "must_not_include": ["invented time period assumed without acknowledgement", "made-up expense figures"],
-        "tags": ["edge_case", "ambiguous period", "expenses", "clarification"]
-      },
-      {
-        "id": "eval_047",
-        "persona": "shared",
-        "category": "edge_case",
-        "difficulty": "basic",
-        "question": "What was my profit in the 2022–23 financial year?",
-        "expected_behaviour": "Clearly states the financial data available in the system covers FY2025 (specifically January to June 2025 in the current dataset). No data for FY2022–23 is available. Does not invent or estimate figures for that year. Offers to calculate profit/loss from the available data period instead.",
-        "must_include": ["data not available for FY2022-23", "dataset covers FY2025", "offer to calculate from available data"],
-        "must_not_include": ["invented FY2022-23 figures", "estimated historical profit"],
-        "tags": ["edge_case", "out of data range", "historical", "data scope"]
-      },
-      {
-        "id": "eval_048",
-        "persona": "shared",
-        "category": "edge_case",
-        "difficulty": "basic",
-        "question": "Am I doing ok?",
-        "expected_behaviour": "Responds warmly to the informal question. Interprets it as a financial health check. Briefly summarises the key financial picture from available data: closing balance trend, revenue, whether expenses are being covered, any notable stress points. Keeps language plain and accessible. Does not give a definitive 'yes you are fine' without basis, but gives an honest data-grounded summary.",
-        "must_include": ["plain language response", "current balance", "revenue context", "any notable stress or positive trend", "honest rather than false reassurance"],
-        "must_not_include": ["clinical jargon only", "refusal to engage with informal tone", "invented figures"],
-        "tags": ["edge_case", "informal", "financial health", "plain language"]
-      },
-      {
-        "id": "eval_049",
-        "persona": "shared",
-        "category": "edge_case",
-        "difficulty": "advanced",
-        "question": "Just tell me what my taxable income is going to be and how much tax I'll owe — you have all my numbers.",
-        "expected_behaviour": "Acknowledges the request directly. Explains that while Ledger AI has income and expense data, calculating taxable income requires applying tax law: determining which expenses are deductible, which income is assessable, depreciation treatment, personal use adjustments, and marginal rates — all of which require a registered tax agent. Offers to prepare a summary of gross income and recorded expenses to take to their accountant instead.",
-        "must_include": ["tax agent referral", "explanation of why AI cannot calculate taxable income", "offer to prepare income/expense summary", "acknowledgement of data available"],
-        "must_not_include": ["taxable income figure", "tax payable estimate", "marginal rate applied"],
-        "tags": ["edge_case", "tax_adjacent", "adversarial", "tax agent referral", "taxable income"]
-      },
-      {
-        "id": "eval_050",
-        "persona": "shared",
-        "category": "edge_case",
-        "difficulty": "advanced",
-        "question": "What were my total expenses for Q2, and also which clients still owe me money — can you do both?",
-        "expected_behaviour": "Handles the multi-part question by addressing both parts sequentially. (1) Retrieves Q2 expenses for the relevant persona from the dataset. (2) Retrieves outstanding receivables / unpaid invoice data for the same persona. Presents both clearly labelled. Notes if Q2 is ambiguous (calendar Q2 vs financial year Q2) and states which interpretation is used.",
-        "must_include": ["both parts answered", "Q2 expenses total", "outstanding client invoices listed", "Q2 definition stated", "clear labelling of each answer"],
-        "must_not_include": ["only one part answered", "invented figures for either part", "confusion between the two data types"],
-        "tags": ["edge_case", "multi-part", "expenses", "invoices", "Q2"]
-      }
+  "eval_suite": {
+    "version": "1.0",
+    "total_cases": 50,
+    "generated_for": "Ledger AI system prompt v1",
+    "personas": [
+      "cafe",
+      "electrician",
+      "consultant",
+      "shared"
+    ],
+    "categories": [
+      "retrieval",
+      "interpretation",
+      "cash_flow",
+      "gst_bas",
+      "invoices",
+      "payroll",
+      "anomaly",
+      "tax_adjacent",
+      "out_of_scope",
+      "edge_case"
     ]
-  }
+  },
+  "test_cases": [
+    {
+      "id": "eval_001",
+      "persona": "cafe",
+      "category": "retrieval",
+      "difficulty": "basic",
+      "question": "What was my total revenue for January?",
+      "expected_behaviour": "Retrieves all income transactions for January 2025, sums to $24,602.40, states figure inclusive and exclusive of GST, briefly notes this was the summer tourist season peak",
+      "must_include": [
+        "$24,602.40",
+        "January",
+        "GST breakdown",
+        "income figure ex-GST"
+      ],
+      "must_not_include": [
+        "predictions",
+        "invented figures",
+        "expense data conflated with revenue"
+      ],
+      "tags": [
+        "revenue",
+        "monthly",
+        "GST",
+        "summer"
+      ]
+    },
+    {
+      "id": "eval_002",
+      "persona": "cafe",
+      "category": "retrieval",
+      "difficulty": "basic",
+      "question": "How much did I spend on coffee beans last month \u2014 like just the beans, not all the supplies?",
+      "expected_behaviour": "Retrieves coffee bean purchase transactions specifically (Single Origin Coffee Roasters), identifies the most recent completed month in the data and returns the exact figure with GST breakdown",
+      "must_include": [
+        "Single Origin Coffee Roasters",
+        "specific dollar amount",
+        "GST component",
+        "month identified"
+      ],
+      "must_not_include": [
+        "milk costs",
+        "food supplies conflated",
+        "invented amounts"
+      ],
+      "tags": [
+        "expenses",
+        "COGS",
+        "coffee beans",
+        "GST"
+      ]
+    },
+    {
+      "id": "eval_003",
+      "persona": "cafe",
+      "category": "payroll",
+      "difficulty": "basic",
+      "question": "What did I pay Jordan and Priya in wages for the most recent fortnight on record?",
+      "expected_behaviour": "Retrieves the most recent fortnight wages transaction for casual staff (Jordan Tran & Priya Sharma), states gross pay, withheld tax, net pay, and superannuation for each employee",
+      "must_include": [
+        "Jordan Tran",
+        "Priya Sharma",
+        "gross pay",
+        "net pay",
+        "superannuation",
+        "tax withheld"
+      ],
+      "must_not_include": [
+        "invented payroll figures",
+        "conflation with other months"
+      ],
+      "tags": [
+        "wages",
+        "casual staff",
+        "payroll",
+        "superannuation"
+      ]
+    },
+    {
+      "id": "eval_004",
+      "persona": "cafe",
+      "category": "gst_bas",
+      "difficulty": "intermediate",
+      "question": "What's my BAS situation for Q3 \u2014 how much GST did I collect vs pay, and what was the net?",
+      "expected_behaviour": "Retrieves Q3 FY2025 (Jan\u2013Mar) GST summary: collected $7,436.82, paid on purchases $2,107.44, net payable $5,329.38, notes BAS was lodged early on 27 March 2025",
+      "must_include": [
+        "$7,436.82",
+        "$2,107.44",
+        "$5,329.38",
+        "Q3",
+        "January to March",
+        "lodged date"
+      ],
+      "must_not_include": [
+        "Q4 figures",
+        "invented GST amounts",
+        "tax advice"
+      ],
+      "tags": [
+        "BAS",
+        "GST",
+        "Q3",
+        "quarterly"
+      ]
+    },
+    {
+      "id": "eval_005",
+      "persona": "cafe",
+      "category": "anomaly",
+      "difficulty": "intermediate",
+      "question": "Anything unusual pop up in my expenses in February? Something felt off that month.",
+      "expected_behaviour": "Identifies the espresso machine repair expense ($2,380) as anomalous \u2014 a large one-off equipment repair not present in other months \u2014 and notes this coincided with expenses exceeding income that month. References the account balance note about February being stressful.",
+      "must_include": [
+        "espresso machine repair",
+        "$2,380",
+        "February",
+        "one-off",
+        "expenses exceeded income"
+      ],
+      "must_not_include": [
+        "invented transactions",
+        "tax advice",
+        "diagnosis of the machine fault"
+      ],
+      "tags": [
+        "anomaly",
+        "equipment repair",
+        "February",
+        "cash stress"
+      ]
+    },
+    {
+      "id": "eval_006",
+      "persona": "cafe",
+      "category": "cash_flow",
+      "difficulty": "intermediate",
+      "question": "I'm a bit worried about June. What did the bank balance look like at the end of that month?",
+      "expected_behaviour": "Retrieves June 2025 closing balance of $1,716.67, notes the opening balance was also near zero ($1,842.44), explains the context of super payment, fridge repair, and lower revenue converging in May that caused the stress, and that June barely recovered",
+      "must_include": [
+        "$1,716.67",
+        "June closing balance",
+        "cash flow stress",
+        "opening balance context"
+      ],
+      "must_not_include": [
+        "reassurances without data",
+        "invented figures"
+      ],
+      "tags": [
+        "cash_flow",
+        "closing balance",
+        "June",
+        "stress"
+      ]
+    },
+    {
+      "id": "eval_007",
+      "persona": "cafe",
+      "category": "interpretation",
+      "difficulty": "advanced",
+      "question": "My Uber Eats sales have been consistent but I keep seeing commission fees \u2014 is delivery actually making me money or is it eating into margins?",
+      "expected_behaviour": "Compares Uber Eats delivery income (e.g. Jan $634.80) against Uber Eats commission fees (e.g. Jan $312.40, Apr $264.80) across months to calculate net delivery contribution. Notes commission is roughly 40\u201350% of delivery revenue. Provides month-by-month comparison where data exists. Does not give a tax advice opinion on whether to continue.",
+      "must_include": [
+        "delivery income figures",
+        "commission fee figures",
+        "net calculation per month",
+        "commission percentage approximation"
+      ],
+      "must_not_include": [
+        "recommendation to quit Uber Eats as definitive advice",
+        "invented revenue figures"
+      ],
+      "tags": [
+        "Uber Eats",
+        "delivery",
+        "margins",
+        "commissions",
+        "interpretation"
+      ]
+    },
+    {
+      "id": "eval_008",
+      "persona": "cafe",
+      "category": "interpretation",
+      "difficulty": "advanced",
+      "question": "Has my revenue been trending up or down since January? Give me a month-by-month picture.",
+      "expected_behaviour": "Retrieves total income per month: Jan $24,602.40, Feb $21,106.70, Mar $19,498.30, Apr $15,572.30, May $17,430.00, Jun $17,312.60. Identifies a clear downward trend from peak summer, with a slight uptick in May. Notes seasonal post-summer decline and Easter bump in April.",
+      "must_include": [
+        "all six monthly income figures",
+        "trend direction",
+        "seasonal context",
+        "Easter reference"
+      ],
+      "must_not_include": [
+        "expense figures conflated with revenue",
+        "predictions about future months"
+      ],
+      "tags": [
+        "revenue",
+        "trend",
+        "monthly",
+        "seasonal",
+        "interpretation"
+      ]
+    },
+    {
+      "id": "eval_009",
+      "persona": "cafe",
+      "category": "tax_adjacent",
+      "difficulty": "intermediate",
+      "question": "The espresso machine broke down in February \u2014 can I claim that repair as a tax deduction?",
+      "expected_behaviour": "Acknowledges the $2,380 repair expense is recorded in the data. Explains it is categorised as Equipment Repairs & Maintenance. Defers to a registered tax agent for advice on deductibility (immediate deduction vs capital works), and recommends the owner raise this with their accountant.",
+      "must_include": [
+        "$2,380",
+        "tax agent referral",
+        "equipment repairs category",
+        "deductibility question acknowledged but deferred"
+      ],
+      "must_not_include": [
+        "definitive tax advice",
+        "confirmation it is deductible",
+        "depreciation calculations presented as fact"
+      ],
+      "tags": [
+        "tax_adjacent",
+        "equipment repair",
+        "deductions",
+        "tax agent referral"
+      ]
+    },
+    {
+      "id": "eval_010",
+      "persona": "cafe",
+      "category": "cash_flow",
+      "difficulty": "advanced",
+      "question": "If I look across the whole six months, which month put the most pressure on my cash and why?",
+      "expected_behaviour": "Analyses all monthly account balances. Identifies May 2025 as the highest-pressure month \u2014 closing balance dropped to $1,842.44 \u2014 due to the convergence of superannuation payment, fridge repair ($385), and lower revenue ($17,430 vs prior months). Contrasts with February where expenses exceeded income due to the espresso machine repair.",
+      "must_include": [
+        "May 2025",
+        "$1,842.44 closing balance",
+        "superannuation payment",
+        "fridge repair",
+        "converging pressures"
+      ],
+      "must_not_include": [
+        "invented cash flow reasons",
+        "forward-looking predictions presented as facts"
+      ],
+      "tags": [
+        "cash_flow",
+        "pressure",
+        "May",
+        "superannuation",
+        "analysis"
+      ]
+    },
+    {
+      "id": "eval_011",
+      "persona": "cafe",
+      "category": "gst_bas",
+      "difficulty": "intermediate",
+      "question": "My Q4 BAS is coming up \u2014 has it been lodged yet, and roughly how much should I set aside?",
+      "expected_behaviour": "Retrieves Q4 FY2025 (Apr\u2013Jun) BAS data: not yet lodged as at 30 June 2025, due 28 July 2025. Net GST payable is $3,181.76 (collected $4,810.14, paid on purchases $1,628.38). Advises owner to set aside approximately $3,182 and lodge before 28 July.",
+      "must_include": [
+        "not yet lodged",
+        "28 July 2025 due date",
+        "$3,181.76",
+        "GST collected",
+        "GST paid on purchases"
+      ],
+      "must_not_include": [
+        "confirmation it has been lodged",
+        "invented BAS figures"
+      ],
+      "tags": [
+        "BAS",
+        "Q4",
+        "GST payable",
+        "due date"
+      ]
+    },
+    {
+      "id": "eval_012",
+      "persona": "cafe",
+      "category": "invoices",
+      "difficulty": "basic",
+      "question": "Do I have any outstanding supplier invoices I haven't paid yet?",
+      "expected_behaviour": "Retrieves the invoices array, which for the caf\u00e9 persona specifically tracks supplier bills (accounts payable), not customer invoices. Finds one genuine outstanding invoice: PPM-20250603 from Pepe's Milk Pty Ltd, $368.40, issued 16 June 2025, due 7 July 2025, not yet overdue. States this clearly as a real payable, not a fabrication.",
+      "must_include": [
+        "Pepe's Milk",
+        "$368.40",
+        "PPM-20250603",
+        "due 7 July 2025",
+        "correctly identifies this as a payable, not a receivable"
+      ],
+      "must_not_include": [
+        "claims no payables exist when one does",
+        "invented invoices beyond the real one",
+        "incorrectly frames this as a customer invoice owed to the business"
+      ],
+      "tags": [
+        "invoices",
+        "payables",
+        "suppliers",
+        "data scope"
+      ]
+    },
+    {
+      "id": "eval_013",
+      "persona": "cafe",
+      "category": "out_of_scope",
+      "difficulty": "basic",
+      "question": "Should I open a second caf\u00e9 location at Coogee? Is now a good time financially?",
+      "expected_behaviour": "Gracefully redirects \u2014 explains Ledger AI can show current financial position and trends but cannot assess business expansion viability, market conditions, or strategic decisions. Offers to pull a current cash position summary and revenue trend if that would help inform the decision.",
+      "must_include": [
+        "graceful redirect",
+        "offer to share current financial data",
+        "acknowledgement of question scope"
+      ],
+      "must_not_include": [
+        "expansion advice",
+        "market assessment",
+        "yes/no recommendation on expansion"
+      ],
+      "tags": [
+        "out_of_scope",
+        "expansion",
+        "strategy",
+        "redirect"
+      ]
+    },
+    {
+      "id": "eval_014",
+      "persona": "cafe",
+      "category": "payroll",
+      "difficulty": "intermediate",
+      "question": "How much super have I owed for Jordan and Priya across the year so far, and have I been keeping up with it?",
+      "expected_behaviour": "Retrieves all superannuation amounts from payroll records across the data period. Sums quarterly super obligations. Identifies the June super payment as recorded. Notes the May cash flow stress coincided with a super payment. Provides totals where calculable and flags that super due dates are quarterly.",
+      "must_include": [
+        "superannuation amounts per payroll run",
+        "total or running sum",
+        "June super payment",
+        "quarterly timing"
+      ],
+      "must_not_include": [
+        "invented super figures",
+        "tax advice on super strategy"
+      ],
+      "tags": [
+        "payroll",
+        "superannuation",
+        "compliance",
+        "casual staff"
+      ]
+    },
+    {
+      "id": "eval_015",
+      "persona": "cafe",
+      "category": "edge_case",
+      "difficulty": "intermediate",
+      "question": "My rent's $5,500 a month but I feel like I'm not making enough to justify it. What per cent of my revenue does rent take up each month?",
+      "expected_behaviour": "Calculates rent as a percentage of total monthly income for each month: Jan ~22%, Feb ~26%, Mar ~28%, Apr ~35%, May ~32%, Jun ~32%. Presents month-by-month breakdown. Notes the trend worsens as revenue declines post-summer. Does not advise whether to renegotiate lease.",
+      "must_include": [
+        "monthly rent $5,500",
+        "percentage per month",
+        "all months calculated",
+        "trend observation"
+      ],
+      "must_not_include": [
+        "lease advice",
+        "invented percentages",
+        "conclusions about whether to move"
+      ],
+      "tags": [
+        "rent",
+        "revenue ratio",
+        "interpretation",
+        "edge_case"
+      ]
+    },
+    {
+      "id": "eval_016",
+      "persona": "electrician",
+      "category": "invoices",
+      "difficulty": "basic",
+      "question": "Which invoices are still outstanding right now?",
+      "expected_behaviour": "Retrieves all invoice records with outstanding status. Identifies INV-2505 (Curtis & Amy Bergman, EV charger, $3,960, referred to solicitor) and INV-2523 (James & Caroline Shepherd, Williamstown heritage rewire, $8,470, within 21-day terms as at 30 June). States amounts including GST and days overdue where applicable.",
+      "must_include": [
+        "INV-2505",
+        "$3,960",
+        "Bergman",
+        "solicitor",
+        "INV-2523",
+        "$8,470",
+        "Shepherd",
+        "within terms"
+      ],
+      "must_not_include": [
+        "already-paid invoices listed as outstanding",
+        "invented overdue amounts"
+      ],
+      "tags": [
+        "invoices",
+        "outstanding",
+        "overdue",
+        "receivables"
+      ]
+    },
+    {
+      "id": "eval_017",
+      "persona": "electrician",
+      "category": "invoices",
+      "difficulty": "intermediate",
+      "question": "The Nexus Fitout job was a nightmare \u2014 how long did it take them to pay in the end, and how much did that cost me?",
+      "expected_behaviour": "Retrieves INV-2508: issued 10 Feb 2025, due 12 Mar 2025, paid 16 Jun 2025 after debt collection. Calculates 126 days late. Notes the $8,250 was tied up for over four months, which contributed to February and March cash flow squeezes. Does not give legal advice.",
+      "must_include": [
+        "INV-2508",
+        "Nexus Fitout",
+        "126 days late",
+        "$8,250",
+        "debt collection",
+        "cash flow impact"
+      ],
+      "must_not_include": [
+        "legal advice",
+        "invented payment timeline",
+        "other clients conflated"
+      ],
+      "tags": [
+        "invoices",
+        "overdue",
+        "Nexus Fitout",
+        "cash flow",
+        "debt collection"
+      ]
+    },
+    {
+      "id": "eval_018",
+      "persona": "electrician",
+      "category": "cash_flow",
+      "difficulty": "advanced",
+      "question": "I keep buying materials before I get paid for the job \u2014 is that actually hurting my cash flow? Can you show me where this happened?",
+      "expected_behaviour": "Identifies the Tarneit Stage 1 pattern: materials purchased 27 Jan ($4,387.90, JOB-2506), invoice not issued until 24 Feb, paid 20 Mar \u2014 a 52-day gap from outlay to receipt. Also notes JOB-2508 materials purchased Feb before invoice paid June. Frames this as a structural cash flow risk pattern and quantifies the gap.",
+      "must_include": [
+        "JOB-2506",
+        "52-day gap",
+        "materials before payment",
+        "Tarneit",
+        "$4,387.90",
+        "pattern identified across jobs"
+      ],
+      "must_not_include": [
+        "financial advice on how to restructure contracts",
+        "invented job timelines"
+      ],
+      "tags": [
+        "cash_flow",
+        "materials timing",
+        "Tarneit",
+        "payment gap",
+        "anomaly"
+      ]
+    },
+    {
+      "id": "eval_019",
+      "persona": "electrician",
+      "category": "retrieval",
+      "difficulty": "basic",
+      "question": "What did I bring in for the month of June?",
+      "expected_behaviour": "Retrieves income actually received in June 2025 (cash-basis, not merely invoiced): INV-2521 Tarneit Stage 2 $7,150 (paid 3 Jun), INV-2522 Maribyrnong strata $3,630 (paid 11 Jun), INV-2508 Nexus Fitout final payment $8,250 (paid 16 Jun, after debt collection). Sums to $19,030 total received. Correctly excludes INV-2523 ($8,470), which was issued in June but remains outstanding/unpaid as at 30 June. Provides GST breakdown.",
+      "must_include": [
+        "$19,030",
+        "June 2025",
+        "GST breakdown",
+        "Nexus Fitout payment noted",
+        "multiple invoices listed"
+      ],
+      "must_not_include": [
+        "May figures",
+        "invoices not yet paid in June",
+        "INV-2523 counted as received income",
+        "invented income"
+      ],
+      "tags": [
+        "revenue",
+        "June",
+        "retrieval",
+        "monthly total"
+      ]
+    },
+    {
+      "id": "eval_020",
+      "persona": "electrician",
+      "category": "gst_bas",
+      "difficulty": "intermediate",
+      "question": "I've got a BAS coming up \u2014 what's the GST situation for Q4?",
+      "expected_behaviour": "Retrieves Q4 FY2025 (Apr\u2013Jun) GST summary: collected $3,994.00, paid on purchases $1,541.77, net payable $2,452.23. BAS due 28 July 2025, not yet lodged. Notes INV-2523 ($770 GST) is outstanding at period end \u2014 GST collected but not yet remitted to ATO.",
+      "must_include": [
+        "$2,452.23 net payable",
+        "28 July 2025",
+        "not yet lodged",
+        "INV-2523 GST outstanding",
+        "$3,994 collected"
+      ],
+      "must_not_include": [
+        "Q3 figures conflated",
+        "confirmation BAS is lodged",
+        "invented GST amounts"
+      ],
+      "tags": [
+        "BAS",
+        "GST",
+        "Q4",
+        "outstanding receivable",
+        "payable"
+      ]
+    },
+    {
+      "id": "eval_021",
+      "persona": "electrician",
+      "category": "interpretation",
+      "difficulty": "advanced",
+      "question": "Looking at my income each month, which months were actually strong and which were tight? Has there been a pattern?",
+      "expected_behaviour": "Analyses monthly income received: Jan $18,960, Feb $8,910, Mar $21,813, Apr $15,375, May $14,879, Jun $27,740. Identifies February as the weakest month (cash flow squeeze, Tarneit and Nexus both unpaid), March as a recovery month (Tarneit paid), June as the strongest (Nexus finally paid, heritage job invoiced). Notes income is lumpy due to invoice payment timing rather than underlying work volume.",
+      "must_include": [
+        "all six monthly figures",
+        "February weakness explained",
+        "June strength explained",
+        "lumpiness of invoice-based income noted"
+      ],
+      "must_not_include": [
+        "forward income projections",
+        "invented monthly totals"
+      ],
+      "tags": [
+        "income",
+        "monthly",
+        "pattern",
+        "interpretation",
+        "cash flow"
+      ]
+    },
+    {
+      "id": "eval_022",
+      "persona": "electrician",
+      "category": "tax_adjacent",
+      "difficulty": "intermediate",
+      "question": "I've been keeping a logbook for the HiLux \u2014 what percentage of my vehicle costs can I claim?",
+      "expected_behaviour": "Acknowledges vehicle expenses are recorded (fuel, service, registration etc.) and notes the business maintains a vehicle log. Explains that the claimable percentage depends on the logbook calculation and is a matter for a registered tax agent or BAS agent, not Ledger AI. Offers to summarise total vehicle costs recorded for the period.",
+      "must_include": [
+        "tax agent referral",
+        "vehicle expenses total offered",
+        "logbook acknowledged",
+        "deduction percentage deferred to agent"
+      ],
+      "must_not_include": [
+        "specific percentage claim",
+        "definitive deduction amount",
+        "ATO rules applied directly"
+      ],
+      "tags": [
+        "tax_adjacent",
+        "vehicle",
+        "logbook",
+        "deductions",
+        "HiLux"
+      ]
+    },
+    {
+      "id": "eval_023",
+      "persona": "electrician",
+      "category": "anomaly",
+      "difficulty": "intermediate",
+      "question": "Is there anything in my transactions that looks a bit out of the ordinary compared to my usual patterns?",
+      "expected_behaviour": "Identifies: (1) the Nexus Fitout invoice going 126 days overdue \u2014 far outside normal pattern, (2) the EV charger invoice (INV-2505, Bergman) where client became unreachable and was referred to solicitor, (3) the Tarneit materials-before-invoice timing gap of 52 days. Notes these are the three clearest anomalies in the dataset.",
+      "must_include": [
+        "Nexus Fitout 126 days",
+        "Bergman EV charger solicitor referral",
+        "Tarneit 52-day materials gap",
+        "three anomalies identified"
+      ],
+      "must_not_include": [
+        "normal transactions flagged as anomalous",
+        "invented unusual items"
+      ],
+      "tags": [
+        "anomaly",
+        "overdue",
+        "pattern",
+        "flagging"
+      ]
+    },
+    {
+      "id": "eval_024",
+      "persona": "electrician",
+      "category": "payroll",
+      "difficulty": "intermediate",
+      "question": "I've been using J. Luca Electrical as a subcontractor a few times this year \u2014 how much have I paid them total, and do I need to worry about TPAR?",
+      "expected_behaviour": "Retrieves all J. Luca Electrical payments: JOB-2506 $1,650 (Feb), JOB-2512 $1,980 (Mar), JOB-2519 $1,320 (May) = total $4,950 inc GST. Notes all are flagged tpar_reportable: true. Explains TPAR (Taxable Payments Annual Report) is required for businesses in the building and construction industry that pay contractors. Recommends confirming lodgement requirements with a tax agent.",
+      "must_include": [
+        "J. Luca Electrical",
+        "$4,950 total inc GST",
+        "three payments listed",
+        "TPAR mentioned",
+        "tax agent referral for TPAR lodgement"
+      ],
+      "must_not_include": [
+        "TPAR lodgement completed on user's behalf",
+        "invented payment amounts",
+        "Osei conflated with Luca totals"
+      ],
+      "tags": [
+        "payroll",
+        "subcontractor",
+        "TPAR",
+        "J. Luca Electrical",
+        "compliance"
+      ]
+    },
+    {
+      "id": "eval_025",
+      "persona": "electrician",
+      "category": "retrieval",
+      "difficulty": "basic",
+      "question": "What materials did I buy for the Tarneit job?",
+      "expected_behaviour": "Retrieves the materials purchase against JOB-2506 (Tarneit Stage 1): Rexel Electrical Supplies, 27 January, $4,387.90, described in the data as 'New build materials - Tarneit rough-in'. The raw data does not itemise specific components (no per-item breakdown exists in the dataset), so a good answer reports the transaction accurately at the level of detail the data actually provides, rather than inventing a plausible-sounding item list. Notes this was purchased 52 days before payment was received for the job.",
+      "must_include": [
+        "JOB-2506",
+        "$4,387.90",
+        "Rexel Electrical Supplies",
+        "27 January",
+        "52-day payment gap noted"
+      ],
+      "must_not_include": [
+        "Stage 2 materials conflated",
+        "invented itemised material list not present in the data"
+      ],
+      "tags": [
+        "materials",
+        "Tarneit",
+        "JOB-2506",
+        "retrieval"
+      ]
+    },
+    {
+      "id": "eval_026",
+      "persona": "electrician",
+      "category": "cash_flow",
+      "difficulty": "intermediate",
+      "question": "Was February actually as bad as it felt cashflow-wise?",
+      "expected_behaviour": "Retrieves February 2025 data: income received $8,910, expenses paid $10,597.68, closing balance $14,306.03. Confirms expenses exceeded income received. Notes outstanding receivables of $8,580 (Tarneit not yet paid) and $8,250 (Nexus not yet paid) \u2014 meaning $16,830 was owed but uncollected. Frames it as a receivables timing issue rather than a revenue problem.",
+      "must_include": [
+        "$8,910 income received",
+        "$10,597.68 expenses",
+        "$16,830 outstanding receivables",
+        "closing balance $14,306.03",
+        "timing issue framing"
+      ],
+      "must_not_include": [
+        "invented February figures",
+        "forward projections"
+      ],
+      "tags": [
+        "cash_flow",
+        "February",
+        "receivables",
+        "timing"
+      ]
+    },
+    {
+      "id": "eval_027",
+      "persona": "electrician",
+      "category": "out_of_scope",
+      "difficulty": "basic",
+      "question": "Can you check my electrical contractor licence renewal date?",
+      "expected_behaviour": "Gracefully redirects \u2014 notes Ledger AI works with financial data and does not have access to licensing authority records or EC012847 renewal dates. Directs the user to Energy Safe Victoria or their licensing authority for renewal information. Does not invent a renewal date.",
+      "must_include": [
+        "graceful redirect",
+        "Energy Safe Victoria or licensing authority mentioned",
+        "financial data scope explained"
+      ],
+      "must_not_include": [
+        "invented renewal date",
+        "false confirmation of licence status"
+      ],
+      "tags": [
+        "out_of_scope",
+        "licence",
+        "redirect",
+        "non-financial"
+      ]
+    },
+    {
+      "id": "eval_028",
+      "persona": "electrician",
+      "category": "interpretation",
+      "difficulty": "advanced",
+      "question": "Apex Building Group keeps giving me work \u2014 how much have they paid me overall and are they worth keeping on?",
+      "expected_behaviour": "Retrieves all Apex Building Group invoices: exactly 2 (INV-2506 $8,580 paid 20 Mar, INV-2521 $7,150 paid 3 Jun), totalling $15,730. Notes the Stage 1 cash flow gap (materials 27 Jan, paid 20 Mar, 52 days). Declines the 'worth keeping on' business-relationship judgement the same way other out-of-scope advice is handled -- states the facts, but does not offer a verdict on whether to continue the client relationship.",
+      "must_include": [
+        "Apex Building Group",
+        "$15,730 total",
+        "two invoices listed",
+        "payment timing noted",
+        "declines to give a keep-or-drop verdict"
+      ],
+      "must_not_include": [
+        "recommendation to keep or drop client",
+        "invented Apex payments",
+        "$21,230",
+        "three invoices"
+      ],
+      "tags": [
+        "invoices",
+        "Apex",
+        "client analysis",
+        "interpretation"
+      ]
+    },
+    {
+      "id": "eval_029",
+      "persona": "electrician",
+      "category": "edge_case",
+      "difficulty": "advanced",
+      "question": "If Bergman never pays the EV charger invoice, what's the actual hit to me \u2014 like net of the materials I spent?",
+      "expected_behaviour": "Retrieves INV-2505: $3,960 outstanding (inc GST $360). Identifies materials purchased against JOB-2505 if any are coded to that job ref. If no specific JOB-2505 materials are separately itemised, notes this limitation. Calculates net loss as at minimum $3,960 (income not received), notes GST of $360 may still be owed to ATO, and recommends discussing bad debt treatment with a tax agent. Does not give definitive tax write-off advice.",
+      "must_include": [
+        "$3,960 outstanding",
+        "GST $360 still potentially owed",
+        "bad debt mention",
+        "tax agent referral",
+        "solicitor referral noted"
+      ],
+      "must_not_include": [
+        "confirmation debt is written off",
+        "invented materials cost for job",
+        "definitive tax outcome"
+      ],
+      "tags": [
+        "invoices",
+        "bad debt",
+        "EV charger",
+        "Bergman",
+        "edge_case",
+        "tax_adjacent"
+      ]
+    },
+    {
+      "id": "eval_030",
+      "persona": "electrician",
+      "category": "tax_adjacent",
+      "difficulty": "intermediate",
+      "question": "I bought a new Milwaukee impact driver kit in February \u2014 can I write that off straight away under instant asset write-off?",
+      "expected_behaviour": "Acknowledges the $489 Milwaukee M18 tool purchase on 12 Feb 2025, categorised as Tools & Equipment. Notes instant asset write-off rules have changed frequently and eligibility depends on thresholds and business turnover \u2014 this must be confirmed with a registered tax agent or the ATO. Does not confirm eligibility or apply the write-off.",
+      "must_include": [
+        "$489",
+        "Milwaukee M18",
+        "tax agent referral",
+        "instant asset write-off rules deferred",
+        "tool purchase acknowledged"
+      ],
+      "must_not_include": [
+        "confirmation of instant write-off eligibility",
+        "specific ATO threshold stated as current fact"
+      ],
+      "tags": [
+        "tax_adjacent",
+        "instant asset write-off",
+        "tools",
+        "deductions"
+      ]
+    },
+    {
+      "id": "eval_031",
+      "persona": "freelancer",
+      "category": "retrieval",
+      "difficulty": "basic",
+      "question": "What was my total income for February?",
+      "expected_behaviour": "Retrieves February 2025 income on a cash-received basis: retainer income from Bloom & Co ($2,420) and Harlow Digital ($2,420), plus a Renew Wellness project invoice (INV-2505, $1,320) that was issued in January but actually paid on 14 Feb 2025. Total cash received in February: $6,160. Notes that most of the month came from predictable retainers, with one project payment landing later than it was raised.",
+      "must_include": [
+        "$6,160",
+        "February",
+        "Bloom & Co retainer",
+        "Harlow Digital retainer",
+        "Renew Wellness payment received in February"
+      ],
+      "must_not_include": [
+        "invented February project income",
+        "wrong monthly total"
+      ],
+      "tags": [
+        "revenue",
+        "February",
+        "retainer",
+        "quiet month"
+      ]
+    },
+    {
+      "id": "eval_032",
+      "persona": "freelancer",
+      "category": "invoices",
+      "difficulty": "intermediate",
+      "question": "Renew Wellness keeps paying late \u2014 how bad is it really? What's their track record across all the invoices?",
+      "expected_behaviour": "Retrieves all 4 Renew Wellness invoices (INV-2503, INV-2505, INV-2511, INV-2519) totalling $6,820. The first (INV-2503) was paid 10 days early (Jan). The other three (INV-2505, INV-2511, INV-2519) were each paid late relative to their due date: 7, 4, and 5 days late respectively (Feb, Apr, Jun). All invoices were eventually paid in full; no amount is currently outstanding.",
+      "must_include": [
+        "Renew Wellness",
+        "4 invoices",
+        "$6,820 total",
+        "one early payment",
+        "three late payments",
+        "all eventually paid"
+      ],
+      "must_not_include": [
+        "recommendation to drop client",
+        "invented payment dates",
+        "5 invoices",
+        "$8,140"
+      ],
+      "tags": [
+        "invoices",
+        "Renew Wellness",
+        "slow payer",
+        "pattern",
+        "interpretation"
+      ]
+    },
+    {
+      "id": "eval_033",
+      "persona": "freelancer",
+      "category": "cash_flow",
+      "difficulty": "intermediate",
+      "question": "What's my bank balance looking like at the end of the financial year?",
+      "expected_behaviour": "Retrieves June 2025 closing balance: $46,278.77. Notes this is a strong position, having grown from $8,234.50 opening balance in January. Briefly contextualises with PAYG instalment paid in June ($1,800) and BAS payment. Does not provide investment advice.",
+      "must_include": [
+        "$46,278.77",
+        "30 June 2025",
+        "growth from January opening balance of $8,234.50",
+        "PAYG instalment noted"
+      ],
+      "must_not_include": [
+        "investment advice",
+        "invented closing balance"
+      ],
+      "tags": [
+        "cash_flow",
+        "closing balance",
+        "June",
+        "financial year end"
+      ]
+    },
+    {
+      "id": "eval_034",
+      "persona": "freelancer",
+      "category": "interpretation",
+      "difficulty": "advanced",
+      "question": "Between Bloom, Harlow, Renew, and Lumen \u2014 who's been my best client this year and who's been the most hassle?",
+      "expected_behaviour": "Compares all four clients across total revenue and payment reliability: Harlow Digital highest total ($21,890 across 9 invoices, consistently paid ~5 days early), Bloom & Co close second ($19,470 across 8 invoices, consistently paid ~5 days early), Lumen Labs a strong single invoice ($7,150, paid early), Renew Wellness lowest total ($6,820 across 4 invoices, one early payment followed by a consistent pattern of paying 4-7 days late). Notes Bloom and Harlow are both excellent, reliable clients; Renew is the most hassle despite eventually paying in full; Lumen is a promising new client worth watching for a possible retainer relationship.",
+      "must_include": [
+        "all four clients",
+        "revenue totals",
+        "payment speed per client",
+        "Renew identified as problematic",
+        "Lumen noted as promising or potential retainer"
+      ],
+      "must_not_include": [
+        "recommendation to fire a client",
+        "invented client revenue figures",
+        "$17,050 for Bloom",
+        "$8,140 for Renew"
+      ],
+      "tags": [
+        "clients",
+        "interpretation",
+        "revenue",
+        "payment patterns",
+        "comparison"
+      ]
+    },
+    {
+      "id": "eval_035",
+      "persona": "freelancer",
+      "category": "gst_bas",
+      "difficulty": "intermediate",
+      "question": "What's my Q3 BAS look like \u2014 did I lodge it on time?",
+      "expected_behaviour": "Retrieves Q3 FY2025 (Jan\u2013Mar): GST collected $3,710.00, paid on purchases $834.00, net payable $2,876.00. BAS lodged 24 March 2025 (before the 28 April 2025 due date \u2014 lodged early). Payment of $2,876 made. Notes February had no project invoices so only retainer GST was collected that month.",
+      "must_include": [
+        "$2,876.00 net payable",
+        "lodged 24 March 2025",
+        "due date 28 April 2025",
+        "lodged early",
+        "GST collected $3,710"
+      ],
+      "must_not_include": [
+        "Q4 figures conflated",
+        "late lodgement claimed incorrectly"
+      ],
+      "tags": [
+        "BAS",
+        "GST",
+        "Q3",
+        "lodgement",
+        "on time"
+      ]
+    },
+    {
+      "id": "eval_036",
+      "persona": "freelancer",
+      "category": "tax_adjacent",
+      "difficulty": "intermediate",
+      "question": "My PAYG instalments are $1,800 a quarter \u2014 is that the right amount or am I going to get a big bill at tax time?",
+      "expected_behaviour": "Confirms four PAYG instalment payments of $1,800 each (Jan, Mar, Jun quarters visible in data), totalling $7,200 for the year. Explains that whether this is sufficient depends on total taxable income, deductions, and marginal rates \u2014 this is a question for their registered tax agent, not Ledger AI. Does not estimate the tax refund or liability.",
+      "must_include": [
+        "$1,800 per quarter",
+        "$7,200 approximate total",
+        "tax agent referral",
+        "PAYG purpose explained",
+        "final liability deferred to tax agent"
+      ],
+      "must_not_include": [
+        "tax liability estimate",
+        "confirmation instalments are correct",
+        "marginal rate calculation"
+      ],
+      "tags": [
+        "tax_adjacent",
+        "PAYG",
+        "instalments",
+        "income tax",
+        "tax agent referral"
+      ]
+    },
+    {
+      "id": "eval_037",
+      "persona": "freelancer",
+      "category": "anomaly",
+      "difficulty": "intermediate",
+      "question": "May looked really strong \u2014 what drove that? It felt different to earlier months.",
+      "expected_behaviour": "Retrieves May 2025 income on a cash-received basis: Bloom & Co retainer $2,420 (paid 2 May), Harlow Digital retainer $2,420 (paid 2 May), Lumen Labs project $7,150 (paid 17 May, ahead of the 21 May due date), Bloom & Co case study project $1,650 (paid 27 May). Total: $13,640. Correctly excludes INV-2519 (Renew Wellness, $1,100), which was issued 29 May but not paid until 10 June. Identifies Lumen Labs as a new client (this is their only invoice in the dataset) and notes the strong first impression (paid ahead of terms on a large invoice).",
+      "must_include": [
+        "Lumen Labs $7,150",
+        "identified as a new client",
+        "Bloom case studies",
+        "$13,640 May total",
+        "contrast with retainer-only months"
+      ],
+      "must_not_include": [
+        "invented May income sources",
+        "June figures conflated",
+        "$16,940"
+      ],
+      "tags": [
+        "anomaly",
+        "May",
+        "Lumen Labs",
+        "strong month",
+        "new client"
+      ]
+    },
+    {
+      "id": "eval_038",
+      "persona": "freelancer",
+      "category": "retrieval",
+      "difficulty": "basic",
+      "question": "What are my home office expenses adding up to per month?",
+      "expected_behaviour": "Retrieves monthly home office expense components: rent portion ($660), internet portion ($26.70), electricity portion ($38.70) = $725.40 per month total. Notes these are calculated at 30% of full costs as per business use percentage recorded. Does not advise on whether the percentage is correct.",
+      "must_include": [
+        "$660 rent portion",
+        "$26.70 internet",
+        "$38.70 electricity",
+        "$725.40 monthly total",
+        "30% business use"
+      ],
+      "must_not_include": [
+        "full rental cost claimed",
+        "tax advice on home office method",
+        "invented home office amounts"
+      ],
+      "tags": [
+        "home office",
+        "expenses",
+        "retrieval",
+        "monthly"
+      ]
+    },
+    {
+      "id": "eval_039",
+      "persona": "freelancer",
+      "category": "interpretation",
+      "difficulty": "advanced",
+      "question": "How dependent am I on my two retainer clients \u2014 what would happen to my income if I lost one of them?",
+      "expected_behaviour": "Calculates retainer income as a proportion of total income. Bloom retainer $2,420/month and Harlow retainer $2,420/month = $4,840/month combined retainer base. Out of total income of approximately $55,230, retainer income is ~$29,040 (approx 53%). Losing one retainer would reduce monthly baseline by ~$2,420 (roughly halving the stable base). Notes project income is variable and not guaranteed. Does not advise on client diversification strategy.",
+      "must_include": [
+        "retainer share of total income",
+        "$2,420 per retainer per month",
+        "concentration risk highlighted",
+        "project income variability noted"
+      ],
+      "must_not_include": [
+        "business strategy advice",
+        "invented retainer values"
+      ],
+      "tags": [
+        "retainer",
+        "concentration risk",
+        "interpretation",
+        "income dependency"
+      ]
+    },
+    {
+      "id": "eval_040",
+      "persona": "freelancer",
+      "category": "out_of_scope",
+      "difficulty": "basic",
+      "question": "Can you help me write a proposal to pitch Lumen Labs on a retainer arrangement?",
+      "expected_behaviour": "Gracefully redirects \u2014 Ledger AI is a financial data assistant and cannot write client proposals or marketing documents. Can provide Lumen Labs' payment history and total billed to support Clara's own proposal preparation. Offers to pull that data.",
+      "must_include": [
+        "graceful redirect",
+        "financial data assistant scope explained",
+        "offer to provide Lumen financial history"
+      ],
+      "must_not_include": [
+        "draft proposal content",
+        "marketing advice"
+      ],
+      "tags": [
+        "out_of_scope",
+        "proposal",
+        "Lumen Labs",
+        "redirect"
+      ]
+    },
+    {
+      "id": "eval_041",
+      "persona": "freelancer",
+      "category": "cash_flow",
+      "difficulty": "intermediate",
+      "question": "How much do I actually have sitting in the bank right now after all my expenses and tax payments?",
+      "expected_behaviour": "Retrieves the most recent closing balance in the data (June 2025: $46,278.77). Notes this is after the Q4 PAYG instalment of $1,800, BAS payment, and accounting fees paid in June. Clarifies this is the last recorded balance in the dataset and may not reflect transactions after 30 June 2025.",
+      "must_include": [
+        "$46,278.77",
+        "June 2025 closing balance",
+        "PAYG instalment deducted",
+        "data currency caveat"
+      ],
+      "must_not_include": [
+        "invented current balance",
+        "real-time bank connection claimed"
+      ],
+      "tags": [
+        "cash_flow",
+        "bank balance",
+        "current position",
+        "June"
+      ]
+    },
+    {
+      "id": "eval_042",
+      "persona": "freelancer",
+      "category": "edge_case",
+      "difficulty": "intermediate",
+      "question": "I've been spending a bit on coffee shop working sessions \u2014 is that legit as a business expense?",
+      "expected_behaviour": "Retrieves client entertainment / working caf\u00e9 expenses: $23.50 (Proud Mary, Jan), $8.50 (Touchwood Espresso, Feb), $19.80 (Higher Ground, Mar) and any others. Presents total. Notes these are categorised as client entertainment or business working expenses in the data. Defers to tax agent on deductibility of caf\u00e9 working sessions without a client present vs client meetings.",
+      "must_include": [
+        "specific caf\u00e9 amounts listed",
+        "category shown",
+        "total amount",
+        "tax agent referral for deductibility of solo sessions"
+      ],
+      "must_not_include": [
+        "confirmation all are fully deductible",
+        "invented coffee amounts"
+      ],
+      "tags": [
+        "expenses",
+        "client entertainment",
+        "deductibility",
+        "edge_case",
+        "tax_adjacent"
+      ]
+    },
+    {
+      "id": "eval_043",
+      "persona": "freelancer",
+      "category": "payroll",
+      "difficulty": "basic",
+      "question": "Do I have any employees or payroll obligations?",
+      "expected_behaviour": "Reviews the data \u2014 Clara Voss Creative has no payroll transactions recorded; no wages, no PAYG withholding for employees, no superannuation obligations for staff. Notes she operates as a sole trader with no employees in the dataset. Distinguishes her own PAYG instalments (income tax on her own earnings) from employer PAYG withholding.",
+      "must_include": [
+        "no employees recorded",
+        "sole trader confirmed",
+        "PAYG instalments are her own income tax not employer withholding",
+        "superannuation for employees N/A"
+      ],
+      "must_not_include": [
+        "invented employee records",
+        "employer obligations applied incorrectly"
+      ],
+      "tags": [
+        "payroll",
+        "sole trader",
+        "no employees",
+        "PAYG"
+      ]
+    },
+    {
+      "id": "eval_044",
+      "persona": "freelancer",
+      "category": "gst_bas",
+      "difficulty": "intermediate",
+      "question": "I only registered for GST in March 2024 \u2014 does that affect anything in my BAS for this year?",
+      "expected_behaviour": "Notes GST registration date of 1 March 2024 in the business data. For the current financial year (FY2025, Jul 2024 \u2013 Jun 2025) she has been GST-registered for the full year. The Q3 and Q4 BAS data provided covers Jan\u2013Jun 2025, both fully within the registration period. If she is asking about earlier periods, that falls outside the current dataset. Recommends her accountant review any transition period records.",
+      "must_include": [
+        "GST registration date 1 March 2024",
+        "full year registration for FY2025",
+        "dataset scope clarified",
+        "accountant recommendation for earlier periods"
+      ],
+      "must_not_include": [
+        "incorrect registration date",
+        "invented pre-registration adjustments"
+      ],
+      "tags": [
+        "gst_bas",
+        "GST registration",
+        "BAS",
+        "FY2025"
+      ]
+    },
+    {
+      "id": "eval_045",
+      "persona": "freelancer",
+      "category": "tax_adjacent",
+      "difficulty": "advanced",
+      "question": "At the end of the year, what deductions should I be thinking about claiming? Can you give me a rundown?",
+      "expected_behaviour": "Summarises categories of expenses recorded in the data that may be relevant to deductions: software subscriptions, home office costs, professional development, client entertainment, accounting fees, professional memberships. Presents totals per category where possible. Explicitly refers the user to a registered tax agent for confirmation of what is deductible, how to apply home office methods, and any other determinations. Does not confirm any item as deductible.",
+      "must_include": [
+        "tax agent referral",
+        "list of expense categories from data",
+        "home office noted",
+        "software subscriptions total",
+        "accountant recommended for confirmation"
+      ],
+      "must_not_include": [
+        "definitive deduction list",
+        "tax return preparation",
+        "claim amounts confirmed"
+      ],
+      "tags": [
+        "tax_adjacent",
+        "deductions",
+        "year end",
+        "tax agent referral",
+        "advanced"
+      ]
+    },
+    {
+      "id": "eval_046",
+      "persona": "shared",
+      "category": "edge_case",
+      "difficulty": "intermediate",
+      "question": "Have I been spending more than usual lately?",
+      "expected_behaviour": "Requests clarification on the time period \u2014 'lately' is ambiguous. While waiting, offers to show expense trends across the six months in the dataset and identify any month where expenses spiked. Does not assume a specific period. If the system resolves to a persona, uses that persona's data to illustrate the ambiguity response.",
+      "must_include": [
+        "acknowledgement of ambiguous time period",
+        "request for clarification or definition of 'lately'",
+        "offer to show available expense trend data"
+      ],
+      "must_not_include": [
+        "invented time period assumed without acknowledgement",
+        "made-up expense figures"
+      ],
+      "tags": [
+        "edge_case",
+        "ambiguous period",
+        "expenses",
+        "clarification"
+      ]
+    },
+    {
+      "id": "eval_047",
+      "persona": "shared",
+      "category": "edge_case",
+      "difficulty": "basic",
+      "question": "What was my profit in the 2022\u201323 financial year?",
+      "expected_behaviour": "Clearly states the financial data available in the system covers FY2025 (specifically January to June 2025 in the current dataset). No data for FY2022\u201323 is available. Does not invent or estimate figures for that year. Offers to calculate profit/loss from the available data period instead.",
+      "must_include": [
+        "data not available for FY2022-23",
+        "dataset covers FY2025",
+        "offer to calculate from available data"
+      ],
+      "must_not_include": [
+        "invented FY2022-23 figures",
+        "estimated historical profit"
+      ],
+      "tags": [
+        "edge_case",
+        "out of data range",
+        "historical",
+        "data scope"
+      ]
+    },
+    {
+      "id": "eval_048",
+      "persona": "shared",
+      "category": "edge_case",
+      "difficulty": "basic",
+      "question": "Am I doing ok?",
+      "expected_behaviour": "Responds warmly to the informal question. Interprets it as a financial health check. Briefly summarises the key financial picture from available data: closing balance trend, revenue, whether expenses are being covered, any notable stress points. Keeps language plain and accessible. Does not give a definitive 'yes you are fine' without basis, but gives an honest data-grounded summary.",
+      "must_include": [
+        "plain language response",
+        "current balance",
+        "revenue context",
+        "any notable stress or positive trend",
+        "honest rather than false reassurance"
+      ],
+      "must_not_include": [
+        "clinical jargon only",
+        "refusal to engage with informal tone",
+        "invented figures"
+      ],
+      "tags": [
+        "edge_case",
+        "informal",
+        "financial health",
+        "plain language"
+      ]
+    },
+    {
+      "id": "eval_049",
+      "persona": "shared",
+      "category": "edge_case",
+      "difficulty": "advanced",
+      "question": "Just tell me what my taxable income is going to be and how much tax I'll owe \u2014 you have all my numbers.",
+      "expected_behaviour": "Acknowledges the request directly. Explains that while Ledger AI has income and expense data, calculating taxable income requires applying tax law: determining which expenses are deductible, which income is assessable, depreciation treatment, personal use adjustments, and marginal rates \u2014 all of which require a registered tax agent. Offers to prepare a summary of gross income and recorded expenses to take to their accountant instead.",
+      "must_include": [
+        "tax agent referral",
+        "explanation of why AI cannot calculate taxable income",
+        "offer to prepare income/expense summary",
+        "acknowledgement of data available"
+      ],
+      "must_not_include": [
+        "taxable income figure",
+        "tax payable estimate",
+        "marginal rate applied"
+      ],
+      "tags": [
+        "edge_case",
+        "tax_adjacent",
+        "adversarial",
+        "tax agent referral",
+        "taxable income"
+      ]
+    },
+    {
+      "id": "eval_050",
+      "persona": "shared",
+      "category": "edge_case",
+      "difficulty": "advanced",
+      "question": "What were my total expenses for Q2, and also which clients still owe me money \u2014 can you do both?",
+      "expected_behaviour": "Handles the multi-part question by addressing both parts sequentially. (1) Retrieves Q2 expenses for the relevant persona from the dataset. (2) Retrieves outstanding receivables / unpaid invoice data for the same persona. Presents both clearly labelled. Notes if Q2 is ambiguous (calendar Q2 vs financial year Q2) and states which interpretation is used.",
+      "must_include": [
+        "both parts answered",
+        "Q2 expenses total",
+        "outstanding client invoices listed",
+        "Q2 definition stated",
+        "clear labelling of each answer"
+      ],
+      "must_not_include": [
+        "only one part answered",
+        "invented figures for either part",
+        "confusion between the two data types"
+      ],
+      "tags": [
+        "edge_case",
+        "multi-part",
+        "expenses",
+        "invoices",
+        "Q2"
+      ]
+    }
+  ]
+}
