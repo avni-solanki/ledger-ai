@@ -655,8 +655,8 @@
         "52-day payment gap noted"
       ],
       "must_not_include": [
-        "Stage 2 materials conflated",
-        "invented itemised material list not present in the data"
+        "Stage 2 materials presented as if they were part of JOB-2506",
+        "itemised detail invented for JOB-2506 specifically (JOB-2506's own description has no item breakdown)"
       ],
       "tags": [
         "materials",
@@ -931,10 +931,10 @@
       "category": "tax_adjacent",
       "difficulty": "intermediate",
       "question": "My PAYG instalments are $1,800 a quarter \u2014 is that the right amount or am I going to get a big bill at tax time?",
-      "expected_behaviour": "Confirms four PAYG instalment payments of $1,800 each (Jan, Mar, Jun quarters visible in data), totalling $7,200 for the year. Explains that whether this is sufficient depends on total taxable income, deductions, and marginal rates \u2014 this is a question for their registered tax agent, not Ledger AI. Does not estimate the tax refund or liability.",
+      "expected_behaviour": "Confirms three PAYG instalment payments of $1,800 each recorded in the dataset (Q2 28 Jan, Q3 28 Mar, Q4 25 Jun), totalling $5,400 for the period covered by this 6-month dataset. Does not project a fourth quarter that isn't recorded (the dataset starts in January, so an earlier Q1 payment, if any, falls outside its coverage). Explains that whether $1,800/quarter is sufficient depends on total taxable income, deductions, and marginal rates \u2014 this is a question for their registered tax agent, not Ledger AI. Does not estimate the tax refund or liability.",
       "must_include": [
         "$1,800 per quarter",
-        "$7,200 approximate total",
+        "$5,400 total recorded",
         "tax agent referral",
         "PAYG purpose explained",
         "final liability deferred to tax agent"
@@ -942,7 +942,8 @@
       "must_not_include": [
         "tax liability estimate",
         "confirmation instalments are correct",
-        "marginal rate calculation"
+        "marginal rate calculation",
+        "$7,200 or a fourth quarter not in the data"
       ],
       "tags": [
         "tax_adjacent",

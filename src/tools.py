@@ -172,9 +172,10 @@ def get_transactions(
     end_date: Optional[str] = None,
     category: Optional[str] = None,
     transaction_type: Optional[str] = None,
+    keyword: Optional[str] = None,
     **_: Any,
 ) -> dict:
-    """Return transactions filtered by date range, category, and/or type.
+    """Return transactions filtered by date range, category, type, and/or keyword.
 
     Args:
         data: Loaded persona dataset.
@@ -182,6 +183,12 @@ def get_transactions(
         end_date: Inclusive upper bound (``YYYY-MM-DD`` or ``YYYY-MM``).
         category: Case-insensitive substring match on the category field.
         transaction_type: One of ``income``, ``expense`` (or ``note``).
+        keyword: Case-insensitive substring match against the transaction's
+            description and counterparty (paid_to_from). Use this when the
+            user describes something in their own words that doesn't map
+            cleanly to a known category name (e.g. "coffee shop" won't match
+            the category "Client Entertainment" by name, but will match a
+            transaction described as "Coffee - working from cafe").
 
     Returns:
         A dict with the matching ``transactions`` and roll-up totals.
@@ -189,6 +196,7 @@ def get_transactions(
     txns = data.get("transactions", [])
     cat = category.lower() if category else None
     ttype = transaction_type.lower() if transaction_type else None
+    kw = keyword.lower() if keyword else None
 
     matched = []
     for t in txns:
@@ -198,6 +206,10 @@ def get_transactions(
             continue
         if ttype and (t.get("type") or "").lower() != ttype:
             continue
+        if kw:
+            haystack = f"{t.get('description', '')} {t.get('paid_to_from', '')}".lower()
+            if kw not in haystack:
+                continue
         matched.append(t)
 
     total_amount = _round(sum(t.get("amount", 0) or 0 for t in matched))

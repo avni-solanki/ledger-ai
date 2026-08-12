@@ -284,7 +284,7 @@ These constraints were agreed before writing the first draft — they inform eve
 # IDENTITY
 You are Ledger AI — a plain-English financial assistant for Australian small business owners. You help sole traders and SME owners understand their own financial data quickly and clearly, without needing an accounting degree.
 
-You have access to the user's financial data through a set of tools. Every answer you give must be grounded in that data. You do not guess, estimate, or generate figures — you retrieve them. This applies equally to dates and time gaps, not just dollar amounts: if the data gives you two dates, calculate and state the exact number of days between them rather than rounding to "a few weeks" or "a couple of months."
+You have access to the user's financial data through a set of tools. Every answer you give must be grounded in that data. You do not guess, estimate, or generate figures — you retrieve them. This applies equally to dates and time gaps, not just dollar amounts: if the data gives you two dates, calculate and state the exact number of days between them rather than rounding to "a few weeks" or "a couple of months." It also applies to descriptive detail: if a transaction's description is a single general line (e.g. "New build materials - rough-in") rather than an itemised list of components, report it at that same level of detail — don't invent a plausible-sounding breakdown of individual items the data doesn't actually contain, even if you know generically what such a job would typically involve.
 
 ---
 
@@ -322,7 +322,7 @@ You have access to the user's financial data through a set of tools. Every answe
 - GST rate: 10%. Registered businesses collect GST on taxable sales and claim GST credits on business purchases
 - BAS (Business Activity Statement): filed quarterly with the ATO, aligned to the Australian financial year. Q1 = Jul–Sep, Q2 = Oct–Dec, Q3 = Jan–Mar, Q4 = Apr–Jun
 - Superannuation: employer contributions are 11% of ordinary time earnings (FY2025 rate)
-- PAYG instalments: sole traders with tax owing above a threshold pay quarterly income tax instalments to the ATO — these are not GST and are not deductible. Important: "PAYG" refers to two genuinely different things, and answers must not conflate them. "PAYG withholding" is what a business withholds from an *employee's* wages and remits to the ATO — it only applies if the business has staff. "PAYG instalments" are prepayments of the *business owner's own* income tax (most relevant for sole traders) — these apply regardless of whether the business has any employees at all, since they're about the owner's personal tax, not payroll. A sole trader with zero employees can still have PAYG instalment obligations; "no employees" does not mean "no PAYG obligations." If a question touches on either PAYG concept, be explicit about which one you're referring to, and address both if the question is broad (e.g. "do I have payroll obligations")
+- PAYG instalments: sole traders with tax owing above a threshold pay quarterly income tax instalments to the ATO — these are not GST and are not deductible. Important: "PAYG" refers to two genuinely different things, and answers must not conflate them. "PAYG withholding" is what a business withholds from an *employee's* wages and remits to the ATO — it only applies if the business has staff. "PAYG instalments" are prepayments of the *business owner's own* income tax (most relevant for sole traders) — these apply regardless of whether the business has any employees at all, since they're about the owner's personal tax, not payroll. A sole trader with zero employees can still have PAYG instalment obligations; "no employees" does not mean "no PAYG obligations." If a question broadly asks about payroll or tax obligations (e.g. "do I have payroll obligations," "any employee-related requirements"), address all three relevant things explicitly rather than just one: PAYG withholding (N/A with no employees), PAYG instalments (still applies, since it's personal, not payroll), and superannuation (N/A for employees with no staff — but don't just drop this one; confirm it explicitly rather than only covering PAYG).
 - Financial year: 1 July – 30 June
 - Always use AUD. Never reference USD or other currencies
 
@@ -342,7 +342,7 @@ When answering questions about invoices, check the `direction` field the tool re
 
 When you mention two or more related outstanding amounts together (e.g. multiple overdue or unpaid invoices contributing to the same cash flow picture), also state their combined total explicitly — don't leave the user to add up figures you've already retrieved and listed separately.
 
-If a search term could match multiple distinct jobs, projects, or invoices with similar names (e.g. "Tarneit Stage 1" and "Tarneit Stage 2" for the same client), and the question uses singular phrasing that implies one specific job rather than all related work (e.g. "the Tarneit job," not "all my Tarneit work"), retrieve and answer about the single most specific match rather than silently combining multiple distinct jobs into one merged total. If it's genuinely unclear which one is meant, say so and ask, rather than guessing by merging them.
+If a search term could match multiple distinct jobs, projects, or invoices with similar names (e.g. "Tarneit Stage 1" and "Tarneit Stage 2" for the same client), and the question uses singular phrasing that implies one specific job rather than all related work (e.g. "the Tarneit job," not "all my Tarneit work"), your default should be to answer about the single most specific match — normally the first/original job by date, since that's what "the [name] job" naturally refers to when someone hasn't specified a stage. Report that answer directly, then mention that a related second job (e.g. Stage 2) also exists and offer to cover it too, rather than asking a clarifying question before answering anything. Only ask first, without answering, in the rare case where there's genuinely no reasonable default (e.g. the jobs are too similar in date/scale to guess which one is meant) — don't default to asking just because more than one match exists.
 
 When a client or supplier only has one invoice in the whole dataset (no prior history), note that this is a new/first-time relationship — that's meaningful context for interpreting the data (e.g. a large first invoice paid promptly is a strong first impression worth flagging), not just another data point to list alongside established, recurring counterparties. Describing that a new relationship *looks* promising based on its data (large first invoice, paid early) is a factual, descriptive interpretation — that's different from recommending an action the user should take about it (e.g. "you should pursue a retainer with them," "worth reaching out about ongoing work"), which stays out of scope under the business-advice principle above. Characterise the pattern; don't recommend acting on it.
 
@@ -379,7 +379,7 @@ This whole section applies when the user's question is actually about tax, or wh
 
 "General AU tax context" has a specific, narrow meaning: naming *what concepts, distinctions, and schemes exist* (e.g. "the ATO distinguishes repairs from improvements," "there's a logbook method for claiming vehicle costs," "an instant asset write-off scheme exists for eligible small businesses"). It does NOT mean applying specific numbers, thresholds, percentages, or durations to the user's situation — even as a hedged illustration. Do not state a specific dollar threshold (e.g. "$20,000"), a specific rule duration (e.g. "12 continuous weeks"), or a specific percentage (even a hypothetical example like "if your logbook shows 75%") — naming the exact figure makes it feel authoritative regardless of how it's hedged, and these are exactly the numbers that change or vary by circumstance. Instead, say that a threshold/percentage/duration exists and applies, and that the tax agent will confirm the actual figure for their situation. Similarly, never state that a specific expense category "is" or "is generally" deductible as if that's settled (e.g. "repairs are immediately deductible") — say that the ATO draws a distinction (e.g. between repairs and improvements) and that which side of it applies here is for the tax agent to confirm, not something you determine.
 
-Never speculate about the scale of the user's tax liability, even hedged with "could" or "may" — this includes projecting what their full-year income or tax bill might be from partial-year data, or characterising whether a stated instalment/payment amount seems adequate, low, or high relative to their likely liability. That determination requires their complete financial picture and is exactly what a tax agent is for. This restriction is about the user's *tax liability* specifically — it doesn't mean avoiding simple arithmetic on their own recorded data. If they've paid four quarterly PAYG instalments of $1,800 each, stating that this totals $7,200 paid so far is a plain, safe sum of their own transactions, not a liability estimate — say it directly. The line is: totals of what's already happened are fine; any claim about what they'll owe, or whether that total is enough, is not.
+Never speculate about the scale of the user's tax liability, even hedged with "could" or "may" — this includes projecting what their full-year income or tax bill might be from partial-year data, or characterising whether a stated instalment/payment amount seems adequate, low, or high relative to their likely liability. That determination requires their complete financial picture and is exactly what a tax agent is for. This restriction is about the user's *tax liability* specifically — it doesn't mean avoiding simple arithmetic on their own recorded data. If several PAYG instalment payments appear in their transactions, stating the total of what's actually recorded (count them — don't assume there are exactly four just because instalments are usually quarterly; the data might only cover part of a year) is a plain, safe sum of their own transactions, not a liability estimate — say it directly. The line is: totals of what's already happened, using only what's actually recorded, are fine; any claim about what they'll owe, whether that total is enough, or projecting a payment that hasn't happened yet, is not.
 
 Example:
 User: "Can I claim my home office expenses?"
@@ -416,7 +416,7 @@ Bad: "I can't answer that question."
 
 # TOOL USE
 You have access to the following tools to query the user's financial data:
-- get_transactions — retrieve transactions by date range, category, or type
+- get_transactions — retrieve transactions by date range, category, type, or keyword (searches description/counterparty for terms that don't map to a known category name)
 - get_account_balance — retrieve monthly closing balance
 - get_invoices — retrieve invoices filtered by status (paid / outstanding / overdue)
 - get_gst_summary — retrieve GST collected and paid for a BAS quarter
@@ -1527,6 +1527,115 @@ These three have now failed on the same criteria across multiple rounds despite 
 ### Iteration notes
 
 *Add notes here after re-running the full suite with eval_025's correction and the eval_041 fix applied. `eval_007` (café interpretation) has now gone unaddressed across several batches — worth a dedicated look next round rather than continuing to deprioritise it.*
+
+---
+
+## P33 — 90%: two overcorrections from our own recent fixes
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### Context
+45/50 (90%). `shared` reached a clean 5/5 — `eval_046` finally passed with no rule changes since P32, good evidence that one really was variance rather than a permanent gap. `eval_026` and `eval_041` both held from the previous run.
+
+### Finding A — `eval_025`: our own disambiguation rule overcorrected into asking instead of answering
+The P29 fix for the Tarneit Stage 1/2 conflation issue told the model to ask for clarification when a job reference was "genuinely unclear." This time, asked "what materials did I buy for the Tarneit job," it did exactly that — listed both Stage 1 and Stage 2, then asked which one was meant, instead of answering about the most likely one (the original, Stage 1) directly. Defensible behaviour in isolation, but not what the eval (or a real user asking a quick question) actually wants — asking first, before attempting an answer, is a worse experience than answering the likely case and offering the alternative.
+
+**Fix:** rewrote the rule to default to answering the most specific/likely match (the first/original job by date) directly, then mention the related second job as an offer rather than a blocker. Reserved the "ask before answering" behaviour for genuine ties where there's no reasonable default to guess from.
+
+### Finding B — `eval_043`: the PAYG fix was so good it crowded out superannuation
+The P31 PAYG-distinction fix worked essentially verbatim — the answer's language on PAYG withholding vs instalments almost matches the rule text directly. But in focusing entirely on PAYG, the answer dropped superannuation coverage entirely, which an earlier version of the same answer used to include. A broad "do I have payroll obligations" question needs all three relevant things confirmed (PAYG withholding, PAYG instalments, superannuation), not just the one most recently reinforced by prompt guidance.
+
+**Fix:** extended the PAYG guidance to explicitly require confirming all three elements for broad obligations questions, naming superannuation directly so it isn't the thing that gets dropped next time something else gets emphasised.
+
+### Pattern worth naming
+Both of these are the same shape of problem: a targeted fix for one specific failure, applied correctly, produced a new and different failure by being *too* effective in one direction. This is a slightly different lesson from P29's "two guardrails conflicting" — here it's one rule doing exactly what it was told, at the expense of something adjacent it wasn't explicitly told to preserve. Worth remembering for any future prompt work: a fix that clearly solves the case it was written for still needs to be checked against the neighbouring cases it might crowd out, not just the one it targeted.
+
+### Remaining open cases
+`eval_008` (Easter reference still missing — untouched this batch), `eval_023` (Bergman/Tarneit anomaly set — still the most safety-relevant open item, best candidate for a structural rather than prompt-based fix), `eval_037` (Lumen — now failed in 3 of the last 4 runs with no rule changes in between, essentially confirmed as inherent variance rather than a coverage gap at this point).
+
+### Iteration notes
+
+*Add notes here after re-running with the eval_025 and eval_043 fixes. Worth a decision point here: at 90% with the remaining gaps well-understood and mostly non-critical, this may be a reasonable place to treat Phase 3 as substantially complete and move toward Phase 4, rather than continuing to chase eval_037 specifically, which the evidence suggests won't be resolved by further prompt tuning.*
+
+---
+
+## P34 — A genuine tool-level gap, not a prompt issue: no description search existed at all
+
+**Phase:** 3 — Claude API engineering  
+**Used in:** `src/tools.py` (`get_transactions`)  
+**Date:** [add date]
+
+### Context
+41/50 this run, but two of the nine "failures" (`eval_014`, `eval_015`) were plain network connection errors, not real results — excluded from analysis. `eval_042` was the one genuinely new, previously-unseen failure worth investigating properly.
+
+### Finding A — a real retrieval bug, not a prompt-wording issue
+Asked "I've been spending on coffee shop working sessions — is that legit as a business expense," the app confidently answered "I don't see any café or coffee-related transactions recorded in your data." This was false: 4 real transactions exist (`Coffee meeting - client strategy session`, `Coffee - working from cafe, client research`, etc.), all correctly categorised as `Client Entertainment`, totalling $85.80. This is the first failure this session traced to a genuine capability gap in the tool layer rather than a data error, a judge error, or a prompt-wording gap: `get_transactions` could filter by category, date, and type, but had **no way to search transaction descriptions for a keyword at all**. Since "coffee shop" doesn't textually match the category name "Client Entertainment," there was no path — prompt engineering alone couldn't have fixed this, because the underlying tool genuinely lacked the capability being asked of it.
+
+**Fix:** added a `keyword` parameter to `get_transactions` that does a case-insensitive substring match against both `description` and `paid_to_from`, for exactly this situation — a user describing something in their own words that doesn't map to the internal category taxonomy. Verified directly against the real failing scenario: `get_transactions(data, keyword="coffee")` now correctly returns all 4 real transactions.
+
+**Important caveat, not yet resolved:** the Python function now supports this parameter, but the actual tool *schema* sent to the Claude API (the JSON definition of available parameters, defined separately in `agent.py`) needs to also expose `keyword` as an available argument, or the model has no way to know it can use it — a function change alone doesn't teach the model anything if the schema it sees hasn't changed to match. This project's `agent.py` has been edited directly on the user's machine throughout Phase 3 rather than through this working copy, so this schema update needs to be applied there directly; flagged clearly rather than assumed done.
+
+### Finding B — a judge false positive that traces back to an overly broad criterion, not judge behaviour this time
+`eval_025` failed again, this run claiming an "invented itemised material list" for the Stage 2 purchase. Checked directly: JOB-2521's own transaction description genuinely says "Rexel - switchboard, busbars, cable for Tarneit Stage 2" — the app was accurately reporting real, grounded data, not inventing anything. The mock data itself has inconsistent detail levels between jobs (JOB-2506 generic, JOB-2521 itemised) — realistic, but the eval case's `must_not_include` was written broadly enough to treat any itemisation as suspicious, based only on JOB-2506's (item-free) data.
+
+**Fix:** narrowed `eval_025`'s must_not_include to specifically forbid inventing itemised detail *for JOB-2506*, or presenting Stage 2 detail as if it belonged to JOB-2506 — not forbidding accurate itemisation of Stage 2's own, genuinely-itemised data.
+
+### Why Finding A is worth calling out specifically
+Every other fix this session has been a data correction, a prompt guardrail, or a judge robustness improvement — this is the first one that required changing what the *tool itself is capable of doing*, because no amount of system-prompt wording can make a function search a field it was never given the code to search. Worth remembering as a general principle: when a capability doesn't exist in the tool layer at all, that's a different category of problem from the model not being told to use a capability that does exist, and it needs a different kind of fix.
+
+### Iteration notes
+
+*Add notes here after: (1) confirming the `keyword` parameter has been added to agent.py's tool schema (not just the Python function) and manually testing the café question again; (2) re-running eval_014/015 (network errors, not real failures) to get a clean read; (3) re-running the full suite.*
+
+---
+
+## P35 — Reading the score correctly, and a recommendation to stop chasing the last cluster
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### Context
+86% (43/50) looked like a regression from the previous 90% run, but wasn't one on closer reading. `eval_021` was a network connection error, not a real judged result — excluding it, the real comparison is 43/49 (~88%), essentially flat. More importantly: `eval_042` (the café keyword-search fix from P34) and `eval_023` (the anomaly-detection case flagged as most safety-relevant in P32) both passed this run, confirming those fixes genuinely held. The cases that failed — `eval_007`, `008`, `037`, `038`, `046` — are the exact same cluster that has been flipping between pass and fail across the last four or five full runs, with no rule changes in between most of those flips.
+
+### Finding — `eval_025` reverted to its original failure mode
+This run, the answer invented itemised component detail for JOB-2506 again — not the Stage-2-confusion variant fixed in P34, but the original hallucination the IDENTITY section's grounding rule is supposed to prevent. Given the rule already existed and was already being followed correctly in some runs, this looks like the same category of instruction-following variance affecting the other persistent cases, rather than a missing rule. Made the existing grounding principle more explicit anyway — extending it from "don't invent figures or date ranges" to also explicitly name "don't invent itemised component detail" — on the reasoning that a more concrete, specific statement of an existing rule sometimes measurably reduces (even if it can't eliminate) this kind of slip, as seen with several earlier fixes in this project.
+
+### A clear-eyed recommendation, based on now-substantial evidence
+Across roughly ten full-suite runs (P25 through P35), a consistent cluster of five to seven cases — mostly open-ended, interpretive, or multi-step questions (Lumen Labs' "new client" framing, home-office tax hedging, month-by-month breakdowns, "lately" clarification, Easter seasonality) — has continued to flip between pass and fail with no correlation to specific rule changes. Every one of these has already received at least one, and in several cases two or three, rounds of targeted prompt refinement. The evidence at this point supports treating this as the practical ceiling of what prompt-only engineering can guarantee for free-form generated answers, not a set of unsolved bugs waiting for the right wording.
+
+**Recommendation:** treat ~86-90% as the project's stable, defensible pass rate rather than continuing to chase a clean 50/50 through further prompt iteration. Two structural alternatives would likely do more than another wording change, if pursued in a future phase: (1) for `eval_025`/`eval_023`-style cases specifically, move the "don't lose this detail" burden from the prompt into the tool layer (e.g. `get_invoices` proactively flagging any `notes` field as a separate structured item, `get_transactions` returning an explicit `has_itemised_detail: false` flag rather than relying on the model to notice and preserve that absence correctly every time); (2) running the eval suite multiple times and reporting a rolling pass rate, rather than treating any single run's number as the definitive score, which better reflects what's actually true about a probabilistic system.
+
+### Iteration notes
+
+*This is a natural point to shift attention to Phase 4 (README, ARCHITECTURE.md, demo, LinkedIn) rather than further Phase 3 eval-chasing — the remaining failures are well-understood, documented, and low-severity, which is itself a demonstrable outcome of the debugging process, not a gap in it.*
+
+---
+
+## P36 — Another eval-suite arithmetic error, and a correction to a live prompt example it exposed
+
+**Phase:** 3 — Claude API engineering  
+**Date:** [add date]
+
+### Context
+88% (44/50), consistent with the P35 read: the same known variance cluster (`eval_007`, `023`, `037`, `046`) fluctuated again, while `eval_008` and `eval_038` flipped back to passing. `eval_025` improved — the item-invention issue from P35 is gone, replaced by a narrower precision slip (stating "6+ weeks" instead of the exact 52 days), which fits the same variance pattern rather than a new gap. `eval_036` was the one worth checking properly.
+
+### Finding — the eval case expected a payment that was never recorded
+`eval_036` expected "four PAYG instalment payments... totalling $7,200." Checked the real dataset: exactly three PAYG payments exist (28 Jan, 28 Mar, 25 Jun — Q2, Q3, Q4), summing to $5,400. There's no fourth payment anywhere in this 6-month dataset; a Q1 payment, if it exists, would fall before January and outside this data's coverage. The eval case's own `expected_behaviour` text was internally contradictory — it named only three specific months while claiming "four payments" — a straightforward counting error at generation time, not an app bug. The app's $5,400 answer was completely correct; stating $7,200 would actually have required projecting an unrecorded payment, exactly what the tax-liability guardrail correctly prevented.
+
+**Fix:** corrected `eval_036`'s expected total and must_include list to the real, verified figure.
+
+### A more important secondary fix: the live prompt itself repeated the same wrong assumption
+The P29/P33 fix that carved out "safe arithmetic" from the tax-liability restriction used "four quarterly PAYG instalments... $7,200" as its worked example — written before this specific miscount was caught, and copied the same wrong assumption (that a dataset always has exactly four quarters of instalments) directly into the live system prompt. Left as-is, this would have actively taught the model to expect four payments even when only three are actually recorded — a bug in the *fix* itself, not just in the eval case.
+
+**Fix:** rewrote the live example to be generic and correct: count what's actually recorded rather than assuming quarterly instalments always number four, since a 6-month dataset will often only contain part of a year's worth.
+
+### Why this is a good one to end on
+This is the clearest example yet of why every fix in this project has needed independent verification against the real data, not just internal consistency with its own reasoning — a specific worked example can be well-written, pass its own internal logic check, and still bake in a wrong assumption that only shows up once a real dataset happens to violate it. The fix for a different case (P29's PAYG carve-out) ended up needing its own fix, two rounds later, once a different question exposed the same underlying error from a different angle.
+
+### Iteration notes
+
+*With this correction, all of the currently-known eval-suite data errors (P21, P25, P26, P28, P29, P32, P34, P36) have been fixed against verified real data. The remaining open cases (`eval_007`, `023`, `025`'s day-precision slip, `037`, `046`) are the documented variance cluster from P35 — no further action planned unless a future run reveals a genuinely new failure mode among them.*
 
 ---
 
