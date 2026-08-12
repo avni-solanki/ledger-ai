@@ -1639,6 +1639,23 @@ This is the clearest example yet of why every fix in this project has needed ind
 
 ---
 
+## P37 — Closing the eval-debugging arc: 94%
+
+**Phase:** 3 → 4 transition  
+**Date:** [add date]
+
+Final full-suite run before moving to Phase 4: 47/50 (94%). Café reached a
+clean 15/15; `interpretation` and `retrieval` both hit full marks for the
+first time. The only three failures are the exact cluster documented as
+inherent LLM variance in P35 (`eval_026`, `eval_037`, `eval_046`) — no new
+failure modes, confirming every genuine data, tool, and prompt bug found
+across P11–P36 is now resolved and stable. This is the number the project
+ships with. See P35 and `ARCHITECTURE.md`'s "irreducible reliability ceiling"
+section for why chasing the remaining three further isn't the right use of
+time, and P36 for the last substantive fix before this run.
+
+---
+
 ## Prompt engineering principles — what this project taught me
 
 *This section to be completed at the end of the project. Intended for interview conversations and the LinkedIn post.*
